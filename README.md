@@ -8,5 +8,5 @@ Creation of a website for internship management of Ecole polytechnique. This pro
 - Aleksa Marusic
 - Victor Radermecker
 
-### Supervisors:
+### Supervisor:
 - Ioana Manolescu
