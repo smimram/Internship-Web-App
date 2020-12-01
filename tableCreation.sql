@@ -95,3 +95,4 @@ copy person from 'path/person.csv' CSV header;
 copy internship from 'path/intership.csv' CSV header;
 copy categories from 'path/categories.csv' CSV header;
 copy internship_category from 'path/internship_category.csv' CSV header;
+copy person_roles from 'path/person_roles.csv' CSV header;
