@@ -93,6 +93,5 @@ insert into program(name, year) values ('phys', 2020);
 
 copy person from 'path/person.csv' CSV header;
 copy internship from 'path/intership.csv' CSV header;
-copy person from 'path/person.csv' CSV header;
-
-select 
+copy categories from 'path/categories.csv' CSV header;
+copy internship_category from 'path/internship_category.csv' CSV header;
