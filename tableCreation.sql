@@ -82,3 +82,17 @@ insert into role_type(role) values ('Admin');
 insert into person(name, email, creation_date, valid, password) values ('Manolescu, Ioana', 'ioana.manolescu@inria.fr', current_date, 'true', 'iloveDBMS');
 
 insert into person_roles(role_id, person_id) values (5, 1);
+
+-- add rows to the database
+
+insert into program(name, year) values ('inf', 2020);
+insert into program(name, year) values ('map', 2020);
+insert into program(name, year) values ('bio', 2020);
+insert into program(name, year) values ('mat', 2020);
+insert into program(name, year) values ('phys', 2020);
+
+copy person from 'path/person.csv' CSV header;
+copy internship from 'path/intership.csv' CSV header;
+copy person from 'path/person.csv' CSV header;
+
+select 
