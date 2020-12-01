@@ -1,3 +1,5 @@
+-- Creation of all the tables
+
 create table program(
     id serial primary key, 
     name varchar(10) not null,
@@ -68,3 +70,15 @@ create table person_program(
     person_id int, foreign key (person) references person(id)
 );
 
+
+-- initialization of the database, i.e. insertion of the first admin
+
+insert into role_type(role) values ('Student');
+insert into role_type(role) values ('Assistant');
+insert into role_type(role) values ('Professor');
+insert into role_type(role) values ('Proponent');
+insert into role_type(role) values ('Admin');
+
+insert into person(name, email, creation_date, valid, password) values ('Manolescu, Ioana', 'ioana.manolescu@inria.fr', current_date, 'true', 'iloveDBMS');
+
+--insert into person_roles(role_id, person_id) values ();
