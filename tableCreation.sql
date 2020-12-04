@@ -70,6 +70,12 @@ create table person_program(
     person_id int, foreign key (person_id) references person(id)
 );
 
+create table program_category(
+	id serial primary key,
+	program_id int, foreign key (program_id) references program(id),
+    cat_id int, foreign key (cat_id) references categories(id)
+);
+
 
 -- initialization of the database, i.e. insertion of the first admin
 
@@ -97,3 +103,5 @@ copy categories from 'path/categories.csv' CSV header;
 copy internship_category from 'path/internship_category.csv' CSV header;
 copy person_roles from 'path/person_roles.csv' CSV header;
 copy person_program from 'path/person_program.csv' CSV header;
+copy person_program from 'path/program_category.csv' CSV header;
+
