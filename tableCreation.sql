@@ -103,7 +103,7 @@ copy categories from 'path/categories.csv' CSV header;
 copy internship_category from 'path/internship_category.csv' CSV header;
 copy person_roles from 'path/person_roles.csv' CSV header;
 copy person_program from 'path/person_program.csv' CSV header;
-copy person_program from 'path/program_category.csv' CSV header;
+copy program_categories from 'path/program_category.csv' CSV header;
 
 
 SELECT setval('person_id_seq', (SELECT MAX(id) FROM person)+1);
