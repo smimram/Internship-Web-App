@@ -1,9 +1,15 @@
 package edu.polytechnique.inf553;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,7 +24,7 @@ public class LoginServlet extends HttpServlet {
 	 * Constructor (see InternshipServlet)
 	 */
 	public LoginServlet() {
-		super();
+		super();	
 		try {
 			Class.forName("org.postgresql.Driver");
 		} catch (ClassNotFoundException e) {
@@ -26,28 +32,54 @@ public class LoginServlet extends HttpServlet {
 		}
 	}
 
-	/**
-	 * Override of method doGet of InternshipServlet
-	 */
-	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//Informs that a user requested access with parameters
 		System.out.println(this.getClass().getName() + " doGet method called with path " + request.getRequestURI() + " and parameters " + request.getQueryString());
-		response.getWriter().append("<!DOCTYPE html><html><head><title>Login</title></head>");
-		response.getWriter().append("<body>");
-		response.getWriter().append("<div class='bg-light' style='width: 200px; height: 200px; position: absolute; left:50%; top:50%;  margin:-100px 0 0 -100px; padding-top: 40px; padding-left: 10px;'>");
-		response.getWriter().append("<input id='reservationID' style='display: none' value='' />");
-		response.getWriter().append("<div>Email : </div>");
-		response.getWriter().append("<div><input id='email' type='text' onKeyPress='return checkIt(event);' name='email' maxlength='4' /></div>");
-		response.getWriter().append("<div>Password : </div>");
-		response.getWriter().append("<div><input id='password' type='text' onKeyPress='return checkIt(event);' name='password' maxlength='4' /></div>");
-		response.getWriter().append("<span style='font-size: 75%;'>"+"</span>");
-		response.getWriter().append("<div><input type='button'  name='buttonsave' value='Login' onclick='makePayment();' /></div>");
-		response.getWriter().append("<div><input type='button'  name='buttoncancel' value='Forgot password' onclick='cancelPayment();' /></div>");
-		response.getWriter().append("</div>");
-		response.getWriter().append("</body>");
-		response.getWriter().append("<result>");
-		String creditno = request.getParameter("email");
-		String s = DbUtils.dbName;
+		request.getRequestDispatcher("login.jsp").forward(request, response);
 	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println(this.getClass().getName() + " doPost method called with path " + request.getRequestURI() + " and parameters " + request.getQueryString());
+		
+		request.setAttribute("email", request.getParameter("email"));
+
+		String email = request.getParameter("email");
+		String pass = request.getParameter("pass");
+
+		//Informs that a user requested access with parameters
+		System.out.println(this.getClass().getName() + " doPost method called with path " + request.getRequestURI() + " and Email '"+email+"' and password '"+pass+"'");
+
+		if(checkUser(email, pass))
+		{
+			request.getRequestDispatcher("login_home.jsp").forward(request, response);
+		}
+		else
+		{
+			request.setAttribute("err_message", "Username or Password incorrect");
+			request.getRequestDispatcher("login.jsp").forward(request, response);
+		}
+
+
+
+	}
+	
+	private boolean checkUser(String email, String password) {
+		boolean st = false;
+		try {
+			String query = "select * from person where email=? and password=?;";
+			//creating connection with the database
+			Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setString(1, email);
+			ps.setString(2, password);
+			ResultSet rs = ps.executeQuery();
+			st = rs.next();
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return st;      
+	}
+
+	
 }
