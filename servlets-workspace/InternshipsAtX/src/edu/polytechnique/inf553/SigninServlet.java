@@ -31,7 +31,6 @@ public class SigninServlet extends HttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//Informs that a user requested access with parameters
 		System.out.println(this.getClass().getName() + " doGet method called with path " + request.getRequestURI() + " and parameters " + request.getQueryString());
 		request.getRequestDispatcher("signin.jsp").include(request, response);
 	}
@@ -55,11 +54,14 @@ public class SigninServlet extends HttpServlet {
 		{
 			try {
 				String query = "insert into person(name, email, creation_date, valid, password)\n" + 
-						" values ('"+concatName+"', '"+email+"', '"+java.time.LocalDate.now().toString()+"', false, '"+pass+"') ;";
+						" values (?, ?, '"+java.time.LocalDate.now().toString()+"', false, ?) ;";
 				//creating connection with the database
 				Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
-				Statement ps = con.createStatement();
-				ps.executeUpdate(query);
+				PreparedStatement ps = con.prepareStatement(query);
+				ps.setString(1, concatName);
+				ps.setString(2, email);
+				ps.setString(3, pass);
+				ps.executeUpdate();
 			}
 			catch(SQLException e) {
 				e.printStackTrace();
@@ -113,10 +115,11 @@ public class SigninServlet extends HttpServlet {
 				try {
 					String query = "SELECT COUNT(*) as count\n" + 
 							"FROM person \n" + 
-							"WHERE email = '"+email+"' ;";
+							"WHERE email = ? ;";
 					//creating connection with the database
 					Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
 					PreparedStatement ps = con.prepareStatement(query);
+					ps.setString(1, email);
 					ResultSet rs = ps.executeQuery();
 					rs.next();
 					emailTaken = rs.getInt("count")>0;

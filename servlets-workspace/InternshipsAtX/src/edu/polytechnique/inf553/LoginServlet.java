@@ -35,11 +35,10 @@ public class LoginServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println(this.getClass().getName() + " doPost method called with path " + request.getRequestURI() + " and parameters " + request.getQueryString());
 		
 		request.setAttribute("email", request.getParameter("email"));
 
-		String email = request.getParameter("email");
+		String email = request.getParameter("email").toLowerCase();
 		String pass = request.getParameter("pass");
 
 		//Informs that a user requested access with parameters
