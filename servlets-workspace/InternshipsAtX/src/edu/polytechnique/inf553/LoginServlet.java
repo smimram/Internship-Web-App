@@ -54,9 +54,6 @@ public class LoginServlet extends HttpServlet {
 			request.setAttribute("err_message", "Username or Password incorrect");
 			request.getRequestDispatcher("login.jsp").forward(request, response);
 		}
-
-
-
 	}
 	
 	private boolean checkUser(String email, String password) {

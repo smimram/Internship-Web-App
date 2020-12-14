@@ -51,7 +51,7 @@ public class SigninServlet extends HttpServlet {
 		String concatName = lastName+", "+firstName;
 
 		String errorMessage = checkEntries(firstName, lastName, email, confirmEmail, pass, confirmPass, role);
-		if(errorMessage == "None")
+		if(errorMessage.equals("None"))
 		{
 			try {
 				String query = "insert into person(name, email, creation_date, valid, password)\n" + 
