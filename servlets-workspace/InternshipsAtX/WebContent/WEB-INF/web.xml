@@ -10,14 +10,39 @@
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
   
-  <servlet>
+  	<servlet>
+		<servlet-name>HomePage</servlet-name>
+		<servlet-class>edu.polytechnique.inf553.HomeServlet</servlet-class>
+	</servlet>
+ 	<servlet>
 		<servlet-name>LoginPage</servlet-name>
 		<servlet-class>edu.polytechnique.inf553.LoginServlet</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>SigninPage</servlet-name>
+		<servlet-class>edu.polytechnique.inf553.SigninServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>UploadTopicPage</servlet-name>
+		<servlet-class>edu.polytechnique.inf553.UploadTopicServlet</servlet-class>
+	</servlet>
+	
 
+	<servlet-mapping>
+		<servlet-name>HomePage</servlet-name>
+		<url-pattern>/home</url-pattern>
+	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>LoginPage</servlet-name>
 		<url-pattern>/login</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>SigninPage</servlet-name>
+		<url-pattern>/signin</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>UploadTopicPage</servlet-name>
+		<url-pattern>/uploadtopic</url-pattern>
 	</servlet-mapping>
   
 </web-app>

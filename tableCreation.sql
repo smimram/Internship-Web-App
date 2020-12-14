@@ -96,6 +96,7 @@ insert into program(name, year) values ('map', 2020);
 insert into program(name, year) values ('bio', 2020);
 insert into program(name, year) values ('mat', 2020);
 insert into program(name, year) values ('phys', 2020);
+<<<<<<< HEAD
  
 copy person from 'webappdata/person.csv' CSV header;
 copy internship from 'webappdata/internship.csv' CSV header;
@@ -106,6 +107,18 @@ copy person_program from 'webappdata/person_program.csv' CSV header;
 copy program_category from 'webappdata/program_category.csv' CSV header;
  
  
+=======
+
+copy person from 'path/person.csv' CSV header;
+copy internship from 'path/intership.csv' CSV header;
+copy categories from 'path/categories.csv' CSV header;
+copy internship_category from 'path/internship_category.csv' CSV header;
+copy person_roles from 'path/person_roles.csv' CSV header;
+copy person_program from 'path/person_program.csv' CSV header;
+copy program_categories from 'path/program_category.csv' CSV header;
+
+
+>>>>>>> bea1ce777da42c9cd85bcfec19ca565a8d14fec5
 SELECT setval('person_id_seq', (SELECT MAX(id) FROM person)+1);
 SELECT setval('internship_id_seq', (SELECT MAX(id) FROM internship)+1);
 SELECT setval('categories_id_seq', (SELECT MAX(id) FROM categories)+1);

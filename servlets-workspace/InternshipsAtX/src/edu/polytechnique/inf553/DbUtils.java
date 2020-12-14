@@ -9,7 +9,7 @@ public final class DbUtils {
 	public static final String dbHost = "localhost";
 	public static final String dbPort = "5432";
 	public static final String dbUser = "postgres";
-	public static final String dbPassword = "ungodlyreavers123";
+	public static final String dbPassword = "postgres";
 	
 	public static final String dbUrl = "jdbc:postgresql://"+dbHost+":"+dbPort+"/"+dbName;
 }
