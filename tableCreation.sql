@@ -29,7 +29,8 @@ create table internship(
    scientific_validated boolean not null,
    administr_validated boolean not null,
    is_taken boolean not null,
-   program_id int, foreign key (program_id) references program(id)
+   program_id int, foreign key (program_id) references program(id),
+   pdf_file bytea not null
 );
  
 create table internship_category(
