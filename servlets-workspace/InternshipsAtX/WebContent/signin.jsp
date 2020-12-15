@@ -16,8 +16,8 @@
         Last Name:<br/><input type="text" name="lastName" value="${lastName}"/><br>
         Email:<br/><input type="text" name="email" value="${email}"/><br/>
         Confirm Email:<br/><input type="text" name="confirmEmail" value="${confirmEmail}"/><br/>
-        Password:<input type="text" name="pass" /><br/>
-        Confirm Password:<input type="text" name="confirmPass" /><br/>
+        Password:<input type="password" name="pass"/><br/>
+        Confirm Password:<input type="password" name="confirmPass" /><br/>
         <select name="role" >
         	<option value="" selected disabled hidden>--Please choose a role--</option>
         	<option value="admin">Admin</option>

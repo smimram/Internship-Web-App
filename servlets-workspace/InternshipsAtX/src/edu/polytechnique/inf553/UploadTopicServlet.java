@@ -211,7 +211,7 @@ public class UploadTopicServlet extends HttpServlet {
 				emailIsValid = false;
 			}
 			if(emailIsValid) {
-				if(uploadFile==null) { // DOESN'T WORK
+				if(uploadFile.getSize()==0) { // DOESN'T WORK
 					return "Please submit your internship description as a PDF file. (16Mo max)";
 				}
 				return "None";
