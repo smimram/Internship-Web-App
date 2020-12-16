@@ -35,7 +35,7 @@
 		<c:forEach items="${subjectsPerCategory}" var="categoryAndSubjects">
 			var subjects = [];
 			 <c:forEach items="${categoryAndSubjects.getSubjects()}" var="subject">
-			 	
+			 	subjects.push()
 			 </c:forEach>
 			 var categoryId = "${categoryAndSubjects.getCategoryId()}";
 		</c:forEach>
