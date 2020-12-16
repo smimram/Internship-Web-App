@@ -46,7 +46,7 @@ public class UploadTopicServlet extends HttpServlet {
 
 		List<Program> programs = loadData();
 		request.setAttribute("programs", programs);
-		request.getRequestDispatcher("uploadtopic.jsp").include(request, response);
+		request.getRequestDispatcher("uploadtopic2.jsp").include(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -152,7 +152,7 @@ public class UploadTopicServlet extends HttpServlet {
 			request.setAttribute("err_message", errorMessage);
 			List<Program> programs = loadData();
 			request.setAttribute("programs", programs);
-			request.getRequestDispatcher("uploadtopic.jsp").forward(request, response);
+			request.getRequestDispatcher("uploadtopic2.jsp").forward(request, response);
 		}
 	}
 	

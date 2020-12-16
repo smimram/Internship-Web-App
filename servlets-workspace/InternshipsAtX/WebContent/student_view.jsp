@@ -12,9 +12,7 @@
     </head>
     <body>
     
-    
-   	
-		
+
 		<script>
 		var programs_categories = new Map();
 		var program_name_id = new Map();
@@ -34,8 +32,12 @@
 		
 		<c:forEach items="${subjectsPerCategory}" var="categoryAndSubjects">
 			var subjects = [];
+<<<<<<< HEAD
 			 <c:forEach items="${categoryAndSubjects.getSubjects()}" var="subject">
 			 	subjects.push()
+=======
+			 <c:forEach items="${categoryAndSubjects.getSubjects()}" var="subject">	
+>>>>>>> e5082a1c6d07baf58b60dd02e971bc4a757a1809
 			 </c:forEach>
 			 var categoryId = "${categoryAndSubjects.getCategoryId()}";
 		</c:forEach>
