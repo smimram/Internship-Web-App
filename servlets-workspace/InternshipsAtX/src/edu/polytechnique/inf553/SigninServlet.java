@@ -32,7 +32,7 @@ public class SigninServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println(this.getClass().getName() + " doGet method called with path " + request.getRequestURI() + " and parameters " + request.getQueryString());
-		request.getRequestDispatcher("signin.jsp").include(request, response);
+		request.getRequestDispatcher("signin2.jsp").include(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -77,7 +77,7 @@ public class SigninServlet extends HttpServlet {
 			request.setAttribute("confirmEmail", confirmEmail);
 			request.setAttribute("role", role);
 			request.setAttribute("err_message", errorMessage);
-			request.getRequestDispatcher("signin.jsp").forward(request, response);
+			request.getRequestDispatcher("signin2.jsp").forward(request, response);
 		}
 	}
 
