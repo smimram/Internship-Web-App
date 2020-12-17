@@ -32,11 +32,13 @@
 	<div class="limiter">
 		<div class="container-login100 background_style">
 			<div class="wrap-login100">
+				
 				<form class="login100-form validate-form p-l-55 p-r-55 p-t-178">
 					<span class="login100-form-title">
 						<h1>Welcome ${name} ! </h1>
 						<h1 class="subtitle" style="color:red;"> ${role} </h1>
 					</span>
+				</form>
 
 					
 				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="user_management">	
@@ -75,7 +77,6 @@
 		
 					
 					
-				</form>
 				
 			</div>
 		</div>
