@@ -38,6 +38,11 @@
     <servlet-name>StudentViewPage</servlet-name>
     <servlet-class>edu.polytechnique.inf553.StudentViewServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>DownloadTopicPage</servlet-name>
+    <servlet-class>edu.polytechnique.inf553.DownloadServlet</servlet-class>
+  </servlet>
+  
   
   <servlet-mapping>
     <servlet-name>HomePage</servlet-name>
@@ -66,5 +71,9 @@
   <servlet-mapping>
     <servlet-name>StudentViewPage</servlet-name>
     <url-pattern>/studentview</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DownloadTopicPage</servlet-name>
+    <url-pattern>/downloadsubject</url-pattern>
   </servlet-mapping>
 </web-app>

@@ -1,19 +1,42 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <!DOCTYPE html>
-<html>	
-    <head>
-     	<meta charset="UTF-8" />
-    	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Student View</title>
-        <!-- css -->
-    	<link rel="stylesheet" href="student_viewstyle.css" />
-    </head>
-    <body>
-    
+<html lang="en">
+<head>
+	<title>Student View</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->	
+	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="css/util.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<link rel="stylesheet" type="text/css" href="css/student_view.css">
+	
+<!--===============================================================================================-->
+</head>
+<body>
+    	Programs: <select name="programs" id="programs">
+		    <option value="0">All Programs</option>
+		  </select>
 		<div id="list">
-		
+			
 		</div>
 
 		<script>
@@ -36,7 +59,7 @@
 		<c:forEach items="${subjectsPerCategory}" var="categoryAndSubjects">
 			var subjects = [];
 			<c:forEach items="${categoryAndSubjects.getSubjects()}" var="subject">
-			 	subjects.push({title: "${subject.getTitle()}", id: "${subject.getId()}", supervisorEmail: "${subject.getSupervisorEmail()}", supervisorName: "${subject.getSupervisorName()}", encodedContent: "${subject.getContent()}"})
+			 	subjects.push({title: "${subject.getTitle()}", id: "${subject.getId()}", supervisorEmail: "${subject.getSupervisorEmail()}", supervisorName: "${subject.getSupervisorName()}"})
 			</c:forEach>
 			var categoryId = "${categoryAndSubjects.getCategoryId()}";
 			var programId = "${categoryAndSubjects.getProgramId()}";
@@ -50,32 +73,47 @@
 			}
 		</c:forEach>
 		
-		var programList = document.getElementById('list');
+		
 		window.onload = function() {
-			var str = "P=";
+			showAllPrograms();
 			
+			var programSel = document.getElementById("programs");
+			programs_categories.forEach((value, key) => {
+				programSel.options[programSel.options.length] = new Option(program_name_id.get(key), key);
+			});
+			programSel.onchange = function(){
+				var pId = this.value
+				if(pId==="0") {
+					//Print all progams with their categories
+					showAllPrograms();
+				} else {
+					//Print certain program (based on pId)
+					showProgram(pId)
+				}
+			}
 			
+		}
+		
+		function showAllPrograms() {
+			var programList = document.getElementById('list');
+			programList.innerHTML = '';
 			programs_categories.forEach((v, k) => {
 				programList.innerHTML += '<div class="program", id="'+k+'">';
 				programList.innerHTML += '<h2>'+program_name_id.get(k)+'</h2>';
 				for (const category of v) {
-					programList.innerHTML += '<div class="category", id="'+category.key+'">';
-					programList.innerHTML += '<h4>'+category.value+'</h4>';
 					
 					var subjects = categories_to_subjects.get(k).get(category.key);
 					if(subjects.length>0) {
+						programList.innerHTML += '<div class="category", id="'+category.key+'">';
+						programList.innerHTML += '<h4>'+category.value+'</h4>';
 						programList.innerHTML += '<table class="subjects" id="'+k.concat(category.key)+'pctable" style="width:100%">';
 						
 						var newRow = document.getElementById(k.concat(category.key).concat("pctable")).insertRow();
 						newRow.innerHTML = '<th>Id</th><th>Subject Title</th><th>Supervisor Name</th><th>Supervisor Email</th><th>Subject</th>';
 						for(const subject of subjects) {
+							var downloadForm = '<a href="downloadsubject?internshipId='+subject.id+'" target="_blank">Download</a>';
 							var newRowE = document.getElementById(k.concat(category.key).concat("pctable")).insertRow();
-							if(subject.title==="OOO") {
-								str = subject.encodedContent;
-								newRowE.innerHTML = '<td>'+subject.id+'</td><td>'+subject.title+'</td><td>'+subject.supervisorName+'</td><td>'+subject.supervisorEmail+'</td><td><input type="button" onClick="base64toPDF(\'' +str+ '\')" value="Dowload"/></td>';
-							} else {
-								newRowE.innerHTML = '<td>'+subject.id+'</td><td>'+subject.title+'</td><td>'+subject.supervisorName+'</td><td>'+subject.supervisorEmail+'</td><td><input type="button" onClick="" value="Dowload"/></td>';
-							}
+							newRowE.innerHTML = '<td>'+subject.id+'</td><td>'+subject.title+'</td><td>'+subject.supervisorName+'</td><td>'+subject.supervisorEmail+'</td><td>'+downloadForm+'</td>';
 						}
 						programList.innerHTML += '</table>'; 
 					}
@@ -86,36 +124,33 @@
 			});
 		}
 		
-		function base64toPDF(data) {
-		    var bufferArray = base64ToArrayBuffer(data);
-		    var blobStore = new Blob([bufferArray], { type: "application/pdf" });
-		    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-		        window.navigator.msSaveOrOpenBlob(blobStore);
-		        return;
-		    }
-		    var data = window.URL.createObjectURL(blobStore);
-		    var link = document.createElement('a');
-		    document.body.appendChild(link);
-		    link.href = data;
-		    link.download = "file.pdf";
-		    link.click();
-		    window.URL.revokeObjectURL(data);
-		    link.remove();
-		}
-
-		function base64ToArrayBuffer(data) {
-		    var bString = window.atob(data);
-		    var bLength = bString.length;
-		    var bytes = new Uint8Array(bLength);
-		    for (var i = 0; i < bLength; i++) {
-		        var ascii = bString.charCodeAt(i);
-		        bytes[i] = ascii;
-		    }
-		    return bytes;
-		};
+		function showProgram(pId) {
+			var programList = document.getElementById('list');
+			programList.innerHTML = '<div class="program", id="'+pId+'">';
+			programList.innerHTML += '<h2>'+program_name_id.get(pId)+'</h2>';
+			for (const category of programs_categories.get(pId)) {
+				
+				var subjects = categories_to_subjects.get(pId).get(category.key);
+				if(subjects.length>0) {
+					programList.innerHTML += '<div class="category", id="'+category.key+'">';
+					programList.innerHTML += '<h4>'+category.value+'</h4>';
+					programList.innerHTML += '<table class="subjects" id="'+pId.concat(category.key)+'pctable" style="width:100%">';
+					
+					var newRow = document.getElementById(pId.concat(category.key).concat("pctable")).insertRow();
+					newRow.innerHTML = '<th>Id</th><th>Subject Title</th><th>Supervisor Name</th><th>Supervisor Email</th><th>Subject</th>';
+					for(const subject of subjects) {
+						var downloadForm = '<a href="downloadsubject?internshipId='+subject.id+'" target="_blank">Download</a>';
+						var newRowE = document.getElementById(pId.concat(category.key).concat("pctable")).insertRow();
+						newRowE.innerHTML = '<td>'+subject.id+'</td><td>'+subject.title+'</td><td>'+subject.supervisorName+'</td><td>'+subject.supervisorEmail+'</td><td>'+downloadForm+'</td>';
+					}
+					programList.innerHTML += '</table>'; 
+				}
+				programList.innerHTML += '</div>';
+			}
+			programList.innerHTML += '</div>';
+		}		
 		
 		</script>
 
-    	<!-- <a href="#" onclick="window.open('MyPDF.pdf', '_blank', 'fullscreen=yes'); return false;">MyPDF</a> -->
     </body>
 </html>

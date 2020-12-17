@@ -1,9 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Home</title>
+	<title>Nope</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->	
@@ -31,32 +33,15 @@
 	
 	<div class="limiter">
 		<div class="container-login100 background_style">
-			<div class="wrap-login100">
-			
-				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="login">	
-					<div class="container-login100-form-btn p-t-50 p-b-25">
-						<button type="submit" class="login100-form-btn">
-							Log In
-						</button>
-					</div>			
-				</form>
+			<div class="wrap-login100-V2">
 
-				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="signin">	
-					<div class="container-login100-form-btn p-t-25 p-b-25">
-						<button type="submit" class="login100-form-btn">
-							Register now
-						</button>
-					</div>			
-				</form>
+
+					<form class="login100-form validate-form p-l-55 p-r-55 p-t-178">
+						<span class="login100-form-title">
+							<h1>Oops... The file could not be found :(  </h1>
+						</span>
+					</form>
 				
-				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="uploadtopic">	
-					<div class="container-login100-form-btn p-t-25 p-b-50">
-						<button type="submit" class="login100-form-btn">
-							Upload A Topic
-						</button>
-					</div>			
-				</form>
-	
 			</div>
 		</div>
 	</div>

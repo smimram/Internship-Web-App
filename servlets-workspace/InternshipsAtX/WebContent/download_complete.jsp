@@ -1,9 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Home</title>
+	<title>Download</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->	
@@ -28,40 +30,63 @@
 <!--===============================================================================================-->
 </head>
 <body>
-	
+
 	<div class="limiter">
 		<div class="container-login100 background_style">
-			<div class="wrap-login100">
-			
-				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="login">	
-					<div class="container-login100-form-btn p-t-50 p-b-25">
-						<button type="submit" class="login100-form-btn">
-							Log In
-						</button>
-					</div>			
-				</form>
+			<div class="wrap-login100-V2">
 
-				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="signin">	
-					<div class="container-login100-form-btn p-t-25 p-b-25">
-						<button type="submit" class="login100-form-btn">
-							Register now
-						</button>
-					</div>			
-				</form>
+
+					<form class="login100-form validate-form p-l-55 p-r-55 p-t-178">
+						<span class="login100-form-title">
+							<h1>Download page of "${subjectTitle}.pdf"</h1>
+						</span>
+					</form>
+					
+					<form>
+						<span class="subtitle" style="color:black;"> <h4> <br> <br> Did not work ? <br> 
+						<a class="subtitle" style="color:black;" href="downloadsubject?internshipId=${internshipId}">Try again here</a>
+						 </h4> <br> <br> </span>
+					</form>
+					
 				
-				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="uploadtopic">	
-					<div class="container-login100-form-btn p-t-25 p-b-50">
-						<button type="submit" class="login100-form-btn">
-							Upload A Topic
-						</button>
-					</div>			
-				</form>
-	
 			</div>
 		</div>
 	</div>
-	
-	
 
-</body>
+		<script>
+		window.onload = function() {
+			base64toPDF("${encodedContent}", "${subjectTitle}");
+		}
+		
+		function base64toPDF(data, subjectTitle) {
+		    var bufferArray = base64ToArrayBuffer(data);
+		    var blobStore = new Blob([bufferArray], { type: "application/pdf" });
+		    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+		        window.navigator.msSaveOrOpenBlob(blobStore);
+		        return;
+		    }
+		    var data = window.URL.createObjectURL(blobStore);
+		    var link = document.createElement('a');
+		    document.body.appendChild(link);
+		    link.href = data;
+		    link.download = subjectTitle.concat(".pdf");
+		    link.click();
+		    window.URL.revokeObjectURL(data);
+		    link.remove();
+		}
+
+		function base64ToArrayBuffer(data) {
+		    var bString = window.atob(data);
+		    var bLength = bString.length;
+		    var bytes = new Uint8Array(bLength);
+		    for (var i = 0; i < bLength; i++) {
+		        var ascii = bString.charCodeAt(i);
+		        bytes[i] = ascii;
+		    }
+		    return bytes;
+		};
+		
+		</script>
+
+    </body>
 </html>

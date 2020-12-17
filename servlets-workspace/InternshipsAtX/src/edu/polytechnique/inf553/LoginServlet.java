@@ -44,7 +44,7 @@ public class LoginServlet extends HttpServlet {
 		String pass = request.getParameter("pass");
 
 		//Informs that a user requested access with parameters
-		System.out.println(this.getClass().getName() + " doPost method called with path " + request.getRequestURI() + " and Email '"+email+"' and password '"+pass+"'");
+		System.out.println(this.getClass().getName() + " doPost method called with path " + request.getRequestURI() + " and Email '"+email);
 
 		String err_message = checkUser(email, pass);
 		if(err_message.equals("None"))
@@ -55,13 +55,13 @@ public class LoginServlet extends HttpServlet {
 			request.setAttribute("name", name_role.get(0));
 			request.setAttribute("role", name_role.get(1));
 			if (role.equals("Admin")) {
-				request.getRequestDispatcher("admin_view.jsp").forward(request, response);
+				request.getRequestDispatcher("./adminview").forward(request, response);
 			}
 			else if (role.equals("Professor")) {
-				request.getRequestDispatcher("professor_view.jsp").forward(request, response);
+				request.getRequestDispatcher("./professorview").forward(request, response);
 			}
 			else if (role.equals("Student")) {
-				request.getRequestDispatcher("student_view.jsp").forward(request, response);
+				response.sendRedirect("./studentview");
 			}
 		}
 		else {

@@ -63,7 +63,7 @@ public class StudentViewServlet extends HttpServlet {
 				while(rs.next()) {
 					String categoryId = rs.getString("id");
 					
-					String query_subjects = "SELECT i.id as id, i.title as title, p.email as email, p.name as name, i.content as content " + 
+					String query_subjects = "SELECT i.id as id, i.title as title, p.email as email, p.name as name " + 
 							"FROM internship i " + 
 							"INNER JOIN internship_category ic ON i.id = ic.internship_id " + 
 							"INNER JOIN categories c ON c.id = ic.category_id " + 
@@ -74,24 +74,7 @@ public class StudentViewServlet extends HttpServlet {
 					List<Subject> subjectsOfCategory = new ArrayList<Subject>();
 					while(rs_subjects.next()) {
 						
-												
-						InputStream inputStream = rs_subjects.getBinaryStream("content");
-		                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		                byte[] buffer = new byte[BUFFER_SIZE];
-		                int bytesRead = -1;
-		                 
-		                while ((bytesRead = inputStream.read(buffer)) != -1) {
-		                    outputStream.write(buffer, 0, bytesRead);                  
-		                }
-		                 
-		                byte[] contentBytes = outputStream.toByteArray();
-		                String encodedContent =  Base64.getEncoder().encodeToString(contentBytes);
-		                
-		                inputStream.close();
-		                outputStream.close();
-			            
-						
-						Subject s = new Subject(rs_subjects.getString("title"), rs_subjects.getString("id"), rs_subjects.getString("email"), rs_subjects.getString("name"), encodedContent);
+						Subject s = new Subject(rs_subjects.getString("title"), rs_subjects.getString("id"), rs_subjects.getString("email"), rs_subjects.getString("name"));
 						subjectsOfCategory.add(s);
 					}
 					subjectsPerCategory.add(new SubjectsPerCategory(programs.get(i).getId().toString(), categoryId, subjectsOfCategory));
@@ -108,12 +91,7 @@ public class StudentViewServlet extends HttpServlet {
 		
 		request.setAttribute("programs", programs);
 		request.setAttribute("subjectsPerCategory", subjectsPerCategory);
-		request.getRequestDispatcher("student_view.jsp").forward(request, response);
+		request.getRequestDispatcher("student_view2.jsp").forward(request, response);
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-
-	}
-	
 }

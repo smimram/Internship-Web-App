@@ -43,10 +43,16 @@
 					<span class="login100-form-title">
 						Internships
 					</span>
-						
-					<div class="container" id="list">
+			
+				<div class="wrap-input100 validate-input m-b-16" data-validate = "Filter on the programs">
+					<select name="programs" id="programs" class="input100">
+				    	<option value="0">All Programs</option>
+					</select>
+				</div>	
+					
+				<div class="container" id="list">
 					  
-					</div>
+				</div>
 					
 					
 					<script>
@@ -70,7 +76,7 @@
 		<c:forEach items="${subjectsPerCategory}" var="categoryAndSubjects">
 			var subjects = [];
 			<c:forEach items="${categoryAndSubjects.getSubjects()}" var="subject">
-			 	subjects.push({title: "${subject.getTitle()}", id: "${subject.getId()}", supervisorEmail: "${subject.getSupervisorEmail()}", supervisorName: "${subject.getSupervisorName()}", encodedContent: "${subject.getContent()}"})
+			 	subjects.push({title: "${subject.getTitle()}", id: "${subject.getId()}", supervisorEmail: "${subject.getSupervisorEmail()}", supervisorName: "${subject.getSupervisorName()}"})
 			</c:forEach>
 			var categoryId = "${categoryAndSubjects.getCategoryId()}";
 			var programId = "${categoryAndSubjects.getProgramId()}";
@@ -84,10 +90,30 @@
 			}
 		</c:forEach>
 		
-		var programList = document.getElementById('list');
+		
 		window.onload = function() {
-			var str = "P=";
+			showAllPrograms();
 			
+			var programSel = document.getElementById("programs");
+			programs_categories.forEach((value, key) => {
+				programSel.options[programSel.options.length] = new Option(program_name_id.get(key), key);
+			});
+			programSel.onchange = function(){
+				var pId = this.value
+				if(pId==="0") {
+					//Print all progams with their categories
+					showAllPrograms();
+				} else {
+					//Print certain program (based on pId)
+					showProgram(pId)
+				}
+			}
+			
+		}
+		
+		function showAllPrograms() {
+			var programList = document.getElementById('list');
+			programList.innerHTML = '';
 			
 			programs_categories.forEach((v, k) => {
 				programList.innerHTML += '<div class="program", id="'+k+'">'; 
@@ -105,35 +131,22 @@
 						'<h2 class="login100-form-btn-V3 p-l-5 p-r-5">' + category.value + '</h2></div>';
 						
 						//New table for each category
-						//programList.innerHTML += '<table class="subjects" id="'+k.concat(category.key)+'pctable" style="width:100%">'; 
 						programList.innerHTML += '<ul class="responsive-table" id="'+k.concat(category.key)+'pctable">';
 						
 						var newRow = document.getElementById(k.concat(category.key).concat("pctable"));
 						
 						
-						//newRow.innerHTML = '<th>Id</th><th>Subject Title</th><th>Supervisor Name</th><th>Supervisor Email</th><th>Subject</th>';
 						newRow.innerHTML += '<li class="table-header"><div class="col col-1"> Id </div><div class="col col-2">Subject Title</div><div class="col col-3">Supervisor Name</div><div class="col col-4">Supervisor Email</div><div class="col col-5">Subject</div></li>';		
 						
 						for(const subject of subjects) {
+							var downloadForm = '<a href="downloadsubject?internshipId='+subject.id+'" target="_blank">Download</a>';
 							var newRowE = document.getElementById(k.concat(category.key).concat("pctable"));
-							if(subject.title==="OOO") {
-								str = subject.encodedContent;
-								//newRowE.innerHTML = '<td>'+subject.id+'</td><td>'+subject.title+'</td><td>'+subject.supervisorName+'</td><td>'+subject.supervisorEmail+'</td><td><input type="button" onClick="base64toPDF(\'' +str+ '\')" value="Dowload"/></td>';
-								
-								newRowE.innerHTML += '<li class="table-row"><div class="col col-1" data-label="Id">' + subject.id + '</div>'+
+							newRowE.innerHTML += '<li class="table-row"><div class="col col-1" data-label="Id">' + subject.id + '</div>'+
 															'<div class="col col-2" data-label="Subject Title">'+subject.title+'</div>'+
 															'<div class="col col-3" data-label="Supervisor Name">'+subject.supervisorName + '</div>'+
 															'<div class="col col-4" data-label="Supervisor Email">'+ subject.supervisorEmail +'</div>'+
-															'<div class="col col-5" data-label="Subject"><input type="button" onClick="base64toPDF(\'' +str+ '\')" value="Download"/></div></li>';
-							
-							
-							
-							} else {
-								newRowE.innerHTML += '<li class="table-row"><div class="col col-1" data-label="Id">' + subject.id + '</div><div class="col col-2" data-label="Subject Title">'+subject.title+'</div><div class="col col-3" data-label="Supervisor Name">'+subject.supervisorName + '</div><div class="col col-4" data-label="Supervisor Email">'+ subject.supervisorEmail +'</div><div class="col col-5" data-label="Subject"><input type="button" onClick="" value="Download"/></div></li>';
-								//newRowE.innerHTML += '<td>'+subject.id+'</td><td>'+subject.title+'</td><td>'+subject.supervisorName+'</td><td>'+subject.supervisorEmail+'</td><td><input type="button" onClick="" value="Dowload"/></td>';
-							}
+															'<div class="col col-5" data-label="Subject">'+downloadForm+'</div></li>';
 						}
-						//programList.innerHTML += '</table>'; 
 						programList.innerHTML += '</ul>'; 
 					}
 					
@@ -143,33 +156,46 @@
 			});
 		}
 		
-		function base64toPDF(data) {
-		    var bufferArray = base64ToArrayBuffer(data);
-		    var blobStore = new Blob([bufferArray], { type: "application/pdf" });
-		    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-		        window.navigator.msSaveOrOpenBlob(blobStore);
-		        return;
-		    }
-		    var data = window.URL.createObjectURL(blobStore);
-		    var link = document.createElement('a');
-		    document.body.appendChild(link);
-		    link.href = data;
-		    link.download = "file.pdf";
-		    link.click();
-		    window.URL.revokeObjectURL(data);
-		    link.remove();
+		function showProgram(pId) {
+			var programList = document.getElementById('list');
+			programList.innerHTML = '<div class="program", id="'+pId+'">'; 
+			programList.innerHTML += '<div class="container-login100-form-btn-V2  p-t-50 p-b-25 p-l-250 p-r-250">'+
+										'<h2 class="login100-form-btn-V2 p-l-5 p-r-5">' + program_name_id.get(pId) + '</h2></div>';
+			
+			
+			for (const category of programs_categories.get(pId)) {
+				
+				var subjects = categories_to_subjects.get(pId).get(category.key);
+				if(subjects.length>0) {
+					
+					programList.innerHTML += '<div class="category", id="'+category.key+'">';					
+					programList.innerHTML += '<div class="container-login100-form-btn-V3  p-t-50 p-b-25 p-r-250">'+
+					'<h2 class="login100-form-btn-V3 p-l-5 p-r-5">' + category.value + '</h2></div>';
+					
+					//New table for each category
+					programList.innerHTML += '<ul class="responsive-table" id="'+pId.concat(category.key)+'pctable">';
+					
+					var newRow = document.getElementById(pId.concat(category.key).concat("pctable"));
+					
+					
+					newRow.innerHTML += '<li class="table-header"><div class="col col-1"> Id </div><div class="col col-2">Subject Title</div><div class="col col-3">Supervisor Name</div><div class="col col-4">Supervisor Email</div><div class="col col-5">Subject</div></li>';		
+					
+					for(const subject of subjects) {
+						var downloadForm = '<a href="downloadsubject?internshipId='+subject.id+'" target="_blank">Download</a>';
+						var newRowE = document.getElementById(pId.concat(category.key).concat("pctable"));
+						newRowE.innerHTML += '<li class="table-row"><div class="col col-1" data-label="Id">' + subject.id + '</div>'+
+														'<div class="col col-2" data-label="Subject Title">'+subject.title+'</div>'+
+														'<div class="col col-3" data-label="Supervisor Name">'+subject.supervisorName + '</div>'+
+														'<div class="col col-4" data-label="Supervisor Email">'+ subject.supervisorEmail +'</div>'+
+														'<div class="col col-5" data-label="Subject">'+downloadForm+'</div></li>';
+					}
+					programList.innerHTML += '</ul>'; 
+				}
+				
+				programList.innerHTML += '</div>';
+			}
+			programList.innerHTML += '</div>';
 		}
-
-		function base64ToArrayBuffer(data) {
-		    var bString = window.atob(data);
-		    var bLength = bString.length;
-		    var bytes = new Uint8Array(bLength);
-		    for (var i = 0; i < bLength; i++) {
-		        var ascii = bString.charCodeAt(i);
-		        bytes[i] = ascii;
-		    }
-		    return bytes;
-		};
 		
 		</script>		
 					

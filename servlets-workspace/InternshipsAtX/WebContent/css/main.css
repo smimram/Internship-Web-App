@@ -247,6 +247,14 @@ iframe {
   z-index: 1;
 }
 
+.wrap-input100-v2 {
+  width: 20%;
+  background-color: #fff;
+  border-radius: 27px;
+  position: relative;
+  z-index: 1;
+}
+
 .input100 {
   font-family: Ubuntu-Bold;
   font-size: 15px;
