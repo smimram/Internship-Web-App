@@ -48,10 +48,11 @@ All those libraries are included in the GitHub repository so installation should
 
 5. Create the postgreSQL database using the tableCreations.SQL file. 
 
-6. Load the project in Eclipse if it's loaded automatically.
+6. Load the project in Eclipse if it's not loaded automatically.
 
 7. Change the dbUtils.java file to make sure that the server connexion credentials are valid.
 
+8. Start the server and enjoy :)
 
 
 
