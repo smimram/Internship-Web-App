@@ -59,7 +59,6 @@ All those libraries are included in the GitHub repository so installation should
 
 ## 
 
-For the server, we have used a Tomcat v9.0 locally hosted. 
 
 The web application in structured in the following hierarchy:
 - Java Servlets under src/edu.polytechnique.inf553 : Each servlet communicates with a JSP page to request and send parameters. Servlets are coded using java and SQL. The database is managed by postgreSQL.
