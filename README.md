@@ -48,17 +48,17 @@ All those libraries are included in the GitHub repository so installation should
 
 5. Create the postgreSQL database using the tableCreations.SQL file. 
 
-6. Load the project in Eclipse if it's loaded automatically.
+6. Load the project in Eclipse if it's not loaded automatically.
 
 7. Change the dbUtils.java file to make sure that the server connexion credentials are valid.
 
+8. Start the server and enjoy :)
 
 
 
 
 ## 
 
-For the server, we have used a Tomcat v9.0 locally hosted. 
 
 The web application in structured in the following hierarchy:
 - Java Servlets under src/edu.polytechnique.inf553 : Each servlet communicates with a JSP page to request and send parameters. Servlets are coded using java and SQL. The database is managed by postgreSQL.
