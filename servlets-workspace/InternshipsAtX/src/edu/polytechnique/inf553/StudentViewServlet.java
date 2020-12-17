@@ -1,15 +1,16 @@
 package edu.polytechnique.inf553;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Base64;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class StudentViewServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static final int BUFFER_SIZE = 16177215;
 
 	/**
 	 * Constructor 
@@ -61,7 +63,7 @@ public class StudentViewServlet extends HttpServlet {
 				while(rs.next()) {
 					String categoryId = rs.getString("id");
 					
-					String query_subjects = "SELECT i.id as id, i.title as title, p.email as email, p.name as name, i.content as content" + 
+					String query_subjects = "SELECT i.id as id, i.title as title, p.email as email, p.name as name, i.content as content " + 
 							"FROM internship i " + 
 							"INNER JOIN internship_category ic ON i.id = ic.internship_id " + 
 							"INNER JOIN categories c ON c.id = ic.category_id " + 
@@ -71,10 +73,28 @@ public class StudentViewServlet extends HttpServlet {
 					
 					List<Subject> subjectsOfCategory = new ArrayList<Subject>();
 					while(rs_subjects.next()) {
-						Subject s = new Subject(rs_subjects.getString("title"), rs_subjects.getString("id"), rs_subjects.getString("email"), rs_subjects.getString("name"), rs_subjects.getBytes("content"));
+						
+												
+						InputStream inputStream = rs_subjects.getBinaryStream("content");
+		                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		                byte[] buffer = new byte[BUFFER_SIZE];
+		                int bytesRead = -1;
+		                 
+		                while ((bytesRead = inputStream.read(buffer)) != -1) {
+		                    outputStream.write(buffer, 0, bytesRead);                  
+		                }
+		                 
+		                byte[] contentBytes = outputStream.toByteArray();
+		                String encodedContent =  Base64.getEncoder().encodeToString(contentBytes);
+		                
+		                inputStream.close();
+		                outputStream.close();
+			            
+						
+						Subject s = new Subject(rs_subjects.getString("title"), rs_subjects.getString("id"), rs_subjects.getString("email"), rs_subjects.getString("name"), encodedContent);
 						subjectsOfCategory.add(s);
 					}
-					subjectsPerCategory.add(new SubjectsPerCategory(categoryId, subjectsOfCategory));
+					subjectsPerCategory.add(new SubjectsPerCategory(programs.get(i).getId().toString(), categoryId, subjectsOfCategory));
 					
 					Category c = new Category(rs.getString("desc"), categoryId);
 					programs.get(i).addCategory(c);
@@ -84,9 +104,7 @@ public class StudentViewServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		//======================== END OF DATA LOADING PART ========================
-		
-		
-		
+
 		
 		request.setAttribute("programs", programs);
 		request.setAttribute("subjectsPerCategory", subjectsPerCategory);

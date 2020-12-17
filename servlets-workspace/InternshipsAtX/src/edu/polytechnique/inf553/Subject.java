@@ -8,33 +8,33 @@ public class Subject {
 	private String id;
 	private String supervisorEmail;
 	private String supervisorName;
-	private byte[] content;
+	private String encodedContent;
 	
-	public Subject(String title, String id, String supervisorEmail, String supervisorName, byte[] content) {
+	public Subject(String title, String id, String supervisorEmail, String supervisorName, String encodedContent) {
 		this.title = title;
 		this.id = id;
 		this.supervisorEmail = supervisorEmail;
 		this.supervisorName = supervisorName;
-		this.content = content;
+		this.encodedContent = encodedContent;
 	}
 	
-	private String getTitle() {
+	public String getTitle() {
 		return title;
 	}
 	
-	private String getId() {
+	public String getId() {
 		return id;
 	}
 	
-	private String getSupervisorEmail() {
+	public String getSupervisorEmail() {
 		return supervisorEmail;
 	}
 	
-	private byte[] getContent() {
-		return content;
+	public String getContent() {
+		return encodedContent;
 	}
 	
-	private String getSupervisorName() {
+	public String getSupervisorName() {
 		return supervisorName;
 	}
 }

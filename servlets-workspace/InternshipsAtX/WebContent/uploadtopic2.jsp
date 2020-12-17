@@ -63,16 +63,6 @@
 						<span class="focus-input100"></span>
 					</div>
 
-					<div class="wrap-input100 validate-input m-b-16" data-validate = "Please enter password">
-						<input class="input100" type="password" name="pass" placeholder="Password">
-						<span class="focus-input100"></span>
-					</div>
-					
-					<div class="wrap-input100 validate-input m-b-16" data-validate = "Please confirm password">
-						<input class="input100" type="password" name="confirmPass" placeholder="Confirm password">
-						<span class="focus-input100"></span>
-					</div>
-
 					<div class="wrap-input100 validate-input m-b-16" data-validate = "Please choose the program">
 						<select name="programs" id="programs" class="input100">
 				    		<option value="0" selected disabled hidden>Select a program</option>
