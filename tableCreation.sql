@@ -89,6 +89,9 @@ insert into person(name, email, creation_date, valid, password) values ('Manoles
 
 insert into person_roles(role_id, person_id) values (5, 1);
 
+insert into person(name, email, creation_date, valid, password) values ('Macron, Emmanuel', 'emmanuel.macron@gouv.fr', current_date, 'true', 'iloveFRANCE');
+
+insert into person_roles(role_id, person_id) values (1, 2);
 
 -- add rows to the database
  
@@ -116,7 +119,5 @@ SELECT setval('person_program_id_seq', (SELECT MAX(id) FROM person_program)+1);
 SELECT setval('program_category_id_seq', (SELECT MAX(id) FROM program_category)+1);
 
 
-insert into person(name, email, creation_date, valid, password) values ('Macron, Emmanuel', 'emmanuel.macron@gouv.fr', current_date, 'true', 'iloveFRANCE');
 
-XXXX = Select id from person where email='emmanuel.macron@gouv.fr';
-insert into person_roles(role_id, person_id) values (1, XXXX);
+--XXXX = Select id from person where email='emmanuel.macron@gouv.fr';
