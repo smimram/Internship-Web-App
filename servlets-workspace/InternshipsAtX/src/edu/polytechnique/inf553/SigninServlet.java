@@ -67,7 +67,7 @@ public class SigninServlet extends HttpServlet {
 				e.printStackTrace();
 			}
 			request.setAttribute("email", email);
-			request.getRequestDispatcher("signin_complete.jsp").forward(request, response);
+			request.getRequestDispatcher("signin_complete2.jsp").forward(request, response);
 		}
 		else
 		{
