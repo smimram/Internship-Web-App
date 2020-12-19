@@ -83,6 +83,7 @@ public class StudentViewServlet extends HttpServlet {
 					programs.get(i).addCategory(c);
 				}
 			}
+			con.close();
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
