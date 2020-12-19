@@ -137,6 +137,7 @@ public class UploadTopicServlet extends HttpServlet {
 					ps7.setInt(2, category_id);
 					ps7.executeUpdate();
 	            }
+				con.close();
 			}
 			catch(SQLException e) {
 				e.printStackTrace();
@@ -180,6 +181,7 @@ public class UploadTopicServlet extends HttpServlet {
 					programs.get(i).addCategory(c);
 				}
 			}
+			con.close();
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
@@ -231,6 +233,7 @@ public class UploadTopicServlet extends HttpServlet {
 			ps.setString(1, email);
 			ResultSet rs = ps.executeQuery();
 			st = rs.next();
+			con.close();
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
@@ -248,6 +251,7 @@ public class UploadTopicServlet extends HttpServlet {
 			ps.setString(1, topicTitle);
 			ResultSet rs = ps.executeQuery();
 			st = rs.next();
+			con.close();
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
