@@ -88,6 +88,7 @@ public class LoginServlet extends HttpServlet {
 			else {
 				err_message = "Username or Password incorrect.";
 			}
+			con.close();
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
