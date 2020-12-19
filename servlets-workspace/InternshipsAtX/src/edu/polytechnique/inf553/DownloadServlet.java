@@ -62,6 +62,7 @@ public class DownloadServlet extends HttpServlet {
                 
                 inputStream.close();
                 outputStream.close();
+		con.close();
                 request.setAttribute("internshipId", internshipId);
                 request.setAttribute("subjectTitle", rs.getString("title"));
                 request.setAttribute("encodedContent", encodedContent);
