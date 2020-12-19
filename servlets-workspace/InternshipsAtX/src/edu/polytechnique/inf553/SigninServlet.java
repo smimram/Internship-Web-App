@@ -62,6 +62,7 @@ public class SigninServlet extends HttpServlet {
 				ps.setString(2, email);
 				ps.setString(3, pass);
 				ps.executeUpdate();
+				con.close();
 			}
 			catch(SQLException e) {
 				e.printStackTrace();
@@ -124,6 +125,7 @@ public class SigninServlet extends HttpServlet {
 					ResultSet rs = ps.executeQuery();
 					rs.next();
 					emailTaken = rs.getInt("count")>0;
+					con.close();
 				}
 				catch(SQLException e) {
 					e.printStackTrace();
