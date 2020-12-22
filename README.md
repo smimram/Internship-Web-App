@@ -40,7 +40,7 @@ All those libraries are included in the GitHub repository so installation should
 1. Clone the project using: 
 `git clone https://github.com/victor-radermecker/Internship-Web-App.git`
 
-2. Set the working directory of Eclipse to the root of the GitHub repository.
+2. Set the working directory of Eclipse to the repository `servlets-workspace`.
 
 3. Set the java development kit to jdk-14 which can be downloaded here: https://www.oracle.com/fr/java/technologies/javase/jdk14-archive-downloads.html
 
