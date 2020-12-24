@@ -32,14 +32,31 @@
 <!--===============================================================================================-->
 </head>
 <body>
-    	Programs: <select name="programs" id="programs">
-		    <option value="0">All Programs</option>
-		  </select>
-		<div id="list">
-			
-		</div>
+	
+	<div class="limiter">
+		<div class="container-login100 background_style">
+			<div class="wrap-login100-V2">
 
-		<script>
+		
+		
+				<form class="login100-form validate-form p-l-55 p-r-55 p-t-178">
+					<span class="login100-form-title">
+						Internships
+					</span>
+			
+				<div class="wrap-input100 validate-input m-b-16" data-validate = "Filter on the programs">
+					<select name="programs" id="programs" class="input100">
+				    	<option value="0">All Programs</option>
+					</select>
+				</div>	
+					
+				<div class="container" id="list">
+					  
+				</div>
+				<h1 class="easter-egg" style="visibility:hidden; font-size:0;">Remi Delacourt was here</h1> <!-- An easter-egg ! -->
+					
+					<script>
+		//Loading the data
 		var programs_categories = new Map();
 		var program_name_id = new Map();
 		var categories_to_subjects = new Map();
@@ -97,25 +114,40 @@
 		function showAllPrograms() {
 			var programList = document.getElementById('list');
 			programList.innerHTML = '';
+			
 			programs_categories.forEach((v, k) => {
-				programList.innerHTML += '<div class="program", id="'+k+'">';
-				programList.innerHTML += '<h2>'+program_name_id.get(k)+'</h2>';
+				programList.innerHTML += '<div class="program", id="'+k+'">'; 
+				programList.innerHTML += '<div class="container-login100-form-btn-V2  p-t-50 p-b-25 p-l-250 p-r-250">'+
+											'<h2 class="login100-form-btn-V2 p-l-5 p-r-5">' + program_name_id.get(k) + '</h2></div>';
+				
+				
 				for (const category of v) {
 					
 					var subjects = categories_to_subjects.get(k).get(category.key);
 					if(subjects.length>0) {
-						programList.innerHTML += '<div class="category", id="'+category.key+'">';
-						programList.innerHTML += '<h4>'+category.value+'</h4>';
-						programList.innerHTML += '<table class="subjects" id="'+k.concat(category.key)+'pctable" style="width:100%">';
 						
-						var newRow = document.getElementById(k.concat(category.key).concat("pctable")).insertRow();
-						newRow.innerHTML = '<th>Id</th><th>Subject Title</th><th>Supervisor Name</th><th>Supervisor Email</th><th>Subject</th>';
+						programList.innerHTML += '<div class="category", id="'+category.key+'">';					
+						programList.innerHTML += '<div class="container-login100-form-btn-V3  p-t-50 p-b-25 p-r-250">'+
+						'<h2 class="login100-form-btn-V3 p-l-5 p-r-5">' + category.value + '</h2></div>';
+						
+						//New table for each category
+						programList.innerHTML += '<ul class="responsive-table" id="'+k.concat(category.key)+'pctable">';
+						
+						var newRow = document.getElementById(k.concat(category.key).concat("pctable"));
+						
+						
+						newRow.innerHTML += '<li class="table-header"><div class="col col-1"> Id </div><div class="col col-2">Subject Title</div><div class="col col-3">Supervisor Name</div><div class="col col-4">Supervisor Email</div><div class="col col-5">Subject</div></li>';		
+						
 						for(const subject of subjects) {
 							var downloadForm = '<a href="downloadsubject?internshipId='+subject.id+'" target="_blank">Download</a>';
-							var newRowE = document.getElementById(k.concat(category.key).concat("pctable")).insertRow();
-							newRowE.innerHTML = '<td>'+subject.id+'</td><td>'+subject.title+'</td><td>'+subject.supervisorName+'</td><td>'+subject.supervisorEmail+'</td><td>'+downloadForm+'</td>';
+							var newRowE = document.getElementById(k.concat(category.key).concat("pctable"));
+							newRowE.innerHTML += '<li class="table-row"><div class="col col-1" data-label="Id">' + subject.id + '</div>'+
+															'<div class="col col-2" data-label="Subject Title">'+subject.title+'</div>'+
+															'<div class="col col-3" data-label="Supervisor Name">'+subject.supervisorName + '</div>'+
+															'<div class="col col-4" data-label="Supervisor Email">'+ subject.supervisorEmail +'</div>'+
+															'<div class="col col-5" data-label="Subject">'+downloadForm+'</div></li>';
 						}
-						programList.innerHTML += '</table>'; 
+						programList.innerHTML += '</ul>'; 
 					}
 					
 					programList.innerHTML += '</div>';
@@ -126,31 +158,59 @@
 		
 		function showProgram(pId) {
 			var programList = document.getElementById('list');
-			programList.innerHTML = '<div class="program", id="'+pId+'">';
-			programList.innerHTML += '<h2>'+program_name_id.get(pId)+'</h2>';
+			programList.innerHTML = '<div class="program", id="'+pId+'">'; 
+			programList.innerHTML += '<div class="container-login100-form-btn-V2  p-t-50 p-b-25 p-l-250 p-r-250">'+
+										'<h2 class="login100-form-btn-V2 p-l-5 p-r-5">' + program_name_id.get(pId) + '</h2></div>';
+			
+			
 			for (const category of programs_categories.get(pId)) {
 				
 				var subjects = categories_to_subjects.get(pId).get(category.key);
 				if(subjects.length>0) {
-					programList.innerHTML += '<div class="category", id="'+category.key+'">';
-					programList.innerHTML += '<h4>'+category.value+'</h4>';
-					programList.innerHTML += '<table class="subjects" id="'+pId.concat(category.key)+'pctable" style="width:100%">';
 					
-					var newRow = document.getElementById(pId.concat(category.key).concat("pctable")).insertRow();
-					newRow.innerHTML = '<th>Id</th><th>Subject Title</th><th>Supervisor Name</th><th>Supervisor Email</th><th>Subject</th>';
+					programList.innerHTML += '<div class="category", id="'+category.key+'">';					
+					programList.innerHTML += '<div class="container-login100-form-btn-V3  p-t-50 p-b-25 p-r-250">'+
+					'<h2 class="login100-form-btn-V3 p-l-5 p-r-5">' + category.value + '</h2></div>';
+					
+					//New table for each category
+					programList.innerHTML += '<ul class="responsive-table" id="'+pId.concat(category.key)+'pctable">';
+					
+					var newRow = document.getElementById(pId.concat(category.key).concat("pctable"));
+					
+					
+					newRow.innerHTML += '<li class="table-header"><div class="col col-1"> Id </div><div class="col col-2">Subject Title</div><div class="col col-3">Supervisor Name</div><div class="col col-4">Supervisor Email</div><div class="col col-5">Subject</div></li>';		
+					
 					for(const subject of subjects) {
 						var downloadForm = '<a href="downloadsubject?internshipId='+subject.id+'" target="_blank">Download</a>';
-						var newRowE = document.getElementById(pId.concat(category.key).concat("pctable")).insertRow();
-						newRowE.innerHTML = '<td>'+subject.id+'</td><td>'+subject.title+'</td><td>'+subject.supervisorName+'</td><td>'+subject.supervisorEmail+'</td><td>'+downloadForm+'</td>';
+						var newRowE = document.getElementById(pId.concat(category.key).concat("pctable"));
+						newRowE.innerHTML += '<li class="table-row"><div class="col col-1" data-label="Id">' + subject.id + '</div>'+
+														'<div class="col col-2" data-label="Subject Title">'+subject.title+'</div>'+
+														'<div class="col col-3" data-label="Supervisor Name">'+subject.supervisorName + '</div>'+
+														'<div class="col col-4" data-label="Supervisor Email">'+ subject.supervisorEmail +'</div>'+
+														'<div class="col col-5" data-label="Subject">'+downloadForm+'</div></li>';
 					}
-					programList.innerHTML += '</table>'; 
+					programList.innerHTML += '</ul>'; 
 				}
+				
 				programList.innerHTML += '</div>';
 			}
 			programList.innerHTML += '</div>';
-		}		
+		}
 		
-		</script>
+		</script>		
+					
+					
+					
+					
+				</form>
+				
+			</div>
+		</div>
+	</div>
+	
+	
+							
+	
 
-    </body>
+</body>
 </html>
