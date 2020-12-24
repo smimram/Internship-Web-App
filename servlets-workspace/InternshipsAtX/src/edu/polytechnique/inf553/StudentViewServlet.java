@@ -70,10 +70,8 @@ public class StudentViewServlet extends HttpServlet {
 							"INNER JOIN person p on i.supervisor_id = p.id " + 
 							"WHERE program_id ="+programs.get(i).getId()+" AND c.id = "+categoryId+" AND i.is_taken=false;";
 					ResultSet rs_subjects = con.prepareStatement(query_subjects).executeQuery();
-					
 					List<Subject> subjectsOfCategory = new ArrayList<Subject>();
 					while(rs_subjects.next()) {
-						
 						Subject s = new Subject(rs_subjects.getString("title"), rs_subjects.getString("id"), rs_subjects.getString("email"), rs_subjects.getString("name"));
 						subjectsOfCategory.add(s);
 					}
