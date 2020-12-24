@@ -41,7 +41,7 @@
 					</div>			
 				</form>
 
-				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="signin">	
+				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="sign-in">	
 					<div class="container-login100-form-btn p-t-25 p-b-25">
 						<button type="submit" class="login100-form-btn">
 							Register now
@@ -49,7 +49,7 @@
 					</div>			
 				</form>
 				
-				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="uploadtopic">	
+				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="upload-topic">	
 					<div class="container-login100-form-btn p-t-25 p-b-50">
 						<button type="submit" class="login100-form-btn">
 							Upload A Topic

@@ -54,26 +54,26 @@
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>SigninPage</servlet-name>
-    <url-pattern>/signin</url-pattern>
+    <url-pattern>/sign-in</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>UploadTopicPage</servlet-name>
-    <url-pattern>/uploadtopic</url-pattern>
+    <url-pattern>/upload-topic</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>UserManagementPage</servlet-name>
-    <url-pattern>/user_management</url-pattern>
+    <url-pattern>/user-management</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>AdminViewPage</servlet-name>
-    <url-pattern>/adminview</url-pattern>
+    <url-pattern>/admin-view</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>StudentViewPage</servlet-name>
-    <url-pattern>/studentview</url-pattern>
+    <url-pattern>/student-view</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>DownloadTopicPage</servlet-name>
-    <url-pattern>/downloadsubject</url-pattern>
+    <url-pattern>/download-subject</url-pattern>
   </servlet-mapping>
 </web-app>

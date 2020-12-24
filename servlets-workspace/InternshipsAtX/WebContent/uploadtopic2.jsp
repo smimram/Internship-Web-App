@@ -33,7 +33,7 @@
 	<div class="limiter">
 		<div class="container-login100 background_style">
 			<div class="wrap-login100">
-				<form class="login100-form validate-form p-l-55 p-r-55 p-t-178 p-b-10" method="post" action="uploadtopic" enctype="multipart/form-data">
+				<form class="login100-form validate-form p-l-55 p-r-55 p-t-178 p-b-10" method="post" action="upload-topic" enctype="multipart/form-data">
 					<span class="login100-form-title">
 						Upload a topic now
 					</span>
