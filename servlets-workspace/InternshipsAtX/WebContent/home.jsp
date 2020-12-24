@@ -13,10 +13,10 @@
     <form method="get" action="login">
     	<button type="submit">Log In</button>
     </form>
-    <form method="get" action="signin">
+    <form method="get" action="sign-in">
     	<button type="submit">Sign In</button>
     </form>
-    <form method="get" action="uploadtopic">
+    <form method="get" action="upload-topic">
     	<button type="submit">Upload A Topic</button>
     </form>
     </body>

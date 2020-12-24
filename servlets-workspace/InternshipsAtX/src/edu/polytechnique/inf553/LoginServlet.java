@@ -55,14 +55,14 @@ public class LoginServlet extends HttpServlet {
 			request.setAttribute("name", name_role.get(0));
 			request.setAttribute("role", name_role.get(1));
 			if (role.equals("Admin")) {
-				response.sendRedirect("./adminview");
+				response.sendRedirect("./admin-view");
 			}
 			else if (role.equals("Professor")) {
-				request.getRequestDispatcher("./professorview").forward(request, response);
+				request.getRequestDispatcher("./professor-view").forward(request, response);
 			}
 			else if (role.equals("Student")) {
 				System.out.println("Login as student");
-				response.sendRedirect("./studentview");
+				response.sendRedirect("./student-view");
 			}
 		}
 		else {

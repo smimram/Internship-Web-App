@@ -41,7 +41,7 @@
 				</form>
 
 					
-				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="user_management">	
+				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="user-management">	
 					<div class="container-login100-form-btn p-t-50 p-b-25">
 						<button type="submit" class="login100-form-btn">
 							User management
@@ -50,7 +50,7 @@
 				</form>
 				
 
-				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="login">	
+				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="program-management">	
 					<div class="container-login100-form-btn p-t-25 p-b-25">
 						<button type="submit" class="login100-form-btn">
 							Program management
@@ -58,15 +58,15 @@
 					</div>			
 				</form>
 
-				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="signin">	
+				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="subject-management">	
 					<div class="container-login100-form-btn p-t-25 p-b-25">
 						<button type="submit" class="login100-form-btn">
-							Subject Management	
+							Subject management	
 						</button>
 					</div>			
 				</form>
 				
-				<form class="login100-form validate-form  p-l-55 p-r-55" method="get" action="uploadtopic">	
+				<form class="login100-form validate-form  p-l-55 p-r-55" method="get" action="subject-attribution">	
 					<div class="container-login100-form-btn p-t-25 p-b-50">
 						<button type="submit" class="login100-form-btn">
 							Subject attribution
