@@ -90,7 +90,7 @@ public class StudentViewServlet extends HttpServlet {
 		
 		request.setAttribute("programs", programs);
 		request.setAttribute("subjectsPerCategory", subjectsPerCategory);
-		request.getRequestDispatcher("student_view2.jsp").forward(request, response);
+		request.getRequestDispatcher("student_view.jsp").forward(request, response);
 	}
 
 }

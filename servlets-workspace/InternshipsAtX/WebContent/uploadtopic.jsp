@@ -1,34 +1,100 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>    
 <!DOCTYPE html>
-<html>
-    <head>
-     	<meta charset="UTF-8" />
-    	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Upload A Topic</title>
-        <!-- css -->
-    	<link rel="stylesheet" href="uploadtopicstyle.css" />
-    </head>
-    <body>
-		<div class='bg-light' style='width: 200px; height: 200px; position: absolute; left:50%; top:50%;  margin:-100px 0 0 -100px; padding-top: 40px; padding-left: 10px;'>
-    	<form method="post" action="upload-topic" enctype="multipart/form-data">
-    	First Name:<br/><input type="text" name="firstName" value="${firstName}"/><br>
-    	Last Name:<br/><input type="text" name="lastName" value="${lastName}"/><br>
-    	Email:<br/><input type="text" name="email" value="${email}"/><br/>
-    	Topic Title:<input type="text" name="topicTitle" value="${topicTitle}"/><br/>
-    	Programs: <select name="programs" id="programs">
-		    <option value="0" selected disabled hidden>--Select a program--</option>
-		  </select>
-		Categories: <select name="categories" id="categories">
-		    <option value="-1" selected disabled hidden>--Select a program first--</option>
-		  </select>
-		Upload file: <input type="file" name="uploadFile" accept="application/pdf" />
-		  <br><br>
-    	<input type="submit" value="Upload">
-    	</form>
-    	<p>${err_message}</p>
-    	</div>
+<html lang="en">
+<head>
+	<title>Upload Topic</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->	
+	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="css/util.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+<!--===============================================================================================-->
+</head>
+<body>
+	
+	<div class="limiter">
+		<div class="container-login100 background_style">
+			<div class="wrap-login100">
+				<form class="login100-form validate-form p-l-55 p-r-55 p-t-178 p-b-10" method="post" action="upload-topic" enctype="multipart/form-data">
+					<span class="login100-form-title">
+						Upload a topic now
+					</span>
+
+	
+					<div class="text-red flex-col-c p-b-10">
+						<p class="text-red" style="color:red;">${err_message}</p>
+					</div>
+					
+					<div class="wrap-input100 validate-input m-b-16" data-validate="Please enter your email">
+						<input class="input100" type="text" name="firstName" placeholder="First Name" value="${firstName}">
+						<span class="focus-input100"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input m-b-16" data-validate="Please enter your email">
+						<input class="input100" type="text" name="lastName" placeholder="Last Name" value="${lastName}">
+						<span class="focus-input100"></span>
+					</div>
+					
+					<div class="wrap-input100 validate-input m-b-16" data-validate="Please enter your email">
+						<input class="input100" type="text" name="email" placeholder="Email" value="${email}">
+						<span class="focus-input100"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input m-b-16" data-validate="Please confirm your email">
+						<input class="input100" type="text" name="topicTitle" placeholder="Topic title" value="${topicTitle}">
+						<span class="focus-input100"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input m-b-16" data-validate = "Please choose the program">
+						<select name="programs" id="programs" class="input100">
+				    		<option value="0" selected disabled hidden>Select a program</option>
+						</select>
+					</div>
+
+					<div class="wrap-input100 validate-input m-b-25" data-validate = "Please choose the category">
+					<select name="categories" id="categories" class="input100">
+		    			<option value="-1" selected disabled hidden> Select a category </option>
+		  			</select>
+					</div>
+
+					<div class="wrap-input100 validate-input m-b-5 class="input100">
+					<p class="text-black"> <b> Please upload the PDf describing the internship offer. </b> </p>
+					<input type="file" name="uploadFile" accept="application/pdf"/>
+		  			<br><br>
+					</div>
+
+
+					<div class="container-login100-form-btn p-t-5">
+						<button type="submit" class="login100-form-btn">
+							Upload topic
+						</button>
+					</div>
+				
+				</form>
+				<h1 class="easter-egg" style="visibility:hidden; font-size:0;">Remi Delacourt was here</h1> <!-- An easter-egg ! -->
+			</div>
+		</div>
+	</div>
+	
+	
 		
 		<script>
 		var data = new Map();
@@ -62,5 +128,6 @@
 		</script>
 
     	
-    </body>
+
+</body>
 </html>
