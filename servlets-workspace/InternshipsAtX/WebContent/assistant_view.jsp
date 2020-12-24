@@ -8,5 +8,14 @@
 </head>
 <body>
 
+	<nav class="navbar navbar-dark bg-dark">
+	  <div class="container-fluid justify-content-start">
+	    <a class="navbar-brand" href="/InternshipsAtX/home">
+	      <img src="images/logo.png" style="max-height: 35px;">
+	    </a>
+	    <a class="navbar-brand" href="/InternshipsAtX/home" style="font-family: sans-serif;">Internship Management</a>
+	  </div>
+	</nav>
+
 </body>
 </html>
