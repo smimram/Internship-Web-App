@@ -15,7 +15,7 @@ public class Subject {
 		this.supervisorEmail = supervisorEmail;
 		this.supervisorName = supervisorName;
 	}
-	
+
 	public String getTitle() {
 		return title;
 	}
