@@ -60,7 +60,7 @@
 					<div class="text-red flex-col-c p-t-100 p-b-40">
 						<p class="text-red" style="color:red;">${err_message}</p>
 					</div>
-					
+					<h1 class="easter-egg" style="visibility:hidden; font-size:0;">Come De Germay was here</h1> <!-- An easter-egg ! -->
 				</form>
 				
 			</div>
