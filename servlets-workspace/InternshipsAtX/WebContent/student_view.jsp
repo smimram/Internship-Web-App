@@ -32,6 +32,30 @@
 <!--===============================================================================================-->
 </head>
 <body>
+
+<%
+String userName = (String)session.getAttribute("userName");
+String role = (String)session.getAttribute("role");
+%>
+
+	<nav class="navbar navbar-dark bg-dark">
+	  <div class="container-fluid justify-content-start">
+	    <a class="navbar-brand" href="/InternshipsAtX/student-view">
+	      <img src="images/logo.png" style="max-height: 35px;">
+	      Internship Management
+	    </a>
+	    <div class="ml-auto d-flex">
+	        <div class="nav-item dropdown">
+	          <a class="text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+	            ${role}: ${userName}
+	          </a>
+	          <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="right:0;left:auto;">
+	            <li><a class="dropdown-item" href="./LogoutServlet">Log out</a></li>
+	          </ul>
+	        </div>
+	    </div>
+	  </div>
+	</nav>
 	
 	<div class="limiter">
 		<div class="container-login100 background_style">
@@ -211,6 +235,7 @@
 	
 							
 	
-
+<!-- Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 </body>
 </html>

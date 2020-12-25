@@ -13,7 +13,6 @@
     <servlet-name>HomePage</servlet-name>
     <servlet-class>edu.polytechnique.inf553.HomeServlet</servlet-class>
   </servlet>
-  
   <servlet>
     <servlet-name>LoginPage</servlet-name>
     <servlet-class>edu.polytechnique.inf553.LoginServlet</servlet-class>
@@ -42,8 +41,6 @@
     <servlet-name>DownloadTopicPage</servlet-name>
     <servlet-class>edu.polytechnique.inf553.DownloadServlet</servlet-class>
   </servlet>
-  
-  
   <servlet-mapping>
     <servlet-name>HomePage</servlet-name>
     <url-pattern>/home</url-pattern>

@@ -15,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -52,8 +53,15 @@ public class LoginServlet extends HttpServlet {
 
 			List<String> name_role = getNameRole(email);
 			String role = name_role.get(1);
-			request.setAttribute("name", name_role.get(0));
-			request.setAttribute("role", name_role.get(1));
+			String userName = name_role.get(0);
+			System.out.println("user " + userName + " log in as " + role);
+			
+			// create a new session
+			HttpSession session = request.getSession();
+			session.setAttribute("userName", userName);
+			session.setAttribute("role", role);
+			
+			
 			if (role.equals("Admin")) {
 				response.sendRedirect("./admin-view");
 			}
@@ -61,7 +69,6 @@ public class LoginServlet extends HttpServlet {
 				request.getRequestDispatcher("./professor-view").forward(request, response);
 			}
 			else if (role.equals("Student")) {
-				System.out.println("Login as student");
 				response.sendRedirect("./student-view");
 			}
 		}

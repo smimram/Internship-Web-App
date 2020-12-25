@@ -30,6 +30,15 @@
 <!--===============================================================================================-->
 </head>
 <body>
+
+	<nav class="navbar navbar-dark bg-dark">
+	  <div class="container-fluid justify-content-start">
+	    <a class="navbar-brand" href="/InternshipsAtX/home">
+	      <img src="images/logo.png" style="max-height: 35px;">
+	      Internship Management
+	    </a>
+	  </div>
+	</nav>
 	
 	<div class="limiter">
 		<div class="container-login100 background_style">
