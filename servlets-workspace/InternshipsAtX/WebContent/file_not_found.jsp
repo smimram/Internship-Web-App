@@ -35,8 +35,8 @@
 	  <div class="container-fluid justify-content-start">
 	    <a class="navbar-brand" href="/InternshipsAtX/home">
 	      <img src="images/logo.png" style="max-height: 35px;">
+	      Internship Management
 	    </a>
-	    <a class="navbar-brand" href="/InternshipsAtX/home" style="font-family: sans-serif;">Internship Management</a>
 	  </div>
 	</nav>
 	
