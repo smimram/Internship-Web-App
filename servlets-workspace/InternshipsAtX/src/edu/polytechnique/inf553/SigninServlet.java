@@ -53,15 +53,28 @@ public class SigninServlet extends HttpServlet {
 		if(errorMessage.equals("None"))
 		{
 			try {
-				String query = "insert into person(name, email, creation_date, valid, password)\n" + 
-						" values (?, ?, '"+java.time.LocalDate.now().toString()+"', false, ?) ;";
 				//creating connection with the database
 				Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
+				
+				//add the user into 'person' table
+				String query = "insert into person(name, email, creation_date, valid, password)\n" + 
+						" values (?, ?, '"+java.time.LocalDate.now().toString()+"', false, ?) ;";
 				PreparedStatement ps = con.prepareStatement(query);
 				ps.setString(1, concatName);
 				ps.setString(2, email);
 				ps.setString(3, pass);
 				ps.executeUpdate();
+				
+				//add a person_role relation into 'person_roles' table
+				String query2 = "insert into person_roles(role_id ,person_id)\n" + 
+						"SELECT rt.id, p.id\n" + 
+						"FROM role_type rt, person p\n" + 
+						"WHERE rt.role = ? AND p.email = ?";
+				PreparedStatement ps2 = con.prepareStatement(query2);
+				ps2.setString(1, role);
+				ps2.setString(2, email);
+				ps2.executeUpdate();
+				
 				con.close();
 			}
 			catch(SQLException e) {

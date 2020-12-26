@@ -7,11 +7,13 @@ public class Program {
 
 	private String name;
 	private String id;
+	private String year;
 	private List<Category> categories;
 	
-	public Program(String id, String name) {
+	public Program(String id, String name, String year) {
 		this.name = name;
 		this.id = id;
+		this.year = year;
 		this.categories = new ArrayList<Category>();
 	}
 	
@@ -21,6 +23,10 @@ public class Program {
 	
 	public String getName() {
 		return name;
+	}
+	
+	public String getYear() {
+		return year;
 	}
 	
 	public void addCategory(Category category) {

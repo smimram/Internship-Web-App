@@ -66,11 +66,15 @@ public class StudentViewServlet extends HttpServlet {
 						request.setAttribute("userSubject", userSubject);
 					}
 					
-					String query1 = "SELECT DISTINCT id, name FROM program;";
+					//show only programs associated to the user
+					String query1 = "SELECT DISTINCT p.id as id, p.name as name, p.year as year\n" + 
+							"FROM program p inner join person_program pp on p.id = pp.program_id\n" + 
+							"WHERE pp.person_id = ?";
 					PreparedStatement ps1 = con.prepareStatement(query1);
+					ps1.setInt(1, userId);
 					ResultSet rs1 = ps1.executeQuery();
 					while(rs1.next()) {
-						Program p = new Program(rs1.getString("id"), rs1.getString("name"));
+						Program p = new Program(rs1.getString("id"), rs1.getString("name"), rs1.getString("year"));
 						programs.add(p);
 					}
 					

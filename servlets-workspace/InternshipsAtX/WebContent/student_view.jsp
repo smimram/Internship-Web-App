@@ -144,7 +144,7 @@ String role = user.getRole();
 			   		 value: "${category.getName()}"
 			   	 });
 		    </c:forEach>
-		    program_name_id.set("${program.getId()}", "${program.getName()}");
+		    program_name_id.set("${program.getId()}", "${program.getName()}" + " - " + "${program.getYear()}");
 		    programs_categories.set("${program.getId()}", program_categories);
 		</c:forEach>
 		
