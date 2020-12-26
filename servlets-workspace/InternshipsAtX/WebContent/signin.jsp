@@ -81,10 +81,8 @@
 			
 						<select name="role" class="input100" >
 	        				<option value="" selected disabled hidden>--Please choose a role--</option>
-	        				<option value="Admin">Admin</option>
 	        				<option value="Assistant">Assistant</option>
 	        				<option value="Professor">Professor</option>
-	        				<option value="Proponent">Proponent</option>
 	        				<option value="Student">Student</option>
 	        			</select>
 					</div>
