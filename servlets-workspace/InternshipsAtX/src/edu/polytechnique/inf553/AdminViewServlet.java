@@ -23,8 +23,9 @@ public class AdminViewServlet extends HttpServlet {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		// session management
 		HttpSession session = request.getSession(false);
-		if(session!=null && session.getAttribute("role")!= null) {
-			String role = (String)session.getAttribute("role");
+		if(session!=null && session.getAttribute("user")!= null) {
+			Person user = (Person)session.getAttribute("user");
+			String role = user.getRole();
 			if (role.equals("Admin")) {
 				request.getRequestDispatcher("admin_view.jsp").forward(request, response);
 			}else {

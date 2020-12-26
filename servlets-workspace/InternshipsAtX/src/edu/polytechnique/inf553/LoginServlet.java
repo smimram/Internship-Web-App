@@ -51,15 +51,14 @@ public class LoginServlet extends HttpServlet {
 		if(err_message.equals("None"))
 		{
 
-			List<String> name_role = getNameRole(email);
-			String role = name_role.get(1);
-			String userName = name_role.get(0);
+			Person user = getUserInfo(email);
+			String role = user.getRole();
+			String userName = user.getName();
 			System.out.println("user " + userName + " log in as " + role);
 			
 			// create a new session
 			HttpSession session = request.getSession();
-			session.setAttribute("userName", userName);
-			session.setAttribute("role", role);
+			session.setAttribute("user", user);
 			
 			
 			if (role.equals("Admin")) {
@@ -104,23 +103,25 @@ public class LoginServlet extends HttpServlet {
 		return err_message;      
 	}
 	
-	private List<String> getNameRole(String email) {
-		List<String> output = new ArrayList<String>();
+	private Person getUserInfo(String email) {
+		Person user = null;
 		try {
-			String query = "select name, role from person p inner join person_roles pr on pr.person_id = p.id inner join role_type rt on rt.id = pr.role_id where email = ?;";
+			String query = "select name, role, person_id from person p inner join person_roles pr on pr.person_id = p.id inner join role_type rt on rt.id = pr.role_id where email = ?;";
 			//creating connection with the database
 			Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
 			PreparedStatement ps = con.prepareStatement(query);
 			ps.setString(1, email);
 			ResultSet rs = ps.executeQuery();
-			rs.next();
-			output.add(rs.getString("name"));
-			output.add(rs.getString("role"));
+			
+			if (rs.next()) {
+				user = new Person(rs.getString("name"), rs.getInt("person_id"), rs.getString("role"));
+			}
+
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
 		}
-		return output ;      
+		return user;  
 	}
 
 

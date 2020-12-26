@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+    pageEncoding="ISO-8859-1"
+    import="edu.polytechnique.inf553.Person"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,8 +31,9 @@
 <body>
 
 <%
-String userName = (String)session.getAttribute("userName");
-String role = (String)session.getAttribute("role");
+Person user = (Person)session.getAttribute("user");
+String name = user.getName();
+String role = user.getRole();
 %>
 
 	<nav class="navbar navbar-dark bg-dark">
@@ -43,7 +45,7 @@ String role = (String)session.getAttribute("role");
 	    <div class="ml-auto d-flex">
 	        <div class="nav-item dropdown">
 	          <a class="text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-	            ${role}: ${userName}
+	            <%=role %>: <%=name %>
 	          </a>
 	          <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="right:0;left:auto;">
 	            <li><a class="dropdown-item" href="./user-management">User management</a></li>
