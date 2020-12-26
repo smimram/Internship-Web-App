@@ -46,11 +46,25 @@ public class StudentViewServlet extends HttpServlet {
 				
 				List<Program> programs = new ArrayList<Program>();
 				List<SubjectsPerCategory> subjectsPerCategory = new ArrayList<SubjectsPerCategory>();
-				
+				int userId = user.getId();
 				
 				//======================== DATA LOADING PART ========================
 				try {
 					Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
+					
+					// check if the user already has an internship
+					String query0 = "select i.id as id, i.title as title, p.email as email, p.name as name\n" + 
+							"FROM internship i\n" + 
+							"INNER JOIN person p on i.supervisor_id = p.id\n" + 
+							"INNER JOIN person_internship pi on i.id = pi.internship_id\n" + 
+							"WHERE pi.person_id = ?";
+					PreparedStatement ps0 = con.prepareStatement(query0);
+					ps0.setInt(1, userId);
+					ResultSet rs0 = ps0.executeQuery();
+					while(rs0.next()) {
+						Subject userSubject = new Subject(rs0.getString("title"), rs0.getString("id"), rs0.getString("email"), rs0.getString("name"));
+						request.setAttribute("userSubject", userSubject);
+					}
 					
 					String query1 = "SELECT DISTINCT id, name FROM program;";
 					PreparedStatement ps1 = con.prepareStatement(query1);

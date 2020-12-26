@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"
-    import="edu.polytechnique.inf553.Person"%>
+    import="edu.polytechnique.inf553.Person"
+    import="edu.polytechnique.inf553.Subject"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <!DOCTYPE html>
@@ -60,16 +61,62 @@ String role = user.getRole();
 	</nav>
 	
 	
+	<%
+		// show user internship if he has
+		Subject userSubject = (Subject)request.getAttribute("userSubject");
+		if(userSubject!=null){
+			String userSubjectId = userSubject.getId();
+			String userSubjectTitle = userSubject.getTitle();
+			String userSubjectSupervisorName = userSubject.getSupervisorName();
+			String userSubjectSupervisorEmail = userSubject.getSupervisorEmail();
+			%>
+			<div class="limiter">
+				<div class="container-login100 background_style" style="min-height:auto;">
+					<div class="wrap-login100-V2">
+		
+		
+							<form class="login100-form validate-form p-l-55 p-r-55 p-t-178">
+								<span class="login100-form-title">
+									<h1>My Internship</h1>
+								</span>
+								<div class="text-center">
+									<ul class="responsive-table">
+										<li class="table-header">
+											<div class="col col-1"> Id </div>
+											<div class="col col-2">Subject Title</div>
+											<div class="col col-3">Supervisor Name</div>
+											<div class="col col-4">Supervisor Email</div>
+											<div class="col col-5">Subject</div>
+										</li>
+										<li class="table-row">
+											<div class="col col-1" data-label="Id"><%=userSubjectId %></div>
+											<div class="col col-2" data-label="Subject Title"><%=userSubjectTitle %></div>
+											<div class="col col-3" data-label="Supervisor Name"><%=userSubjectSupervisorName %></div>
+											<div class="col col-4" data-label="Supervisor Email"><%=userSubjectSupervisorEmail %></div>
+											<div class="col col-5" data-label="Subject">
+												<a href="downloadsubject?internshipId=<%=userSubjectId %>" target="_blank">Download</a>
+											</div>
+										</li>
+									</ul>
+								</div>
+							</form>
+						
+					</div>
+				</div>
+			</div>			
+			<%
+		}
+	%>
+	
+
 	
 	<div class="limiter">
 		<div class="container-login100 background_style">
 			<div class="wrap-login100-V2">
 
-		
-		
 				<form class="login100-form validate-form p-l-55 p-r-55 p-t-178">
 					<span class="login100-form-title">
-						Internships
+						Available Internships
 					</span>
 			
 				<div class="wrap-input100 validate-input m-b-16" data-validate = "Filter on the programs">
