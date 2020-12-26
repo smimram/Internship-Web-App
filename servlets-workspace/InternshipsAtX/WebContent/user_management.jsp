@@ -66,16 +66,28 @@ String role = user.getRole();
 				<form class="login100-form validate-form p-l-55 p-r-55 p-t-178">
 					<span class="login100-form-title">
 						<h1> User Management </h1>
-						<h1 class="subtitle"> EN COURS DE CONSTRUCTION </h1>
 					</span>
-					<span class="login100-form-subtitle">
-					</span>
-
-					<div class="container-login100-form-btn p-t-40">
-	
+					
+					<div class="text-center">
+						<ul class="responsive-table">
+							<li class="table-header">
+								<div class="col col-1"> Id </div>
+								<div class="col col-2">Subject Title</div>
+								<div class="col col-3">Supervisor Name</div>
+								<div class="col col-4">Supervisor Email</div>
+								<div class="col col-5">Subject</div>
+							</li>
+							<li class="table-row">
+								<div class="col col-1" data-label="Id">userSubjectId</div>
+								<div class="col col-2" data-label="Subject Title">userSubjectTitle %></div>
+								<div class="col col-3" data-label="Supervisor Name">userSubjectSupervisorName %></div>
+								<div class="col col-4" data-label="Supervisor Email">userSubjectSupervisorEmail %></div>
+								<div class="col col-5" data-label="Subject">
+									<a href="downloadsubject?internshipId=" target="_blank">Download</a>
+								</div>
+							</li>
+						</ul>
 					</div>
-					
-					
 				</form>
 				
 			</div>

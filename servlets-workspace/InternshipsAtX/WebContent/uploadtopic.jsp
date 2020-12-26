@@ -116,7 +116,7 @@
 		   		 value: "${category.getName()}"
 		   	 });
 		    </c:forEach>
-		    program_name_id.set("${program.getId()}", "${program.getName()}");
+		    program_name_id.set("${program.getId()}", "${program.getName()}" + " - " + "${program.getYear()}");
 		    data.set("${program.getId()}", program_dict);
 		</c:forEach>
 		
