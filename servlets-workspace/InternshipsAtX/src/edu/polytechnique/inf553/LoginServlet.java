@@ -106,7 +106,7 @@ public class LoginServlet extends HttpServlet {
 	private Person getUserInfo(String email) {
 		Person user = null;
 		try {
-			String query = "select name, role, person_id from person p inner join person_roles pr on pr.person_id = p.id inner join role_type rt on rt.id = pr.role_id where email = ?;";
+			String query = "select name, role, person_id, valid from person p inner join person_roles pr on pr.person_id = p.id inner join role_type rt on rt.id = pr.role_id where email = ?;";
 			//creating connection with the database
 			Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
 			PreparedStatement ps = con.prepareStatement(query);
@@ -114,7 +114,7 @@ public class LoginServlet extends HttpServlet {
 			ResultSet rs = ps.executeQuery();
 			
 			if (rs.next()) {
-				user = new Person(rs.getString("name"), rs.getInt("person_id"), rs.getString("role"));
+				user = new Person(rs.getString("name"), rs.getInt("person_id"), rs.getString("role"), rs.getBoolean("valid"));
 			}
 
 		}
