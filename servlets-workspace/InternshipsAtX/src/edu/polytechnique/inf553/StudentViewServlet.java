@@ -39,8 +39,9 @@ public class StudentViewServlet extends HttpServlet {
 		
 		// session management
 		HttpSession session = request.getSession(false);
-		if(session!=null && session.getAttribute("role")!= null) {
-			String role = (String)session.getAttribute("role");
+		if(session!=null && session.getAttribute("user")!= null) {
+			Person user = (Person)session.getAttribute("user");
+			String role = user.getRole();
 			if (role.equals("Student")) {
 				
 				List<Program> programs = new ArrayList<Program>();
