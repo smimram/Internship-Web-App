@@ -162,11 +162,11 @@ public class UploadTopicServlet extends HttpServlet {
 		try {
 			Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
 			
-			String query1 = "SELECT DISTINCT id, name FROM program;";
+			String query1 = "SELECT DISTINCT id, name, year FROM program;";
 			PreparedStatement ps1 = con.prepareStatement(query1);
 			ResultSet rs1 = ps1.executeQuery();
 			while(rs1.next()) {
-				Program p = new Program(rs1.getString("id"), rs1.getString("name"));
+				Program p = new Program(rs1.getString("id"), rs1.getString("name"), rs1.getString("year"));
 				programs.add(p);
 			}
 			
