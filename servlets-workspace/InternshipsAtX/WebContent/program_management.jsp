@@ -37,19 +37,12 @@
 <style>
 	.responsive-table li.table-row{
 		margin-bottom:10px;
-		padding: 15px 30px;
-	}
-	.program-title-container{
-		position:relative;
-	}
-	.program-delete{
-		position:absolute;
-		right:55px;
-		top:5px;
+		padding: 10px 30px;
 	}
 </style>
 <body>
 
+	<!-- navigation bar -->
 	<nav class="navbar navbar-dark bg-dark">
 	  <div class="container-fluid justify-content-start">
 	    <a class="navbar-brand" href= ${user.role == "Admin" ? '/InternshipsAtX/admin-view' : '/InternshipsAtX/professor-view'}>
@@ -76,6 +69,7 @@
 	  </div>
 	</nav>
 	
+	<!-- program management -->
 	<div class="limiter">
 		<div class="container-login100 background_style" style="min-height:30vh;">
 			<div class="wrap-login100-V2">
@@ -84,56 +78,75 @@
 						<h1> Program Management </h1>
 					</span>
 					
-					<div class="program-container mb-4">
-						<div class="container-login100-form-btn-V2  p-t-25 p-b-25">
-							<div class="program-title-container">
-								<h2 class="login100-form-btn-V2 p-l-5 p-r-5 w-25 m-auto">
-								map - 2020 
-								</h2>
-								<button type="button" class="btn btn-primary program-delete">Delete Program</button>
-							</div>
-						</div>
+					<!-- show all the programs -->
+					<c:forEach items="${programs}" var="program">
+						<div class="program-container mt-4">
 						
-						<div class="program-category text-center">
-							<ul class="responsive-table">
-								<li class="table-header">
-									<div class="col col-2"> Id </div>
-									<div class="col col-7">Cetegory Description</div>
-									<div class="col col-3">Action</div>
-								</li>
-								<li class="table-row">
-									<div class="col col-2" data-label="Id">1</div>
-									<div class="col col-7" data-label="Cetegory Description">userSubjectTitle %></div>
-									<div class="col col-3" data-label="Action">
-										<button type="button" class="btn btn-primary">Delete</button>
+							<!-- program title-->
+							<div class="container-login100-form-btn-V2">
+								<div class="program-title-container d-flex justify-content-between">
+									<h2 class="login100-form-btn-V2 p-l-5 p-r-5 d-inline-flex ml-3" style="width:30%">
+									${program.id}. ${program.name} - ${program.year} 
+									</h2>
+									<div class="program-actions">
+										<button type="button" class="btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#program-${program.id}" aria-expanded="false" aria-controls="#program-${program.id}">
+										Show associated categories
+										</button>
+										<button type="button" class="btn btn-primary ml-3">Delete Program</button>
 									</div>
-								</li>
-								<li class="table-row">
-									<div class="col col-2" data-label="Id">NEW</div>
-									<div class="col col-7">
-										<form class="add-category text-center">
-										    <select  class="form-control w-75 d-inline" id="addCategoryName">
-										      <option>1</option>
-										      <option>2</option>
-										      <option>3</option>
-										      <option>4</option>
-										      <option>5</option>
-										    </select>
-										</form>
-									</div>
-									<div class="col col-3" data-label="Id"><button type="submit" class="btn btn-primary">Add category</button></div>
-								</li>
-							</ul>
-						</div>					
-					</div>
-					
+								</div>
+							</div>
+
+							<!-- categories associated with the program -->
+							<div class="program-category text-center collapse mt-4" id="program-${program.id}">
+								<ul class="responsive-table">
+									<li class="table-header">
+										<div class="col col-2"> Id </div>
+										<div class="col col-7">Cetegory Description</div>
+										<div class="col col-3">Action</div>
+									</li>
+									
+									<!-- details of each category -->
+									<c:forEach items="${program.categories}" var="category">
+										<li class="table-row">
+											<div class="col col-2" data-label="Id">${category.id}</div>
+											<div class="col col-7" data-label="Cetegory Description">${category.name}</div>
+											<div class="col col-3" data-label="Action">
+												<button type="button" class="btn btn-secondary btn-sm">Delete</button>
+											</div>
+										</li>
+									</c:forEach>
+
+									<!-- form to associate a new category to the program -->
+									<li class="table-row" style="background-color:lightblue;">
+										<div class="col col-2" data-label="Id">NEW</div>
+										<div class="col col-7">
+											<form class="add-category text-center">
+											    <select  class="form-control w-75 d-inline" id="addCategoryName">
+											    	<c:forEach items="${categories}" var="category">
+											    		<!-- only show the categories not associated to the program -->
+											    		<c:if test = "${!program.categories.contains(category)}">
+											    			<option>${category.name}</option>
+											    		</c:if>
+											    	</c:forEach>
+											    </select>
+											</form>
+										</div>
+										<div class="col col-3" data-label="Id"><button type="submit" class="btn btn-secondary btn-sm">Add category</button></div>
+									</li>
+								</ul>
+							</div>					
+						</div>
+						<hr>
+					</c:forEach>
+
+					<!-- form to create new program -->
 					<form class="create-program m-t-10 text-center">
 						<div class="container-login100-form-btn-V2  p-t-25 p-b-25">
 							<h2 class="login100-form-btn-V2 p-l-5 p-r-5 w-25 m-auto">
 							New Program
 							</h2>
 						</div>
-
 						<div class="form-group">
 							<label for="programName" class="mr-3">Program name: </label>
 						    <input type="text" placeholder="Please enter the name of the program" class="form-control w-50 d-inline" id="programName">
@@ -142,7 +155,6 @@
 						  	<label for="programYear" class="mr-3">Program year: </label>
 						    <input type="text" placeholder="Please enter the year of the program" class="form-control w-50 d-inline" id="programYear">							
 						</div>
-
 					  <button type="submit" class="btn btn-primary">Create new program</button>
 					</form>
 					
@@ -152,6 +164,7 @@
 		</div>
 	</div>
 	
+	<!-- Category list -->
 	<div class="limiter">
 		<div class="container-login100 background_style" style="min-height:60vh;">
 			<div class="wrap-login100-V2">
@@ -160,46 +173,42 @@
 						<h1> Category list </h1>
 					</span>
 
+					<!-- show all the categories -->
 					<div class="text-center">
 						<ul class="responsive-table">
 							<li class="table-header">
 								<div class="col col-2"> Id </div>
-								<div class="col col-8">Cetegory Description</div>
-								<div class="col col-2">Action</div>
+								<div class="col col-7">Cetegory Description</div>
+								<div class="col col-3">Action</div>
 							</li>
-							<li class="table-row">
-								<div class="col col-2" data-label="Id">1</div>
-								<div class="col col-8" data-label="Cetegory Description">userSubjectTitle %></div>
-								<div class="col col-2" data-label="Action">
-									<button type="button" class="btn btn-primary">Delete</button>
-								</div>
-							</li>
-							<li class="table-row">
-								<div class="col col-2" data-label="Id">1</div>
-								<div class="col col-8" data-label="Cetegory Description">userSubjectTitle %></div>
-								<div class="col col-2" data-label="Action">Delete</div>
-							</li>
+							
+							<c:forEach items="${categories}" var="category">
+								<li class="table-row">
+									<div class="col col-2" data-label="Id">${category.id}</div>
+									<div class="col col-7" data-label="Cetegory Description">${category.name}</div>
+									<div class="col col-3" data-label="Action">
+										<button type="button" class="btn btn-secondary btn-sm">Delete</button>
+									</div>
+								</li>
+							</c:forEach>
 						</ul>
 					</div>
 					
+					<!-- form to create new category -->
 					<form class="create-category m-t-10 text-center">
 						<div class="container-login100-form-btn-V2  p-t-25 p-b-25">
 							<h2 class="login100-form-btn-V2 p-l-5 p-r-5 w-25 m-auto">
 							New Category
 							</h2>
 						</div>
-
 						<div class="form-group">
 							<label for="categoryName" class="mr-3">Category name: </label>
 						    <input type="text" placeholder="Please enter the name of the category" class="form-control w-50 d-inline" id="categoryName">
 						</div>
-
 					  <button type="submit" class="btn btn-primary">Create new category</button>
 					</form>
 					
-					
 				</div>
-				
 			</div>
 		</div>
 	</div>

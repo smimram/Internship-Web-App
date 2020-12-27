@@ -40,56 +40,58 @@ public class ProgramManagementServlet extends HttpServlet {
 			Person user = (Person)session.getAttribute("user");
 			String role = user.getRole();
 			if (role.equals("Admin") || role.equals("Professor")) {
-//				List<Person> persons = new ArrayList<Person>();
-//				List<Program> programs = new ArrayList<Program>();
-//				
-//				//======================== DATA LOADING PART ========================
-//				try {
-//					Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
-//					
-//					// get user list
-//					String query0 = "SELECT p.id as id, p.name as name, rt.role as role, p.valid as valid\n" + 
-//							"FROM person p inner join person_roles pr on p.id = pr.person_id\n" + 
-//							"inner join role_type rt on pr.role_id = rt.id\n" + 
-//							"WHERE rt.role != 'Proponent'\n" + 
-//							"ORDER BY p.id";
-//					PreparedStatement ps0 = con.prepareStatement(query0);
-//					ResultSet rs0 = ps0.executeQuery();
-//					while(rs0.next()) {
-//						Person p = new Person(rs0.getString("name"), rs0.getInt("id"), rs0.getString("role"), rs0.getBoolean("valid"));
-//						persons.add(p);
-//					}
-//					
-//					// get program list for each user
-//					for(int i = 0; i < persons.size(); i++) {
-//						String query1 = "SELECT DISTINCT program_id, name, year\n" + 
-//								"FROM program p inner join person_program pp on p.id = pp.program_id\n" + 
-//								"WHERE pp.person_id = ?";
-//						PreparedStatement ps1 = con.prepareStatement(query1);
-//						ps1.setInt(1, persons.get(i).getId());
-//						ResultSet rs1 = ps1.executeQuery();
-//						while(rs1.next()) {
-//							Program pr = new Program(rs1.getString("program_id"), rs1.getString("name"), rs1.getString("year"));
-//							persons.get(i).addProgram(pr);
-//						}
-//					}
-//					
-//					// get all program list
-//					String query2 = "SELECT DISTINCT id, name, year FROM program;";
-//					PreparedStatement ps2 = con.prepareStatement(query2);
-//					ResultSet rs2 = ps2.executeQuery();
-//					while(rs2.next()) {
-//						Program p = new Program(rs2.getString("id"), rs2.getString("name"), rs2.getString("year"));
-//						programs.add(p);
-//					}
-//					
-//					con.close();
-//				} catch(SQLException e) {
-//					e.printStackTrace();
-//				}
-//				
-//				request.setAttribute("persons", persons);
-//				request.setAttribute("programs", programs);
+				List<Program> programs = new ArrayList<Program>();
+				List<Category> categories = new ArrayList<Category>();
+				
+				
+				//======================== DATA LOADING PART ========================
+				try {
+					Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
+
+					//get all the categories
+					String query0 = "SELECT * FROM categories ORDER BY id";
+					PreparedStatement ps0 = con.prepareStatement(query0);
+					ResultSet rs0 = ps0.executeQuery();
+					while(rs0.next()) {
+						Category c = new Category(rs0.getString("description"), rs0.getString("id"));
+						categories.add(c);
+					}
+					
+					
+					//get all the programs
+					String query1 = "SELECT DISTINCT id, name, year \n" + 
+							"FROM program ORDER BY id";
+					PreparedStatement ps1 = con.prepareStatement(query1);
+					ResultSet rs1 = ps1.executeQuery();
+					while(rs1.next()) {
+						Program p = new Program(rs1.getString("id"), rs1.getString("name"), rs1.getString("year"));
+						programs.add(p);
+					}
+					
+					// get associated categories for each program
+					for(int i=0; i<programs.size(); ++i) {
+						String query = "SELECT DISTINCT c.description AS desc, c.id as id \n" + 
+								"FROM categories c\n" + 
+								"INNER JOIN program_category pc ON pc.cat_id = c.id\n" + 
+								"WHERE pc.program_id ="+programs.get(i).getId()+"\n" + 
+								"ORDER BY c.id;";
+						ResultSet rs = con.prepareStatement(query).executeQuery();
+						
+						while(rs.next()) {
+							String categoryId = rs.getString("id");
+							Category c = new Category(rs.getString("desc"), categoryId);
+							programs.get(i).addCategory(c);
+						}
+					}
+					
+					con.close();
+				} catch(SQLException e) {
+					e.printStackTrace();
+				}
+				//======================== END OF DATA LOADING PART ========================
+				
+				request.setAttribute("programs", programs);
+				request.setAttribute("categories", categories);
 				request.getRequestDispatcher("program_management.jsp").forward(request, response);
 			}else {
 				// the user is not admin, redirect to the error page
