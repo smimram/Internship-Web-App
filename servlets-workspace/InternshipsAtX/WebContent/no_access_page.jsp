@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+    pageEncoding="ISO-8859-1"
+    import="edu.polytechnique.inf553.Person"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <!DOCTYPE html>
@@ -38,13 +39,14 @@
 	      Internship Management
 	    </a>
 	    <%
-			if(session!=null && session.getAttribute("role")!= null) {
-				String role = (String)session.getAttribute("role");
-				String userName = (String)session.getAttribute("userName");
+			if(session!=null && session.getAttribute("user")!= null) {
+				Person user = (Person)session.getAttribute("user");
+				String name = user.getName();
+				String role = user.getRole();
 				%><div class="ml-auto d-flex">
 				        <div class="nav-item dropdown">
 				          <a class="text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-				            ${role}: ${userName}
+				           <%=role %>: <%=name %>
 				          </a>
 				          <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="right:0;left:auto;">
 				          <%

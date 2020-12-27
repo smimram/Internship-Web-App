@@ -34,6 +34,10 @@
     <servlet-class>edu.polytechnique.inf553.UserManagementServlet</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>ProgramManagementPage</servlet-name>
+    <servlet-class>edu.polytechnique.inf553.ProgramManagementServlet</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>StudentViewPage</servlet-name>
     <servlet-class>edu.polytechnique.inf553.StudentViewServlet</servlet-class>
   </servlet>
@@ -60,6 +64,10 @@
   <servlet-mapping>
     <servlet-name>UserManagementPage</servlet-name>
     <url-pattern>/user-management</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ProgramManagementPage</servlet-name>
+    <url-pattern>/program-management</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>AdminViewPage</servlet-name>

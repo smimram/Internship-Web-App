@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+    pageEncoding="ISO-8859-1"
+    import="edu.polytechnique.inf553.Person"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +11,7 @@
 <!--===============================================================================================-->	
 	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
 <!--===============================================================================================-->
@@ -18,43 +20,185 @@
 	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
 <!--===============================================================================================-->	
 	<link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="css/util.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<link rel="stylesheet" type="text/css" href="css/table.css">
 <!--===============================================================================================-->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+<!--===============================================================================================-->
+
 </head>
+<style>
+	.responsive-table li.table-row{
+		margin-bottom:10px;
+		padding: 15px 30px;
+	}
+	.program-title-container{
+		position:relative;
+	}
+	.program-delete{
+		position:absolute;
+		right:55px;
+		top:5px;
+	}
+</style>
 <body>
 
 	<nav class="navbar navbar-dark bg-dark">
 	  <div class="container-fluid justify-content-start">
-	    <a class="navbar-brand" href="/InternshipsAtX/home">
+	    <a class="navbar-brand" href= ${user.role == "Admin" ? '/InternshipsAtX/admin-view' : '/InternshipsAtX/professor-view'}>
 	      <img src="images/logo.png" style="max-height: 35px;">
+	      Internship Management
 	    </a>
-	    <a class="navbar-brand" href="/InternshipsAtX/home" style="font-family: sans-serif;">Internship Management</a>
+	    <div class="ml-auto d-flex">
+	        <div class="nav-item dropdown">
+	          <a class="text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+	            ${user.role}: ${user.name}
+	          </a>
+	          <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="right:0;left:auto;">
+	            <li><a class="dropdown-item" href="./user-management">User management</a></li>
+	            <li><a class="dropdown-item" href="./program-management">Program management</a></li>
+	            <li><a class="dropdown-item" href="./subject-management">Subject management</a></li>
+	            <c:if test = "${user.role == 'Admin'}">
+	            	<li><a class="dropdown-item" href="./subject-attribution">Subject attribution</a></li>
+	            </c:if>
+	            <li><hr class="dropdown-divider"></li>
+	            <li><a class="dropdown-item" href="./LogoutServlet">Log out</a></li>
+	          </ul>
+	        </div>
+	    </div>
 	  </div>
 	</nav>
 	
 	<div class="limiter">
-		<div class="container-login100 background_style">
+		<div class="container-login100 background_style" style="min-height:30vh;">
 			<div class="wrap-login100-V2">
-				<form class="login100-form validate-form p-l-55 p-r-55 p-t-178">
+				<div class="login100-form validate-form p-l-55 p-r-55 p-t-140 p-b-40">
 					<span class="login100-form-title">
 						<h1> Program Management </h1>
-						<h1 class="subtitle"> EN COURS DE CONSTRUCTION </h1>
 					</span>
-					<span class="login100-form-subtitle">
-					</span>
-
-					<div class="container-login100-form-btn p-t-40">
-	
+					
+					<div class="program-container mb-4">
+						<div class="container-login100-form-btn-V2  p-t-25 p-b-25">
+							<div class="program-title-container">
+								<h2 class="login100-form-btn-V2 p-l-5 p-r-5 w-25 m-auto">
+								map - 2020 
+								</h2>
+								<button type="button" class="btn btn-primary program-delete">Delete Program</button>
+							</div>
+						</div>
+						
+						<div class="program-category text-center">
+							<ul class="responsive-table">
+								<li class="table-header">
+									<div class="col col-2"> Id </div>
+									<div class="col col-7">Cetegory Description</div>
+									<div class="col col-3">Action</div>
+								</li>
+								<li class="table-row">
+									<div class="col col-2" data-label="Id">1</div>
+									<div class="col col-7" data-label="Cetegory Description">userSubjectTitle %></div>
+									<div class="col col-3" data-label="Action">
+										<button type="button" class="btn btn-primary">Delete</button>
+									</div>
+								</li>
+								<li class="table-row">
+									<div class="col col-2" data-label="Id">NEW</div>
+									<div class="col col-7">
+										<form class="add-category text-center">
+										    <select  class="form-control w-75 d-inline" id="addCategoryName">
+										      <option>1</option>
+										      <option>2</option>
+										      <option>3</option>
+										      <option>4</option>
+										      <option>5</option>
+										    </select>
+										</form>
+									</div>
+									<div class="col col-3" data-label="Id"><button type="submit" class="btn btn-primary">Add category</button></div>
+								</li>
+							</ul>
+						</div>					
 					</div>
 					
+					<form class="create-program m-t-10 text-center">
+						<div class="container-login100-form-btn-V2  p-t-25 p-b-25">
+							<h2 class="login100-form-btn-V2 p-l-5 p-r-5 w-25 m-auto">
+							New Program
+							</h2>
+						</div>
+
+						<div class="form-group">
+							<label for="programName" class="mr-3">Program name: </label>
+						    <input type="text" placeholder="Please enter the name of the program" class="form-control w-50 d-inline" id="programName">
+						</div>
+						<div class="form-group">
+						  	<label for="programYear" class="mr-3">Program year: </label>
+						    <input type="text" placeholder="Please enter the year of the program" class="form-control w-50 d-inline" id="programYear">							
+						</div>
+
+					  <button type="submit" class="btn btn-primary">Create new program</button>
+					</form>
 					
-				</form>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	
+	<div class="limiter">
+		<div class="container-login100 background_style" style="min-height:60vh;">
+			<div class="wrap-login100-V2">
+				<div class="login100-form validate-form p-l-55 p-r-55 p-t-178 p-b-40">
+					<span class="login100-form-title">
+						<h1> Category list </h1>
+					</span>
+
+					<div class="text-center">
+						<ul class="responsive-table">
+							<li class="table-header">
+								<div class="col col-2"> Id </div>
+								<div class="col col-8">Cetegory Description</div>
+								<div class="col col-2">Action</div>
+							</li>
+							<li class="table-row">
+								<div class="col col-2" data-label="Id">1</div>
+								<div class="col col-8" data-label="Cetegory Description">userSubjectTitle %></div>
+								<div class="col col-2" data-label="Action">
+									<button type="button" class="btn btn-primary">Delete</button>
+								</div>
+							</li>
+							<li class="table-row">
+								<div class="col col-2" data-label="Id">1</div>
+								<div class="col col-8" data-label="Cetegory Description">userSubjectTitle %></div>
+								<div class="col col-2" data-label="Action">Delete</div>
+							</li>
+						</ul>
+					</div>
+					
+					<form class="create-category m-t-10 text-center">
+						<div class="container-login100-form-btn-V2  p-t-25 p-b-25">
+							<h2 class="login100-form-btn-V2 p-l-5 p-r-5 w-25 m-auto">
+							New Category
+							</h2>
+						</div>
+
+						<div class="form-group">
+							<label for="categoryName" class="mr-3">Category name: </label>
+						    <input type="text" placeholder="Please enter the name of the category" class="form-control w-50 d-inline" id="categoryName">
+						</div>
+
+					  <button type="submit" class="btn btn-primary">Create new category</button>
+					</form>
+					
+					
+				</div>
 				
 			</div>
 		</div>
