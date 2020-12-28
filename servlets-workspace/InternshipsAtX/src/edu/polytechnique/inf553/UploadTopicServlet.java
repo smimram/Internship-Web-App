@@ -76,7 +76,7 @@ public class UploadTopicServlet extends HttpServlet {
 					String defaultPass = "12345678";
 					String concatName = lastName+", "+firstName;
 					String query1 = "insert into person(name, email, creation_date, valid, password)" + 
-							" values (?, ?, '"+java.time.LocalDate.now().toString()+"', true, ?) ;";
+							" values (?, ?, '"+java.time.LocalDate.now().toString()+"', true, crypt(?, gen_salt('bf'))) ;";
 					PreparedStatement ps1 = con.prepareStatement(query1);
 					ps1.setString(1, concatName);
 					ps1.setString(2, email);

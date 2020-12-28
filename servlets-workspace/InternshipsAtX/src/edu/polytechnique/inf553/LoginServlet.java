@@ -80,7 +80,7 @@ public class LoginServlet extends HttpServlet {
 	private String checkUser(String email, String password) {
 		String err_message = "None";
 		try {
-			String query = "select * from person where email=? and password=?;";
+			String query = "select * from person where email=? and password=crypt(?, password);";
 			//creating connection with the database
 			Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
 			PreparedStatement ps = con.prepareStatement(query);

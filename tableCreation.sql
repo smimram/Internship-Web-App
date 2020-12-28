@@ -1,5 +1,7 @@
 -- Creation of all the tables
  
+CREATE EXTENSION pgcrypto;
+
 create table program(
    id serial primary key,
    name varchar(10) not null,
@@ -86,11 +88,11 @@ insert into role_type(role) values ('Professor');
 insert into role_type(role) values ('Proponent');
 insert into role_type(role) values ('Admin');
  
-insert into person(name, email, creation_date, valid, password) values ('Manolescu, Ioana', 'ioana.manolescu@inria.fr', current_date, 'true', 'iloveDBMS');
+insert into person(name, email, creation_date, valid, password) values ('Manolescu, Ioana', 'ioana.manolescu@inria.fr', current_date, 'true', crypt('iloveDBMS', gen_salt('bf')));
 
 insert into person_roles(role_id, person_id) values (5, 1);
 
-insert into person(name, email, creation_date, valid, password) values ('Macron, Emmanuel', 'emmanuel.macron@gouv.fr', current_date, 'true', 'iloveFRANCE');
+insert into person(name, email, creation_date, valid, password) values ('Macron, Emmanuel', 'emmanuel.macron@gouv.fr', current_date, 'true', crypt('iloveFRANCE', gen_salt('bf')));
 SELECT setval('person_id_seq', (SELECT MAX(id) FROM person)+1);
 insert into person_roles(role_id, person_id) values (3, 2);
 

@@ -58,7 +58,7 @@ public class SigninServlet extends HttpServlet {
 				
 				//add the user into 'person' table
 				String query = "insert into person(name, email, creation_date, valid, password)\n" + 
-						" values (?, ?, '"+java.time.LocalDate.now().toString()+"', false, ?) ;";
+						" values (?, ?, '"+java.time.LocalDate.now().toString()+"', false, crypt(?, gen_salt('bf'))) ;";
 				PreparedStatement ps = con.prepareStatement(query);
 				ps.setString(1, concatName);
 				ps.setString(2, email);
