@@ -30,8 +30,7 @@
 	<link rel="stylesheet" type="text/css" href="css/table.css">
 <!--===============================================================================================-->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 <!--===============================================================================================-->
@@ -44,17 +43,19 @@
 .select2-container .select2-selection--multiple .select2-selection__rendered{
 	display:block;
 }
-.responsive-table .selection li{
-	margin:0px;
+.select2-container--default .select2-selection--multiple{
+	position:relative;
+}
+.select2-container .select2-search--inline {
+	position:absolute;
+	left:0;
+	top:0
+}
+.select2-container--default .select2-selection--multiple .select2-selection__rendered li{
+	margin: 5px 0px 0px 5px;
 }
 </style>
 <body>
-
-<%
-Person user = (Person)session.getAttribute("user");
-String name = user.getName();
-String role = user.getRole();
-%>
 
 	<nav class="navbar navbar-dark bg-dark">
 	  <div class="container-fluid justify-content-start">
@@ -65,7 +66,7 @@ String role = user.getRole();
 	    <div class="ml-auto d-flex">
 	        <div class="nav-item dropdown">
 	          <a class="text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-	            <%=role %>: <%=name %>
+	            ${user.role}: ${user.name}
 	          </a>
 	          <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="right:0;left:auto;">
 	            <li><a class="dropdown-item" href="./user-management">User management</a></li>

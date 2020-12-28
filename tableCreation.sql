@@ -3,12 +3,13 @@
 create table program(
    id serial primary key,
    name varchar(10) not null,
-   year smallint not null
+   year smallint not null,
+   UNIQUE(name, year)
 );
  
 create table categories(
    id serial primary key,
-   description varchar not null
+   description varchar not null UNIQUE
 );
  
 create table person(

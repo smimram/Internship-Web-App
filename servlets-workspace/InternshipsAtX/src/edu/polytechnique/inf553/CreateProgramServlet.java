@@ -13,14 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-/**
- * Servlet implementation class UpdateUserProgramServlet
- */
-@WebServlet("/UpdateUserProgramServlet")
-public class UpdateUserProgramServlet extends HttpServlet {
+@WebServlet("/CreateProgramServlet")
+public class CreateProgramServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
-    public UpdateUserProgramServlet() {
+       
+    public CreateProgramServlet() {
         super();
 		try {
 			Class.forName("org.postgresql.Driver");
@@ -29,7 +26,6 @@ public class UpdateUserProgramServlet extends HttpServlet {
 		}
     }
 
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println(this.getClass().getName() + " doGet method called with path " + request.getRequestURI() + " and parameters " + request.getQueryString());
 		// session management
@@ -37,38 +33,26 @@ public class UpdateUserProgramServlet extends HttpServlet {
 		if(session!=null && session.getAttribute("user")!= null) {
 			Person user = (Person)session.getAttribute("user");
 			String role = user.getRole();
-			if (role.equals("Admin")) {
-				Boolean add = Boolean.parseBoolean(request.getParameter("select"));
-				int pid = Integer.parseInt(request.getParameter("pid"));
-				int programid = Integer.parseInt(request.getParameter("programid"));
+			if (role.equals("Admin") || role.equals("Professor" )) {
+				String name = request.getParameter("name");
+				int year = Integer.parseInt(request.getParameter("year"));
 				
 				try {
 					Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
-					String query = null;
-					// update user program, set isolation level SERIALIZABLE
-					if (add) {
-						// add program
-						query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-								"insert into person_program(program_id, person_id)\r\n" + 
-								"values (?,?);\r\n" + 
-								"COMMIT TRANSACTION;";
-					}else {
-						// delete program
-						query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-								"DELETE FROM person_program\r\n" + 
-								"  WHERE program_id = ? AND person_id = ?;\r\n" + 
-								"COMMIT TRANSACTION;";
-					}
+					String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
+							"insert into program(name, year)\r\n" + 
+							"values (?,?);\r\n" + 
+							"COMMIT TRANSACTION;";;
 					PreparedStatement ps = con.prepareStatement(query);
-					ps.setInt(1, programid);
-					ps.setInt(2, pid);
+					ps.setString(1, name);
+					ps.setInt(2, year);
 					ps.executeUpdate();
 					
 					con.close();
 					
 				} catch(SQLException e) {
 					e.printStackTrace();
-					// query errors
+					// db error
 					response.sendError(HttpServletResponse.SC_FORBIDDEN);
 				}
 				

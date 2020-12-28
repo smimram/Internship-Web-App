@@ -20,4 +20,13 @@ public class Category {
 	public String getName() {
 		return name;
 	}
+	
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Category) {
+        	Category cat= (Category) obj;
+            return this.id.equals(cat.id);
+        }
+        return false;
+    }
 }
