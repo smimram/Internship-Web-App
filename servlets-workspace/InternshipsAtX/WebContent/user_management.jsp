@@ -48,7 +48,7 @@
 }
 .select2-container .select2-search--inline {
 	position:absolute;
-	left:0;
+	right:0;
 	top:0
 }
 .select2-container--default .select2-selection--multiple .select2-selection__rendered li{
@@ -123,7 +123,7 @@
 									<div class="col col-2" data-label="Validate">
 										<!-- update the valid status of a user -->
 										<!-- need to select at least one program before validate a user -->
-										<select class="custom-select" ${person.programSize() == 0 ? 'disabled' : ''} onchange="updateUserValid(${person.id}, this);">
+										<select id="select-valid-${person.id}" class="custom-select" ${person.programSize() == 0 ? 'disabled' : ''} onchange="updateUserValid(${person.id}, this);">
 										  <option value="true" ${person.valid ? 'selected' : ''}>Valid</option>
 										  <option value="false" ${person.valid ? '' : 'selected'}>Invalid</option>
 										</select>
@@ -141,8 +141,6 @@
 	</div>
 	
 <script>
-
-
 $(document).ready(function() {
 	
 	<c:forEach items="${persons}" var="person">
@@ -161,8 +159,7 @@ $(document).ready(function() {
 		$('#mul-select-' + "${person.id}").on('select2:select', function (e) {
 		    var programid = e.params.data.id;
 		    var pid = ${person.id}
-		    updateUserProgram(pid, programid, true)
-		    
+		    updateUserProgram(pid, programid, true)		    
 		});
 		
 		// listen for the unselect event
@@ -170,14 +167,11 @@ $(document).ready(function() {
 		    var programid = e.params.data.id;
 		    var pid = ${person.id}
 		    updateUserProgram(pid, programid, false)
-		    
 		});
 		
 	</c:forEach>
 	
 });
-
-
 function updateUserProgram(pid, programid, select){
     $.ajax({
         type : "GET",
@@ -185,6 +179,10 @@ function updateUserProgram(pid, programid, select){
         data : "pid=" + pid + "&programid=" + programid + "&select=" + select,
         success : function(data) {
         	console.log("update user " + pid + ", program " + programid + " select " + select)
+        	if(select){
+    		    // if the validate option was disabled(no program selected), remove it
+    		    $('#select-valid-' + pid).attr("disabled",false);
+        	}
         },
         error: function(res){
         	alert("Failed to update user program");
@@ -192,8 +190,6 @@ function updateUserProgram(pid, programid, select){
         }
     });
 }
-
-
 function updateUserRole(pid, sel){
 	var rid = sel.value;
     $.ajax({
@@ -209,7 +205,6 @@ function updateUserRole(pid, sel){
         }
     });
 }
-
 function updateUserValid(pid, sel){
 	var valid = sel.value;
     $.ajax({
