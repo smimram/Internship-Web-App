@@ -30,12 +30,6 @@
 </head>
 <body>
 
-<%
-Person user = (Person)session.getAttribute("user");
-String name = user.getName();
-String role = user.getRole();
-%>
-
 	<nav class="navbar navbar-dark bg-dark">
 	  <div class="container-fluid justify-content-start">
 	    <a class="navbar-brand" href="/InternshipsAtX/admin-view">
@@ -45,7 +39,7 @@ String role = user.getRole();
 	    <div class="ml-auto d-flex">
 	        <div class="nav-item dropdown">
 	          <a class="text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-	            <%=role %>: <%=name %>
+	            ${user.role}: ${user.name}
 	          </a>
 	          <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="right:0;left:auto;">
 	            <li><a class="dropdown-item" href="./user-management">User management</a></li>
@@ -66,7 +60,7 @@ String role = user.getRole();
 				
 				<form class="login100-form validate-form p-l-55 p-r-55 p-t-178">
 					<span class="login100-form-title">
-						<h1>Welcome ${userName} ! </h1>
+						<h1>Welcome ${user.name} ! </h1>
 					</span>
 				</form>
 
