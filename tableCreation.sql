@@ -28,7 +28,7 @@ create table internship(
    title varchar not null,
    creation_date date not null,
    content bytea not null,
-   supervisor_id int, foreign key (supervisor_id) references person(id),
+   supervisor_id int, foreign key (supervisor_id) references person(id) on delete cascade,
    scientific_validated boolean not null,
    administr_validated boolean not null,
    is_taken boolean not null,
@@ -49,7 +49,7 @@ create table role_type(
 create table person_roles(
    id serial primary key,
    role_id int, foreign key (role_id) references role_type(id),
-   person_id int, foreign key (person_id) references person(id)
+   person_id int, foreign key (person_id) references person(id) on delete cascade
 );
  
 create table error(
@@ -58,19 +58,19 @@ create table error(
    time timestamp not null,
    method_raised varchar(128) not null,
    description text,
-   person_id int, foreign key (person_id) references person(id)
+   person_id int, foreign key (person_id) references person(id) on delete cascade
 );
  
 create table person_internship(
    id serial primary key,
    internship_id int, foreign key (internship_id) references internship(id),
-   person_id int unique, foreign key (person_id) references person(id)
+   person_id int unique, foreign key (person_id) references person(id) on delete cascade
 );
  
 create table person_program(
    id serial primary key,
    program_id int, foreign key (program_id) references program(id),
-   person_id int, foreign key (person_id) references person(id)
+   person_id int, foreign key (person_id) references person(id) on delete cascade
 );
  
 create table program_category(
