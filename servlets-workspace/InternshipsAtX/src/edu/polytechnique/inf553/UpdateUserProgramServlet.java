@@ -22,11 +22,6 @@ public class UpdateUserProgramServlet extends HttpServlet {
 
     public UpdateUserProgramServlet() {
         super();
-		try {
-			Class.forName("org.postgresql.Driver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
     }
 
 
@@ -41,9 +36,12 @@ public class UpdateUserProgramServlet extends HttpServlet {
 				Boolean add = Boolean.parseBoolean(request.getParameter("select"));
 				int pid = Integer.parseInt(request.getParameter("pid"));
 				int programid = Integer.parseInt(request.getParameter("programid"));
-				
+				Connection con = null;
 				try {
-					Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
+					con = DbUtils.getInstance().getConnection();
+					if (con == null) {
+						response.sendError(HttpServletResponse.SC_FORBIDDEN);
+					}
 					String query = null;
 					// update user program, set isolation level SERIALIZABLE
 					if (add) {
@@ -63,13 +61,14 @@ public class UpdateUserProgramServlet extends HttpServlet {
 					ps.setInt(1, programid);
 					ps.setInt(2, pid);
 					ps.executeUpdate();
-					
-					con.close();
+
 					
 				} catch(SQLException e) {
 					e.printStackTrace();
 					// query errors
 					response.sendError(HttpServletResponse.SC_FORBIDDEN);
+				} finally {
+					DbUtils.getInstance().releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );

@@ -25,11 +25,6 @@ public class ProgramManagementServlet extends HttpServlet {
 
     public ProgramManagementServlet() {
         super();
-		try {
-			Class.forName("org.postgresql.Driver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
     }
 
 
@@ -45,8 +40,12 @@ public class ProgramManagementServlet extends HttpServlet {
 				
 				
 				//======================== DATA LOADING PART ========================
+				Connection con = null;
 				try {
-					Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
+					con = DbUtils.getInstance().getConnection();
+					if (con == null) {
+						response.sendError(HttpServletResponse.SC_FORBIDDEN);
+					}
 
 					//get all the categories
 					String query0 = "SELECT * FROM categories ORDER BY id";
@@ -84,9 +83,10 @@ public class ProgramManagementServlet extends HttpServlet {
 						}
 					}
 					
-					con.close();
 				} catch(SQLException e) {
 					e.printStackTrace();
+				} finally {
+					DbUtils.getInstance().releaseConnection(con);
 				}
 				//======================== END OF DATA LOADING PART ========================
 				

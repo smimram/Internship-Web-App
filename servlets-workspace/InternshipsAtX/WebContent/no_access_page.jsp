@@ -34,45 +34,27 @@
 
 	<nav class="navbar navbar-dark bg-dark">
 	  <div class="container-fluid justify-content-start">
-	    <a class="navbar-brand" href="/InternshipsAtX/home">
+	    <a class="navbar-brand" href="/InternshipsAtX/dashboard">
 	      <img src="images/logo.png" style="max-height: 35px;">
 	      Internship Management
 	    </a>
-	    <%
-			if(session!=null && session.getAttribute("user")!= null) {
-				Person user = (Person)session.getAttribute("user");
-				String name = user.getName();
-				String role = user.getRole();
-				%><div class="ml-auto d-flex">
-				        <div class="nav-item dropdown">
-				          <a class="text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-				           <%=role %>: <%=name %>
-				          </a>
-				          <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="right:0;left:auto;">
-				          <%
-				          if(role.equals("Admin")){
-					            %><li><a class="dropdown-item" href="./user-management">User management</a></li>
-					            <li><a class="dropdown-item" href="./program-management">Program management</a></li>
-					            <li><a class="dropdown-item" href="./subject-management">Subject management</a></li>
-					            <li><a class="dropdown-item" href="./subject-attribution">Subject attribution</a></li>
-					            <li><hr class="dropdown-divider"></li><%
-				          }else if(role.equals("Professor")){
-					            %><li><a class="dropdown-item" href="./program-management">Program management</a></li>
-					            <li><a class="dropdown-item" href="./subject-management">Subject management</a></li>
-					            <li><a class="dropdown-item" href="./subject-attribution">Subject attribution</a></li>
-					            <li><hr class="dropdown-divider"></li><%
-				          }else if(role.equals("Assistant")){
-					            %><li><a class="dropdown-item" href="./subject-management">Subject management</a></li>
-					            <li><hr class="dropdown-divider"></li><%
-				          }
-				          %>
-				            <li><a class="dropdown-item" href="./LogoutServlet">Log out</a></li>
-				          </ul>
-				        </div>
-				    </div>
-				<%
-			}
-	    %>
+	    <div class="ml-auto d-flex">
+	        <div class="nav-item dropdown">
+	          <a class="text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+	            ${user.role}: ${user.name}
+	          </a>
+	          <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="right:0;left:auto;">
+	            ${ (user.role == "Admin") ? '<li><a class="dropdown-item" href="./user-management">User management</a></li>' : '' }
+	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./program-management">Program management</a></li>' : '' }
+	            ${ (user.role == "Admin" || user.role == "Assistant" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./subject-validation">Subject validation</a></li>' : '' }
+	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./subject-management">Subject management</a></li>' : '' }
+	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./subject-attribution">Subject attribution</a></li>' : '' }
+	            ${ (user.role == "Admin" || user.role == "Assistant") ? '<li><a class="dropdown-item" href="./subject-deletion">Subject deletion</a></li>' : '' }
+	            <li><hr class="dropdown-divider"></li>
+	            <li><a class="dropdown-item" href="./LogoutServlet">Log out</a></li>
+	          </ul>
+	        </div>
+	    </div>
 	  </div>
 	</nav>
 	

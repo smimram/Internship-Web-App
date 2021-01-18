@@ -42,9 +42,12 @@ public class DeleteProgramServlet extends HttpServlet {
 			String role = user.getRole();
 			if (role.equals("Admin") || role.equals("Professor" )) {
 				int id = Integer.parseInt(request.getParameter("id"));
-				
+				Connection con = null;
 				try {
-					Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
+					con = DbUtils.getInstance().getConnection();
+					if (con == null) {
+						response.sendError(HttpServletResponse.SC_FORBIDDEN);
+					}
 					String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
 							"DELETE FROM program\r\n" + 
 							"  WHERE id = ?;\r\n" + 
@@ -52,13 +55,14 @@ public class DeleteProgramServlet extends HttpServlet {
 					PreparedStatement ps = con.prepareStatement(query);
 					ps.setInt(1, id);
 					ps.executeUpdate();
-					
-					con.close();
+
 					
 				} catch(SQLException e) {
 					e.printStackTrace();
 					// db error
 					response.sendError(HttpServletResponse.SC_FORBIDDEN);
+				} finally {
+					DbUtils.getInstance().releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );

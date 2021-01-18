@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"
     import="edu.polytechnique.inf553.Person"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,34 +26,8 @@
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="css/util.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
-	<link rel="stylesheet" type="text/css" href="css/table.css">
-<!--===============================================================================================-->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
-	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 <!--===============================================================================================-->
 </head>
-<style>
-.mul-select{
-	width:100%;
-	height:auto !important;
-}
-.select2-container .select2-selection--multiple .select2-selection__rendered{
-	display:block;
-}
-.select2-container--default .select2-selection--multiple{
-	position:relative;
-}
-.select2-container .select2-search--inline {
-	position:absolute;
-	right:0;
-	top:0
-}
-.select2-container--default .select2-selection--multiple .select2-selection__rendered li{
-	margin: 5px 0px 0px 5px;
-}
-</style>
 <body>
 
 	<nav class="navbar navbar-dark bg-dark">
@@ -71,10 +44,8 @@
 	          <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="right:0;left:auto;">
 	            ${ (user.role == "Admin") ? '<li><a class="dropdown-item" href="./user-management">User management</a></li>' : '' }
 	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./program-management">Program management</a></li>' : '' }
-	            ${ (user.role == "Admin" || user.role == "Assistant" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./subject-validation">Subject validation</a></li>' : '' }
-	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./subject-management">Subject management</a></li>' : '' }
+	            ${ (user.role == "Admin" || user.role == "Professor" || user.role == "Assistant") ? '<li><a class="dropdown-item" href="./subject-management">Subject management</a></li>' : '' }
 	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./subject-attribution">Subject attribution</a></li>' : '' }
-	            ${ (user.role == "Admin" || user.role == "Assistant") ? '<li><a class="dropdown-item" href="./subject-deletion">Subject deletion</a></li>' : '' }
 	            <li><hr class="dropdown-divider"></li>
 	            <li><a class="dropdown-item" href="./LogoutServlet">Log out</a></li>
 	          </ul>
@@ -85,70 +56,79 @@
 	
 	<div class="limiter">
 		<div class="container-login100 background_style">
-			<div class="wrap-login100-V2">
+			<div class="wrap-login100">
+				
 				<form class="login100-form validate-form p-l-55 p-r-55 p-t-178">
 					<span class="login100-form-title">
-						<h1> Subject Management </h1>
+						<h1>Welcome ${user.name} ! </h1>
 					</span>
-					
-					<div class="text-center">
-						<ul class="responsive-table">
-							<li class="table-header">
-								<div class="col col-4"> Student </div>
-								<div class="col col-4"> Subject </div>
-								<div class="col col-4"> Assign </div>
-							</li>
-							<li class="table-row">
-								<div class="col col-4">
-									<select class="js-example-basic-single" name="student" id="selectStudent">
-										<c:forEach items="${students}" var="student">
-											<option value="${student.id}">${student.name}</option>
-										</c:forEach>
-									</select>
-								</div>
-								<div class="col col-4">
-									<select class="js-example-basic-single" name="subject" id="selectSubject">
-										<c:forEach items="${subjects}" var="subject">
-											<option value="${subject.id}">${subject.title}</option>
-										</c:forEach>
-									</select>
-								</div>
-								<div class="col col-4">
-									<button type="button" class="btn btn-primary ml-3" onclick="assignStudentToSubject();">Assign</button>
-								</div>
-							</li>
-							
-						</ul>
-					</div>
 				</form>
-				
 
+				${ (user.role == "Admin") ? '
+				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="user-management">	
+					<div class="container-login100-form-btn p-t-50 p-b-25">
+						<button type="submit" class="login100-form-btn">
+							User management
+						</button>
+					</div>			
+				</form>
+				' : '' }
+				
+				${ (user.role == "Admin" || user.role == "Professor") ? '
+				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="program-management">	
+					<div class="container-login100-form-btn p-t-25 p-b-25">
+						<button type="submit" class="login100-form-btn">
+							Program management
+						</button>
+					</div>			
+				</form>
+				' : '' }
+				
+				${ (user.role == "ssss") ? '
+				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="subject-validation">	
+					<div class="container-login100-form-btn p-t-25 p-b-25">
+						<button type="submit" class="login100-form-btn">
+							Subject validation
+						</button>
+					</div>			
+				</form>
+				' : '' }
+
+				${ (user.role == "Admin" || user.role == "Professor" || user.role == "Assistant") ? '
+				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="subject-management">	
+					<div class="container-login100-form-btn p-t-25 p-b-25">
+						<button type="submit" class="login100-form-btn">
+							Subject management	
+						</button>
+					</div>			
+				</form>
+				' : '' }
+				
+				${ (user.role == "Admin" || user.role == "Professor") ? '
+				<form class="login100-form validate-form  p-l-55 p-r-55" method="get" action="subject-attribution">	
+					<div class="container-login100-form-btn p-t-25 p-b-25">
+						<button type="submit" class="login100-form-btn">
+							Subject attribution
+						</button>
+					</div>			
+				</form>
+				' : '' }
+				
+				${ (user.role == "ssss") ? '
+				<form class="login100-form validate-form  p-l-55 p-r-55" method="get" action="subject-deletion">	
+					<div class="container-login100-form-btn p-t-25 p-b-25">
+						<button type="submit" class="login100-form-btn">
+							Subject deletion
+						</button>
+					</div>			
+				</form>
+				' : '' }
+					
 			</div>
 		</div>
 	</div>
 	
-<script>
-function assignStudentToSubject(){
-	studentId = document.getElementById("selectStudent").value;
-	subjectId = document.getElementById("selectSubject").value;
-	$.ajax({
-        type : "GET",
-        url : "AssignStudentSubjectServlet",
-        data : "studentId=" + studentId + "&subjectId=" + subjectId,
-        success : function(data) {
-        	console.log("assigned studentId " + studentId + " to subjectId " + subjectId)
-        	location.reload();
-        },
-        error: function(res){
-        	alert("Failed to update subject category.");
-        	location.reload();
-        }
-    });
-}
-
-</script>
-
-
-
+<!-- Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 </body>
 </html>

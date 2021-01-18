@@ -16,18 +16,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-
 /**
- * Servlet implementation class SubjectAttributionServlet
+ * Servlet implementation class SubjectDeletionServlet
  */
-@WebServlet("/SubjectAttributionServlet")
-public class SubjectAttributionServlet extends HttpServlet {
+@WebServlet("/SubjectDeletionServlet")
+public class SubjectDeletionServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SubjectAttributionServlet() {
+    public SubjectDeletionServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -41,17 +40,16 @@ public class SubjectAttributionServlet extends HttpServlet {
 		if(session!=null && session.getAttribute("user")!= null) {
 			Person user = (Person)session.getAttribute("user");
 			String role = user.getRole();
-			if (role.equals("Admin") || role.equals("Professor")) {
+			if (role.equals("Admin") || role.equals("Assistant")) {
 				
 				//======================== DATA LOADING PART ========================
 				List<Subject> subjects = getSubjects();
-				List<Person> students = getStudents();
 				
-				request.setAttribute("students", students);
+				request.setAttribute("role", user.getRole());
 				request.setAttribute("subjects", subjects);
-				request.getRequestDispatcher("subject_attribution.jsp").forward(request, response);
+				request.getRequestDispatcher("subject_deletion.jsp").forward(request, response);
 			}else {
-				// the user is not professor, redirect to the error page
+				// the user is not admin, assistant or professor, redirect to the error page
 				session.setAttribute("errorMessage", "Please check your user role.");
 				request.getRequestDispatcher("no_access_page.jsp").forward(request, response);
 			}
@@ -69,7 +67,7 @@ public class SubjectAttributionServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
-	
+
 	private List<Subject> getSubjects() {
 		Connection con = null;
 		try {
@@ -81,8 +79,7 @@ public class SubjectAttributionServlet extends HttpServlet {
 			List<Subject> subjects = new ArrayList<>();
 			// get all subject list
 			String query = "SELECT DISTINCT id, title, program_id, administr_validated, scientific_validated "
-					+ "FROM internship "
-					+ "WHERE is_taken IS FALSE AND administr_validated IS TRUE AND scientific_validated IS TRUE;";
+					+ "FROM internship;";
 			PreparedStatement preparedStatement = con.prepareStatement(query);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while(resultSet.next()) {
@@ -101,36 +98,4 @@ public class SubjectAttributionServlet extends HttpServlet {
 		}
 	}
 	
-	private List<Person> getStudents() {
-		Connection con = null;
-		Person user = null;
-		try {
-			
-			List<Person> students = new ArrayList<>();
-			String query = "select name, role, person_id, valid "
-					+ "from person p inner join person_roles pr on pr.person_id = p.id inner join role_type rt on rt.id = pr.role_id "
-					+ "where rt.role = 'Student' AND valid IS TRUE;";
-			//creating connection with the database
-			con = DbUtils.getInstance().getConnection();
-			if (con == null) {
-				return null;
-			}
-			ResultSet resultSet = con.prepareStatement(query).executeQuery();
-			
-			while (resultSet.next()) {
-				user = new Person(resultSet.getString("name"), resultSet.getInt("person_id"), resultSet.getString("role"), resultSet.getBoolean("valid"));
-				students.add(user);
-			}
-
-			return students;
-
-		}
-		catch(SQLException e) {
-			e.printStackTrace();
-			return null;
-		} finally {
-			DbUtils.getInstance().releaseConnection(con);
-		}
-	}
-
 }

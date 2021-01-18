@@ -22,11 +22,6 @@ public class UpdateUserValidServlet extends HttpServlet {
        
     public UpdateUserValidServlet() {
         super();
-		try {
-			Class.forName("org.postgresql.Driver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
     }
 
 
@@ -40,9 +35,12 @@ public class UpdateUserValidServlet extends HttpServlet {
 			if (role.equals("Admin")) {
 				Boolean valid = Boolean.parseBoolean(request.getParameter("valid"));
 				int pid = Integer.parseInt(request.getParameter("pid"));
-				
+				Connection con = null;
 				try {
-					Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
+					con = DbUtils.getInstance().getConnection();
+					if (con == null) {
+						response.sendError(HttpServletResponse.SC_FORBIDDEN);
+					}
 					
 					// update user valid, set isolation level SERIALIZABLE
 					String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
@@ -53,11 +51,12 @@ public class UpdateUserValidServlet extends HttpServlet {
 					ps.setBoolean(1, valid);
 					ps.setInt(2, pid);
 					ps.executeUpdate();
-					
-					con.close();
+
 					
 				} catch(SQLException e) {
 					e.printStackTrace();
+				} finally {
+					DbUtils.getInstance().releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );

@@ -14,6 +14,10 @@
     <servlet-class>edu.polytechnique.inf553.HomeServlet</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>DashboardPage</servlet-name>
+    <servlet-class>edu.polytechnique.inf553.DashboardViewServlet</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>LoginPage</servlet-name>
     <servlet-class>edu.polytechnique.inf553.LoginServlet</servlet-class>
   </servlet>
@@ -26,16 +30,28 @@
     <servlet-class>edu.polytechnique.inf553.UploadTopicServlet</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>AdminViewPage</servlet-name>
-    <servlet-class>edu.polytechnique.inf553.AdminViewServlet</servlet-class>
-  </servlet>
-  <servlet>
     <servlet-name>UserManagementPage</servlet-name>
     <servlet-class>edu.polytechnique.inf553.UserManagementServlet</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>ProgramManagementPage</servlet-name>
     <servlet-class>edu.polytechnique.inf553.ProgramManagementServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>SubjectValidationPage</servlet-name>
+    <servlet-class>edu.polytechnique.inf553.SubjectValidationServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>SubjectManagementPage</servlet-name>
+    <servlet-class>edu.polytechnique.inf553.SubjectManagementServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>SubjectAttributionPage</servlet-name>
+    <servlet-class>edu.polytechnique.inf553.SubjectAttributionServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>SubjectDeletionPage</servlet-name>
+    <servlet-class>edu.polytechnique.inf553.SubjectDeletionServlet</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>StudentViewPage</servlet-name>
@@ -45,9 +61,17 @@
     <servlet-name>DownloadTopicPage</servlet-name>
     <servlet-class>edu.polytechnique.inf553.DownloadServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>ErrorPage</servlet-name>
+    <servlet-class>edu.polytechnique.inf553.ErrorPageServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>HomePage</servlet-name>
     <url-pattern>/home</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DashboardPage</servlet-name>
+    <url-pattern>/dashboard</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>LoginPage</servlet-name>
@@ -70,8 +94,20 @@
     <url-pattern>/program-management</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>AdminViewPage</servlet-name>
-    <url-pattern>/admin-view</url-pattern>
+    <servlet-name>SubjectValidationPage</servlet-name>
+    <url-pattern>/subject-validation</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SubjectManagementPage</servlet-name>
+    <url-pattern>/subject-management</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SubjectAttributionPage</servlet-name>
+    <url-pattern>/subject-attribution</url-pattern>
+  </servlet-mapping>
+    <servlet-mapping>
+    <servlet-name>SubjectDeletionPage</servlet-name>
+    <url-pattern>/subject-deletion</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>StudentViewPage</servlet-name>
@@ -80,5 +116,9 @@
   <servlet-mapping>
     <servlet-name>DownloadTopicPage</servlet-name>
     <url-pattern>/download-subject</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ErrorPage</servlet-name>
+    <url-pattern>/error</url-pattern>
   </servlet-mapping>
 </web-app>

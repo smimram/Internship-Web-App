@@ -37,8 +37,8 @@ create table internship(
  
 create table internship_category(
    id serial primary key,
-   internship_id int, foreign key (internship_id) references internship(id),
-   category_id int, foreign key (category_id) references categories(id)
+   internship_id int, foreign key (internship_id) references internship(id) on delete cascade,
+   category_id int, foreign key (category_id) references categories(id) on delete cascade
 );
  
 create table role_type(
@@ -75,7 +75,7 @@ create table person_program(
  
 create table program_category(
    id serial primary key,
-   program_id int, foreign key (program_id) references program(id),
+   program_id int, foreign key (program_id) references program(id) on delete cascade,
    cat_id int, foreign key (cat_id) references categories(id)
 );
  
@@ -105,13 +105,13 @@ insert into program(name, year) values ('bio', 2020);
 insert into program(name, year) values ('mat', 2020);
 insert into program(name, year) values ('phys', 2020);
 
-copy person from 'webappdata/person.csv' CSV header;
-copy internship from 'webappdata/internship.csv' CSV header;
-copy categories from 'webappdata/categories.csv' CSV header;
-copy internship_category from 'webappdata/internship_category.csv' CSV header;
-copy person_roles from 'webappdata/person_roles.csv' CSV header;
-copy person_program from 'webappdata/person_program.csv' CSV header;
-copy program_category from 'webappdata/program_category.csv' CSV header;
+copy person from '/home/aleksamarusic/Internship-Web-App/data/person.csv' CSV header;
+copy internship from '/home/aleksamarusic/Internship-Web-App/data/internship.csv' CSV header;
+copy categories from '/home/aleksamarusic/Internship-Web-App/data/categories.csv' CSV header;
+copy internship_category from '/home/aleksamarusic/Internship-Web-App/data/internship_category.csv' CSV header;
+copy person_roles from '/home/aleksamarusic/Internship-Web-App/data/person_roles.csv' CSV header;
+copy person_program from '/home/aleksamarusic/Internship-Web-App/data/person_program.csv' CSV header;
+copy program_category from '/home/aleksamarusic/Internship-Web-App/data/program_category.csv' CSV header;
 
 
 SELECT setval('person_id_seq', (SELECT MAX(id) FROM person)+1);

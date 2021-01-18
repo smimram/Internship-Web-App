@@ -37,8 +37,12 @@ public class DownloadServlet extends HttpServlet {
 		String internshipId = request.getParameter("internshipId"); 
 		
 		String returnFileName = "file_not_found.jsp";
+		Connection con = null;
 		try {
-			Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
+			con = DbUtils.getInstance().getConnection();
+			if (con == null) {
+				response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			}
 			
 			String query = "SELECT content, title " +
 						   "FROM internship " +
@@ -62,13 +66,15 @@ public class DownloadServlet extends HttpServlet {
                 
                 inputStream.close();
                 outputStream.close();
-		con.close();
+
                 request.setAttribute("internshipId", internshipId);
                 request.setAttribute("subjectTitle", rs.getString("title"));
                 request.setAttribute("encodedContent", encodedContent);
 			}
 		} catch(SQLException e) {
 			e.printStackTrace();
+		} finally {
+			DbUtils.getInstance().releaseConnection(con);
 		}
 		
 		request.getRequestDispatcher(returnFileName).forward(request, response);

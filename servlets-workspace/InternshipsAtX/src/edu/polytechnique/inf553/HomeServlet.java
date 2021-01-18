@@ -13,6 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 public class HomeServlet extends HttpServlet {
@@ -31,7 +32,15 @@ public class HomeServlet extends HttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println(this.getClass().getName() + " doGet method called with path " + request.getRequestURI());
-		request.getRequestDispatcher("home.jsp").forward(request, response);
+		// session management
+		HttpSession session = request.getSession(false);
+		if(session!=null && session.getAttribute("user")!= null) {
+			Person user = (Person)session.getAttribute("user");
+			String role = user.getRole();
+			request.getRequestDispatcher("dashboard.jsp").forward(request, response);
+			
+		}else {
+			request.getRequestDispatcher("home.jsp").forward(request, response);
+		}
 	}
 }

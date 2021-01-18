@@ -40,8 +40,12 @@ public class UserManagementServlet extends HttpServlet {
 				List<Program> programs = new ArrayList<Program>();
 				
 				//======================== DATA LOADING PART ========================
+				Connection con = null;
 				try {
-					Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
+					con = DbUtils.getInstance().getConnection();
+					if (con == null) {
+						response.sendError(HttpServletResponse.SC_FORBIDDEN);
+					}
 					
 					// get user list
 					String query0 = "SELECT p.id as id, p.name as name, rt.role as role, p.valid as valid\n" + 
@@ -79,9 +83,10 @@ public class UserManagementServlet extends HttpServlet {
 						programs.add(p);
 					}
 					
-					con.close();
 				} catch(SQLException e) {
 					e.printStackTrace();
+				} finally {
+					DbUtils.getInstance().releaseConnection(con);
 				}
 				
 				request.setAttribute("persons", persons);

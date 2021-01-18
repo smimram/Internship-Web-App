@@ -45,7 +45,7 @@
 	<!-- navigation bar -->
 	<nav class="navbar navbar-dark bg-dark">
 	  <div class="container-fluid justify-content-start">
-	    <a class="navbar-brand" href= ${user.role == "Admin" ? '/InternshipsAtX/admin-view' : '/InternshipsAtX/professor-view'}>
+	    <a class="navbar-brand" href="/InternshipsAtX/dashboard">
 	      <img src="images/logo.png" style="max-height: 35px;">
 	      Internship Management
 	    </a>
@@ -55,12 +55,12 @@
 	            ${user.role}: ${user.name}
 	          </a>
 	          <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="right:0;left:auto;">
-	            <li><a class="dropdown-item" href="./user-management">User management</a></li>
-	            <li><a class="dropdown-item" href="./program-management">Program management</a></li>
-	            <li><a class="dropdown-item" href="./subject-management">Subject management</a></li>
-	            <c:if test = "${user.role == 'Admin'}">
-	            	<li><a class="dropdown-item" href="./subject-attribution">Subject attribution</a></li>
-	            </c:if>
+	            ${ (user.role == "Admin") ? '<li><a class="dropdown-item" href="./user-management">User management</a></li>' : '' }
+	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./program-management">Program management</a></li>' : '' }
+	            ${ (user.role == "Admin" || user.role == "Assistant" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./subject-validation">Subject validation</a></li>' : '' }
+	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./subject-management">Subject management</a></li>' : '' }
+	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./subject-attribution">Subject attribution</a></li>' : '' }
+	            ${ (user.role == "Admin" || user.role == "Assistant") ? '<li><a class="dropdown-item" href="./subject-deletion">Subject deletion</a></li>' : '' }
 	            <li><hr class="dropdown-divider"></li>
 	            <li><a class="dropdown-item" href="./LogoutServlet">Log out</a></li>
 	          </ul>

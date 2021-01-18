@@ -42,9 +42,12 @@ public class UpdateUserRoleServlet extends HttpServlet {
 			if (role.equals("Admin")) {
 				int rid = Integer.parseInt(request.getParameter("rid"));
 				int pid = Integer.parseInt(request.getParameter("pid"));
-				
+				Connection con = null;
 				try {
-					Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
+					con = DbUtils.getInstance().getConnection();
+					if (con == null) {
+						response.sendError(HttpServletResponse.SC_FORBIDDEN);
+					}
 					
 					// update user role, set isolation level SERIALIZABLE
 					String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
@@ -55,11 +58,12 @@ public class UpdateUserRoleServlet extends HttpServlet {
 					ps.setInt(1, rid);
 					ps.setInt(2, pid);
 					ps.executeUpdate();
-					
-					con.close();
+
 					
 				} catch(SQLException e) {
 					e.printStackTrace();
+				} finally {
+					DbUtils.getInstance().releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );

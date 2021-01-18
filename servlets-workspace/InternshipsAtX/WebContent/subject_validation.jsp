@@ -88,35 +88,31 @@
 			<div class="wrap-login100-V2">
 				<form class="login100-form validate-form p-l-55 p-r-55 p-t-178">
 					<span class="login100-form-title">
-						<h1> Subject Management </h1>
+						<h1> Subject Validation </h1>
 					</span>
 					
 					<div class="text-center">
 						<ul class="responsive-table">
 							<li class="table-header">
-								<div class="col col-4"> Student </div>
-								<div class="col col-4"> Subject </div>
-								<div class="col col-4"> Assign </div>
+								<div class="col col-1"> Id </div>
+								<div class="col col-2">Title</div>
+								<div class="col col-2">Admin validate</div>
 							</li>
-							<li class="table-row">
-								<div class="col col-4">
-									<select class="js-example-basic-single" name="student" id="selectStudent">
-										<c:forEach items="${students}" var="student">
-											<option value="${student.id}">${student.name}</option>
-										</c:forEach>
-									</select>
-								</div>
-								<div class="col col-4">
-									<select class="js-example-basic-single" name="subject" id="selectSubject">
-										<c:forEach items="${subjects}" var="subject">
-											<option value="${subject.id}">${subject.title}</option>
-										</c:forEach>
-									</select>
-								</div>
-								<div class="col col-4">
-									<button type="button" class="btn btn-primary ml-3" onclick="assignStudentToSubject();">Assign</button>
-								</div>
-							</li>
+							
+							<c:forEach items="${subjects}" var="subject">
+								<li class="table-row">
+									<div class="col col-1" data-label="Id">${subject.id}</div>
+									<div class="col col-2" data-label="Title">${subject.title}</div>
+									<div class="col col-2" data-label="Validate">
+										<!-- update the valid status of a user -->
+										<!-- need to select at least one program before validate a user -->
+										<select id="select-valid-${subject.id}" class="custom-select" onchange="updateSubjectAdminValid(${subject.id}, this);">
+										  <option value="true" ${subject.adminValid ? 'selected' : ''}>Valid</option>
+										  <option value="false" ${(role == "Admin" || role == "Assistant") ? '' : 'disabled' } ${subject.adminValid ? '' : 'selected'}>Invalid</option>
+										</select>
+									</div>
+								</li>
+							</c:forEach>
 							
 						</ul>
 					</div>
@@ -128,24 +124,21 @@
 	</div>
 	
 <script>
-function assignStudentToSubject(){
-	studentId = document.getElementById("selectStudent").value;
-	subjectId = document.getElementById("selectSubject").value;
-	$.ajax({
+function updateSubjectAdminValid(subjectId, sel){
+	var valid = sel.value;
+    $.ajax({
         type : "GET",
-        url : "AssignStudentSubjectServlet",
-        data : "studentId=" + studentId + "&subjectId=" + subjectId,
+        url : "UpdateSubjectAdminValidServlet",
+        data : "subjectId=" + subjectId + "&valid=" + valid,
         success : function(data) {
-        	console.log("assigned studentId " + studentId + " to subjectId " + subjectId)
-        	location.reload();
+        	console.log("update subject " + subjectId + " valid into " + valid)
         },
         error: function(res){
-        	alert("Failed to update subject category.");
+        	alert("Failed to update subject admin valid");
         	location.reload();
         }
     });
 }
-
 </script>
 
 

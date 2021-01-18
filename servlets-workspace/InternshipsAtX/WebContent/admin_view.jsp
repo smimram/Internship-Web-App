@@ -32,7 +32,7 @@
 
 	<nav class="navbar navbar-dark bg-dark">
 	  <div class="container-fluid justify-content-start">
-	    <a class="navbar-brand" href="/InternshipsAtX/admin-view">
+	    <a class="navbar-brand" href="/InternshipsAtX/dashboard">
 	      <img src="images/logo.png" style="max-height: 35px;">
 	      Internship Management
 	    </a>
@@ -42,10 +42,12 @@
 	            ${user.role}: ${user.name}
 	          </a>
 	          <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="right:0;left:auto;">
-	            <li><a class="dropdown-item" href="./user-management">User management</a></li>
-	            <li><a class="dropdown-item" href="./program-management">Program management</a></li>
-	            <li><a class="dropdown-item" href="./subject-management">Subject management</a></li>
-	            <li><a class="dropdown-item" href="./subject-attribution">Subject attribution</a></li>
+	            ${ (user.role == "Admin") ? '<li><a class="dropdown-item" href="./user-management">User management</a></li>' : '' }
+	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./program-management">Program management</a></li>' : '' }
+	            ${ (user.role == "Admin" || user.role == "Assistant" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./subject-validation">Subject validation</a></li>' : '' }
+	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./subject-management">Subject management</a></li>' : '' }
+	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./subject-attribution">Subject attribution</a></li>' : '' }
+	            ${ (user.role == "Admin" || user.role == "Assistant") ? '<li><a class="dropdown-item" href="./subject-deletion">Subject deletion</a></li>' : '' }
 	            <li><hr class="dropdown-divider"></li>
 	            <li><a class="dropdown-item" href="./LogoutServlet">Log out</a></li>
 	          </ul>
@@ -64,7 +66,7 @@
 					</span>
 				</form>
 
-					
+				${ (user.role == "Admin") ? '
 				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="user-management">	
 					<div class="container-login100-form-btn p-t-50 p-b-25">
 						<button type="submit" class="login100-form-btn">
@@ -72,8 +74,9 @@
 						</button>
 					</div>			
 				</form>
+				' : '' }
 				
-
+				${ (user.role == "Admin" || user.role == "Professor") ? '
 				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="program-management">	
 					<div class="container-login100-form-btn p-t-25 p-b-25">
 						<button type="submit" class="login100-form-btn">
@@ -81,7 +84,19 @@
 						</button>
 					</div>			
 				</form>
+				' : '' }
+				
+				${ (user.role == "Admin" || user.role == "Assistant" || user.role == "Professor") ? '
+				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="subject-validation">	
+					<div class="container-login100-form-btn p-t-25 p-b-25">
+						<button type="submit" class="login100-form-btn">
+							Subject validation
+						</button>
+					</div>			
+				</form>
+				' : '' }
 
+				${ (user.role == "Admin" || user.role == "Professor") ? '
 				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="subject-management">	
 					<div class="container-login100-form-btn p-t-25 p-b-25">
 						<button type="submit" class="login100-form-btn">
@@ -89,19 +104,28 @@
 						</button>
 					</div>			
 				</form>
+				' : '' }
 				
+				${ (user.role == "Admin" || user.role == "Professor") ? '
 				<form class="login100-form validate-form  p-l-55 p-r-55" method="get" action="subject-attribution">	
-					<div class="container-login100-form-btn p-t-25 p-b-50">
+					<div class="container-login100-form-btn p-t-25 p-b-25">
 						<button type="submit" class="login100-form-btn">
 							Subject attribution
 						</button>
 					</div>			
 				</form>
+				' : '' }
 				
-		
+				${ (user.role == "Admin" || user.role == "Assistant") ? '
+				<form class="login100-form validate-form  p-l-55 p-r-55" method="get" action="subject-deletion">	
+					<div class="container-login100-form-btn p-t-25 p-b-25">
+						<button type="submit" class="login100-form-btn">
+							Subject deletion
+						</button>
+					</div>			
+				</form>
+				' : '' }
 					
-					
-				
 			</div>
 		</div>
 	</div>

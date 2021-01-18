@@ -66,11 +66,14 @@ public class UploadTopicServlet extends HttpServlet {
 			//Conversion from String to Integer, exception impossible by construction of values in html files for each category and each program
 			int program_id = Integer.parseInt(program_id_string);
 			int category_id = Integer.parseInt(category_id_string);
-			
+			Connection con = null;
 			try {
 				int supervisor_id;
 				
-				Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
+				con = DbUtils.getInstance().getConnection();
+				if (con == null) {
+					response.sendError(HttpServletResponse.SC_FORBIDDEN);
+				}
 
 				if(!checkEmail(email)) {
 					String defaultPass = "12345678";
@@ -137,10 +140,12 @@ public class UploadTopicServlet extends HttpServlet {
 					ps7.setInt(2, category_id);
 					ps7.executeUpdate();
 	            }
-				con.close();
+
 			}
 			catch(SQLException e) {
 				e.printStackTrace();
+			} finally {
+				DbUtils.getInstance().releaseConnection(con);
 			}
 			request.setAttribute("topicTitle", topicTitle);
 			request.getRequestDispatcher("upload_complete.jsp").forward(request, response);
@@ -159,8 +164,12 @@ public class UploadTopicServlet extends HttpServlet {
 	
 	private List<Program> loadData() {
 		List<Program> programs = new ArrayList<Program>();
+		Connection con = null;
 		try {
-			Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
+			con = DbUtils.getInstance().getConnection();
+			if (con == null) {
+				return null;
+			}
 			
 			String query1 = "SELECT DISTINCT id, name, year FROM program;";
 			PreparedStatement ps1 = con.prepareStatement(query1);
@@ -181,9 +190,11 @@ public class UploadTopicServlet extends HttpServlet {
 					programs.get(i).addCategory(c);
 				}
 			}
-			con.close();
+
 		} catch(SQLException e) {
 			e.printStackTrace();
+		} finally {
+			DbUtils.getInstance().releaseConnection(con);
 		}
 		return programs;
 	}
@@ -225,35 +236,47 @@ public class UploadTopicServlet extends HttpServlet {
 	
 	private boolean checkEmail(String email) {
 		boolean st = false;
+		Connection con = null;
 		try {
 			String query = "select * from person where email=?;";
 			//creating connection with the database
-			Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
+			con = DbUtils.getInstance().getConnection();
+			if (con == null) {
+				return false;
+			}
 			PreparedStatement ps = con.prepareStatement(query);
 			ps.setString(1, email);
 			ResultSet rs = ps.executeQuery();
 			st = rs.next();
-			con.close();
+
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
+		} finally {
+			DbUtils.getInstance().releaseConnection(con);
 		}
 		return st;      
 	}
 	
 	private boolean checkTitle(String topicTitle) {
 		boolean st = false;
+		Connection con = null;
 		try {
 			String query = "select * from internship where title=?;";
 			//creating connection with the database
-			Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
+			con = DbUtils.getInstance().getConnection();
+			if (con == null) {
+				return false;
+			}
 			PreparedStatement ps = con.prepareStatement(query);
 			ps.setString(1, topicTitle);
 			ResultSet rs = ps.executeQuery();
 			st = rs.next();
-			con.close();
+
 		} catch(SQLException e) {
 			e.printStackTrace();
+		} finally {
+			DbUtils.getInstance().releaseConnection(con);
 		}
 		return st;
 	}

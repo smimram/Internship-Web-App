@@ -49,8 +49,12 @@ public class StudentViewServlet extends HttpServlet {
 				int userId = user.getId();
 				
 				//======================== DATA LOADING PART ========================
+				Connection con = null;
 				try {
-					Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
+					con = DbUtils.getInstance().getConnection();
+					if (con == null) {
+						response.sendError(HttpServletResponse.SC_FORBIDDEN);
+					}
 					
 					// check if the user already has an internship
 					String query0 = "select i.id as id, i.title as title, p.email as email, p.name as name\n" + 
@@ -106,9 +110,10 @@ public class StudentViewServlet extends HttpServlet {
 							programs.get(i).addCategory(c);
 						}
 					}
-					con.close();
 				} catch(SQLException e) {
 					e.printStackTrace();
+				} finally {
+					DbUtils.getInstance().releaseConnection(con);
 				}
 				//======================== END OF DATA LOADING PART ========================
 

@@ -25,11 +25,6 @@ public class UpdateProgramCategoryServlet extends HttpServlet {
      */
     public UpdateProgramCategoryServlet() {
         super();
-		try {
-			Class.forName("org.postgresql.Driver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
     }
 
 	/**
@@ -46,9 +41,12 @@ public class UpdateProgramCategoryServlet extends HttpServlet {
 				String type = request.getParameter("type");
 				int pid = Integer.parseInt(request.getParameter("pid"));
 				int cid = Integer.parseInt(request.getParameter("cid"));
-				
+				Connection con = null;
 				try {
-					Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
+					con = DbUtils.getInstance().getConnection();
+					if (con == null) {
+						response.sendError(HttpServletResponse.SC_FORBIDDEN);
+					}
 					String query = null;
 					// update user program, set isolation level SERIALIZABLE
 					if (type.equals("add")) {
@@ -68,13 +66,14 @@ public class UpdateProgramCategoryServlet extends HttpServlet {
 					ps.setInt(1, pid);
 					ps.setInt(2, cid);
 					ps.executeUpdate();
-					
-					con.close();
+
 					
 				} catch(SQLException e) {
 					e.printStackTrace();
 					// query errors
 					response.sendError(HttpServletResponse.SC_FORBIDDEN);
+				} finally {
+					DbUtils.getInstance().releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );

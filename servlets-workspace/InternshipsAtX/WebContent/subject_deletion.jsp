@@ -11,7 +11,7 @@
 <!--===============================================================================================-->	
 	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
 <!--===============================================================================================-->
@@ -20,8 +20,6 @@
 	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
 <!--===============================================================================================-->	
 	<link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
 <!--===============================================================================================-->
@@ -34,29 +32,17 @@
 	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 <!--===============================================================================================-->
+
 </head>
 <style>
-.mul-select{
-	width:100%;
-	height:auto !important;
-}
-.select2-container .select2-selection--multiple .select2-selection__rendered{
-	display:block;
-}
-.select2-container--default .select2-selection--multiple{
-	position:relative;
-}
-.select2-container .select2-search--inline {
-	position:absolute;
-	right:0;
-	top:0
-}
-.select2-container--default .select2-selection--multiple .select2-selection__rendered li{
-	margin: 5px 0px 0px 5px;
-}
+	.responsive-table li.table-row{
+		margin-bottom:10px;
+		padding: 10px 30px;
+	}
 </style>
 <body>
 
+	<!-- navigation bar -->
 	<nav class="navbar navbar-dark bg-dark">
 	  <div class="container-fluid justify-content-start">
 	    <a class="navbar-brand" href="/InternshipsAtX/dashboard">
@@ -83,72 +69,63 @@
 	  </div>
 	</nav>
 	
+	<!-- program management -->
 	<div class="limiter">
-		<div class="container-login100 background_style">
+		<div class="container-login100 background_style" style="min-height:30vh;">
 			<div class="wrap-login100-V2">
-				<form class="login100-form validate-form p-l-55 p-r-55 p-t-178">
+				<div class="login100-form validate-form p-l-55 p-r-55 p-t-140 p-b-40">
 					<span class="login100-form-title">
-						<h1> Subject Management </h1>
+						<h1> Delete subjects </h1>
 					</span>
 					
 					<div class="text-center">
 						<ul class="responsive-table">
 							<li class="table-header">
-								<div class="col col-4"> Student </div>
-								<div class="col col-4"> Subject </div>
-								<div class="col col-4"> Assign </div>
+								<div class="col col-2"> ID </div>
+								<div class="col col-4"> SUBJECT TITLE </div>
+								<div class="col col-4"> DELETE </div>
 							</li>
-							<li class="table-row">
-								<div class="col col-4">
-									<select class="js-example-basic-single" name="student" id="selectStudent">
-										<c:forEach items="${students}" var="student">
-											<option value="${student.id}">${student.name}</option>
-										</c:forEach>
-									</select>
-								</div>
-								<div class="col col-4">
-									<select class="js-example-basic-single" name="subject" id="selectSubject">
-										<c:forEach items="${subjects}" var="subject">
-											<option value="${subject.id}">${subject.title}</option>
-										</c:forEach>
-									</select>
-								</div>
-								<div class="col col-4">
-									<button type="button" class="btn btn-primary ml-3" onclick="assignStudentToSubject();">Assign</button>
-								</div>
-							</li>
+							<c:forEach items="${subjects}" var="subject">
+								<li class="table-row">
+									<div class="col col-2" data-label="Id">${subject.id}</div>
+									<div class="col col-4" data-label="Title">${subject.title}</div>
+									<div class="col col-4" data-label="Delete">
+										<button type="button" class="btn btn-primary ml-3" onclick="deleteSubject(${subject.id}, '${subject.title}');">Delete</button>
+									</div>
+								</li>
+							</c:forEach>
 							
 						</ul>
 					</div>
-				</form>
+					
+				</div>
 				
-
 			</div>
 		</div>
 	</div>
 	
 <script>
-function assignStudentToSubject(){
-	studentId = document.getElementById("selectStudent").value;
-	subjectId = document.getElementById("selectSubject").value;
-	$.ajax({
-        type : "GET",
-        url : "AssignStudentSubjectServlet",
-        data : "studentId=" + studentId + "&subjectId=" + subjectId,
-        success : function(data) {
-        	console.log("assigned studentId " + studentId + " to subjectId " + subjectId)
-        	location.reload();
-        },
-        error: function(res){
-        	alert("Failed to update subject category.");
-        	location.reload();
-        }
-    });
+
+function deleteSubject(id, title){
+	alert("dad");
+	var r = confirm("Are you sure you want to delete the subject " + title + " ?");
+	if (r == true) {
+	    $.ajax({
+	        type : "GET",
+	        url : "DeleteSubjectServlet",
+	        data : "subjectId=" + id ,
+	        success : function(data) {
+	        	console.log("delete subject " + title);
+	        	location.reload();
+	        },
+	        error: function(res){
+	        	alert("Failed to delete the subject" + title);
+	        }
+	    });
+	}
 }
 
 </script>
-
-
 
 </body>
 </html>

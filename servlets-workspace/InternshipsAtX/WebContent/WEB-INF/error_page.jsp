@@ -1,11 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"
     import="edu.polytechnique.inf553.Person"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Login V8</title>
+	<title>Nope</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->	
@@ -27,34 +28,8 @@
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="css/util.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
-	<link rel="stylesheet" type="text/css" href="css/table.css">
-<!--===============================================================================================-->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
-	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 <!--===============================================================================================-->
 </head>
-<style>
-.mul-select{
-	width:100%;
-	height:auto !important;
-}
-.select2-container .select2-selection--multiple .select2-selection__rendered{
-	display:block;
-}
-.select2-container--default .select2-selection--multiple{
-	position:relative;
-}
-.select2-container .select2-search--inline {
-	position:absolute;
-	right:0;
-	top:0
-}
-.select2-container--default .select2-selection--multiple .select2-selection__rendered li{
-	margin: 5px 0px 0px 5px;
-}
-</style>
 <body>
 
 	<nav class="navbar navbar-dark bg-dark">
@@ -86,69 +61,23 @@
 	<div class="limiter">
 		<div class="container-login100 background_style">
 			<div class="wrap-login100-V2">
-				<form class="login100-form validate-form p-l-55 p-r-55 p-t-178">
-					<span class="login100-form-title">
-						<h1> Subject Management </h1>
-					</span>
-					
-					<div class="text-center">
-						<ul class="responsive-table">
-							<li class="table-header">
-								<div class="col col-4"> Student </div>
-								<div class="col col-4"> Subject </div>
-								<div class="col col-4"> Assign </div>
-							</li>
-							<li class="table-row">
-								<div class="col col-4">
-									<select class="js-example-basic-single" name="student" id="selectStudent">
-										<c:forEach items="${students}" var="student">
-											<option value="${student.id}">${student.name}</option>
-										</c:forEach>
-									</select>
-								</div>
-								<div class="col col-4">
-									<select class="js-example-basic-single" name="subject" id="selectSubject">
-										<c:forEach items="${subjects}" var="subject">
-											<option value="${subject.id}">${subject.title}</option>
-										</c:forEach>
-									</select>
-								</div>
-								<div class="col col-4">
-									<button type="button" class="btn btn-primary ml-3" onclick="assignStudentToSubject();">Assign</button>
-								</div>
-							</li>
-							
-						</ul>
-					</div>
-				</form>
-				
 
+
+					<form class="login100-form validate-form p-l-55 p-r-55 p-t-178 p-b-40">
+						<span class="login100-form-title">
+							<h1>${errorMessage} </h1>
+						</span>
+						<div class="text-center">
+							<a href="./home"><h3 class="m-t-20">Click here to go home</h3></a>
+						</div>
+					</form>
+				
 			</div>
 		</div>
 	</div>
 	
-<script>
-function assignStudentToSubject(){
-	studentId = document.getElementById("selectStudent").value;
-	subjectId = document.getElementById("selectSubject").value;
-	$.ajax({
-        type : "GET",
-        url : "AssignStudentSubjectServlet",
-        data : "studentId=" + studentId + "&subjectId=" + subjectId,
-        success : function(data) {
-        	console.log("assigned studentId " + studentId + " to subjectId " + subjectId)
-        	location.reload();
-        },
-        error: function(res){
-        	alert("Failed to update subject category.");
-        	location.reload();
-        }
-    });
-}
-
-</script>
-
-
-
+	
+<!-- Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -52,9 +52,13 @@ public class SigninServlet extends HttpServlet {
 		String errorMessage = checkEntries(firstName, lastName, email, confirmEmail, pass, confirmPass, role);
 		if(errorMessage.equals("None"))
 		{
+			Connection con = null;
 			try {
 				//creating connection with the database
-				Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
+				con = DbUtils.getInstance().getConnection();
+				if (con == null) {
+					response.sendError(HttpServletResponse.SC_FORBIDDEN);
+				}
 				
 				//add the user into 'person' table
 				String query = "insert into person(name, email, creation_date, valid, password)\n" + 
@@ -74,11 +78,12 @@ public class SigninServlet extends HttpServlet {
 				ps2.setString(1, role);
 				ps2.setString(2, email);
 				ps2.executeUpdate();
-				
-				con.close();
+
 			}
 			catch(SQLException e) {
 				e.printStackTrace();
+			} finally {
+				DbUtils.getInstance().releaseConnection(con);
 			}
 			request.setAttribute("email", email);
 			request.getRequestDispatcher("signin_complete.jsp").forward(request, response);
@@ -127,22 +132,28 @@ public class SigninServlet extends HttpServlet {
 			}
 			if(emailIsValid) {
 				boolean emailTaken = false;
+				Connection con = null;
 				try {
 					String query = "SELECT COUNT(*) as count\n" + 
 							"FROM person \n" + 
 							"WHERE email = ? ;";
 					//creating connection with the database
-					Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
+					con = DbUtils.getInstance().getConnection();
+					if (con == null) {
+						return "failed connection to fatabase!";
+					}
 					PreparedStatement ps = con.prepareStatement(query);
 					ps.setString(1, email);
 					ResultSet rs = ps.executeQuery();
 					rs.next();
 					emailTaken = rs.getInt("count")>0;
-					con.close();
+
 				}
 				catch(SQLException e) {
 					e.printStackTrace();
 					emailTaken = true;
+				} finally {
+					DbUtils.getInstance().releaseConnection(con);
 				}
 				if(emailTaken) {
 					return "The email is already used.";

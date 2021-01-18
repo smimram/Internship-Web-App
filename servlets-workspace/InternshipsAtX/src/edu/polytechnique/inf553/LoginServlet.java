@@ -50,7 +50,7 @@ public class LoginServlet extends HttpServlet {
 		String err_message = checkUser(email, pass);
 		if(err_message.equals("None"))
 		{
-
+			System.out.println(err_message);
 			Person user = getUserInfo(email);
 			String role = user.getRole();
 			String userName = user.getName();
@@ -59,18 +59,13 @@ public class LoginServlet extends HttpServlet {
 			// create a new session
 			HttpSession session = request.getSession();
 			session.setAttribute("user", user);
-			
-			
-			if (role.equals("Admin")) {
-				response.sendRedirect("./admin-view");
-			}
-			else if (role.equals("Professor")) {
-				request.getRequestDispatcher("./professor-view").forward(request, response);
-			}
-			else if (role.equals("Student")) {
+			if (role.equals("Student")) {
 				response.sendRedirect("./student-view");
+			} 
+			else {
+				response.sendRedirect("./dashboard");
 			}
-		}
+		}	
 		else {
 			request.setAttribute("err_message", err_message);
 			request.getRequestDispatcher("login.jsp").forward(request, response);
@@ -79,10 +74,14 @@ public class LoginServlet extends HttpServlet {
 	
 	private String checkUser(String email, String password) {
 		String err_message = "None";
+		Connection con = null;
 		try {
 			String query = "select * from person where email=? and password=crypt(?, password);";
 			//creating connection with the database
-			Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
+			con = DbUtils.getInstance().getConnection();
+			if (con == null) {
+				return "Failed connection to database!";
+			}
 			PreparedStatement ps = con.prepareStatement(query);
 			ps.setString(1, email);
 			ps.setString(2, password);
@@ -95,20 +94,26 @@ public class LoginServlet extends HttpServlet {
 			else {
 				err_message = "Username or Password incorrect.";
 			}
-			con.close();
+
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
+		} finally {
+			DbUtils.getInstance().releaseConnection(con);
 		}
 		return err_message;      
 	}
 	
 	private Person getUserInfo(String email) {
 		Person user = null;
+		Connection con = null;
 		try {
 			String query = "select name, role, person_id, valid from person p inner join person_roles pr on pr.person_id = p.id inner join role_type rt on rt.id = pr.role_id where email = ?;";
 			//creating connection with the database
-			Connection con = DriverManager.getConnection(DbUtils.dbUrl, DbUtils.dbUser, DbUtils.dbPassword);
+			con = DbUtils.getInstance().getConnection();
+			if (con == null) {
+				return null;
+			}
 			PreparedStatement ps = con.prepareStatement(query);
 			ps.setString(1, email);
 			ResultSet rs = ps.executeQuery();
@@ -120,6 +125,8 @@ public class LoginServlet extends HttpServlet {
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
+		} finally {
+			DbUtils.getInstance().releaseConnection(con);
 		}
 		return user;  
 	}
