@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -45,11 +46,14 @@ public class SubjectManagementServlet extends HttpServlet {
 				//======================== DATA LOADING PART ========================
 				List<Subject> subjects = getSubjects();
 				getCategoriesForSubjects(subjects);
+				getAffiliatedStudentsForSubjects(subjects);
 				List<Program> programs = getAllPrograms();
 				List<Category> categories = getAllCategories();
 				List<Person> students = getStudents();
-				
+				List<Person> studentsWithoutInternship = getStudentsWithoutInternship();
+
 				request.setAttribute("students", students);
+				request.setAttribute("studentsNoInternship", studentsWithoutInternship);
 				request.setAttribute("programs", programs);
 				request.setAttribute("categories", categories);
 				request.setAttribute("subjects", subjects);
@@ -191,6 +195,36 @@ public class SubjectManagementServlet extends HttpServlet {
 			DbUtils.getInstance().releaseConnection(con);
 		}
 	}
+
+	private void getAffiliatedStudentsForSubjects(List<Subject> subjects) {
+		Connection con = null;
+		try {
+			con = DbUtils.getInstance().getConnection();
+			if (con == null) {
+				return;
+			}
+
+			// get associated categories for each subject
+			for(int i=0; i<subjects.size(); ++i) {
+			String query = "SELECT p.id AS pid, p.name AS pName, r.role AS role, p.valid AS pValid " +
+						"FROM person p " +
+						"INNER JOIN person_internship pi ON pi.person_id = p.id " +
+						"LEFT JOIN person_roles pr ON pr.person_id = p.id " +
+						"LEFT JOIN role_type r ON pr.role_id = r.id " +
+						"WHERE pi.internship_id ="+subjects.get(i).getId()+";";
+				ResultSet resultSet = con.prepareStatement(query).executeQuery();
+
+				while(resultSet.next()) {
+					Person person = new Person(resultSet.getString("pName"), resultSet.getInt("pid"), resultSet.getString("role"), resultSet.getBoolean("pValid"));
+					subjects.get(i).setAffiliatedStudent(person);
+				}
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DbUtils.getInstance().releaseConnection(con);
+		}
+	}
 	
 	private List<Person> getStudents() {
 		Connection con = null;
@@ -224,5 +258,35 @@ public class SubjectManagementServlet extends HttpServlet {
 		}
 	}
 
-	
+	private List<Person> getStudentsWithoutInternship() {
+		Connection con = null;
+		try {
+
+			List<Person> students = new ArrayList<>();
+			String query = "select p.name AS name, p.id AS person_id, rt.role AS role, p.valid AS valid "
+					+ "from person p "
+					+ "inner join person_roles pr on pr.person_id = p.id "
+					+ "inner join role_type rt on rt.id = pr.role_id "
+					+ "where rt.role = 'Student' AND p.valid IS TRUE AND p.id NOT IN (SELECT pi.person_id FROM person_internship pi);";
+			//creating connection with the database
+			con = DbUtils.getInstance().getConnection();
+			if (con == null) {
+				return null;
+			}
+			ResultSet resultSet = con.prepareStatement(query).executeQuery();
+
+			while (resultSet.next()) {
+				Person user = new Person(resultSet.getString("name"), resultSet.getInt("person_id"), resultSet.getString("role"), resultSet.getBoolean("valid"));
+				students.add(user);
+			}
+
+			return students;
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			DbUtils.getInstance().releaseConnection(con);
+		}
+	}
 }

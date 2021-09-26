@@ -15,6 +15,7 @@ public class Subject {
 	private boolean adminValid;
 	private boolean sciValid;
 	private List<Category> categories;
+	private Person affiliatedStudent;
 	
 	public Subject(String title, String id, String supervisorEmail, String supervisorName, String programId, boolean adminValid, boolean sciValid) {
 		this.title = title;
@@ -25,6 +26,7 @@ public class Subject {
 		this.sciValid = sciValid;
 		this.programId = programId;
 		this.categories = new ArrayList<>();
+		this.affiliatedStudent = null;
 	}
 	
 	public Subject(String id, String title, String programId, boolean adminValid, boolean sciValid) {
@@ -34,6 +36,7 @@ public class Subject {
 		this.sciValid = sciValid;
 		this.programId = programId;
 		this.categories = new ArrayList<>();
+		this.affiliatedStudent = null;
 	}
 	
 	public Subject(String title, String id, String supervisorEmail, String supervisorName) {
@@ -42,6 +45,7 @@ public class Subject {
 		this.supervisorEmail = supervisorEmail;
 		this.supervisorName = supervisorName;
 		this.categories = new ArrayList<>();
+		this.affiliatedStudent = null;
 	}
 
 	public String getTitle() {
@@ -71,6 +75,8 @@ public class Subject {
 	public boolean getSciValid() {
 		return sciValid;
 	}
+
+	public Person getAffiliatedStudent() { return this.affiliatedStudent; }
 	
 	public void addCategory(Category category) {
 		categories.add(category);
@@ -83,5 +89,7 @@ public class Subject {
 		return categories;
 	}
 	
-	
+	public void setAffiliatedStudent(Person affiliatedStudent) {
+		this.affiliatedStudent = affiliatedStudent;
+	}
 }

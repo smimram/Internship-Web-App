@@ -1,29 +1,27 @@
 package edu.polytechnique.inf553;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
- * Servlet implementation class UpdateSubjectAdminValidServlet
+ * Servlet implementation class UnassignStudentSubjectServlet
  */
-@WebServlet("/UpdateSubjectAdminValidServlet")
-public class UpdateSubjectAdminValidServlet extends HttpServlet {
+@WebServlet("/UnassignStudentSubjectServlet")
+public class UnassignStudentSubjectServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public UpdateSubjectAdminValidServlet() {
+    public UnassignStudentSubjectServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -38,25 +36,33 @@ public class UpdateSubjectAdminValidServlet extends HttpServlet {
 		if(session!=null && session.getAttribute("user")!= null) {
 			Person user = (Person)session.getAttribute("user");
 			String role = user.getRole();
-			if (role.equals("Admin") || role.equals("Assistant") || role.equals("Professor")) {
-				Boolean valid = Boolean.parseBoolean(request.getParameter("valid"));
+			if (role.equals("Admin") || role.equals("Professor")) {
+				int studentId = Integer.parseInt(request.getParameter("studentId"));
 				int subjectId = Integer.parseInt(request.getParameter("subjectId"));
+				System.out.println(studentId + " " + subjectId);
 				Connection con = null;
 				try {
 					con = DbUtils.getInstance().getConnection();
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
-					
+										
 					// update user valid, set isolation level SERIALIZABLE
-					String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE; " +
-							"UPDATE internship SET administr_validated = ? " +
-							"WHERE id = ?; " +
-							"COMMIT TRANSACTION; ";
-					PreparedStatement ps = con.prepareStatement(query);
-					ps.setBoolean(1, valid);
-					ps.setInt(2, subjectId);
-					ps.executeUpdate();
+					String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
+							"DELETE FROM person_internship WHERE internship_id=? AND person_id=?;\r\n"
+							+ "COMMIT TRANSACTION;";
+					PreparedStatement preparedStatement = con.prepareStatement(query);
+					preparedStatement.setInt(1, subjectId);
+					preparedStatement.setInt(2, studentId);
+					preparedStatement.executeUpdate();
+					
+					query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
+							"UPDATE internship SET is_taken = FALSE "
+							+ "WHERE id=?;\r\n"
+							+ "COMMIT TRANSACTION;";
+					preparedStatement = con.prepareStatement(query);
+					preparedStatement.setInt(1, subjectId);
+					preparedStatement.executeUpdate();
 
 					
 				} catch(SQLException e) {
