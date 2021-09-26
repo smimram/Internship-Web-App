@@ -54,6 +54,60 @@
 .select2-container--default .select2-selection--multiple .select2-selection__rendered li{
 	margin: 5px 0px 0px 5px;
 }
+ /* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+input:checked + .slider {
+  background-color: #2196F3;
+}
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+.slider.round:before {
+  border-radius: 50%;
+}
 </style>
 <body>
 
@@ -71,10 +125,7 @@
 	          <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="right:0;left:auto;">
 	            ${ (user.role == "Admin") ? '<li><a class="dropdown-item" href="./user-management">User management</a></li>' : '' }
 	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./program-management">Program management</a></li>' : '' }
-	            ${ (user.role == "Admin" || user.role == "Assistant" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./subject-validation">Subject validation</a></li>' : '' }
 	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./subject-management">Subject management</a></li>' : '' }
-	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./subject-attribution">Subject attribution</a></li>' : '' }
-	            ${ (user.role == "Admin" || user.role == "Assistant") ? '<li><a class="dropdown-item" href="./subject-deletion">Subject deletion</a></li>' : '' }
 	            <li><hr class="dropdown-divider"></li>
 	            <li><a class="dropdown-item" href="./LogoutServlet">Log out</a></li>
 	          </ul>
@@ -125,10 +176,14 @@
 									<div class="col col-2" data-label="Validate">
 										<!-- update the valid status of a user -->
 										<!-- need to select at least one program before validate a user -->
-										<select id="select-valid-${person.id}" class="custom-select" ${person.programSize() == 0 ? 'disabled' : ''} onchange="updateUserValid(${person.id}, this);">
-										  <option value="true" ${person.valid ? 'selected' : ''}>Valid</option>
-										  <option value="false" ${person.valid ? '' : 'selected'}>Invalid</option>
-										</select>
+										<%-- <select id="select-valid-${person.id}" class="custom-select" ${person.programSize() == 0 ? 'disabled' : ''} onchange="updateUserValid(${person.id}, this);"> --%>
+										  <%-- <option value="true" ${person.valid ? 'selected' : ''}>Valid</option> --%>
+										  <%-- <option value="false" ${person.valid ? '' : 'selected'}>Invalid</option> --%>
+										<%-- </select> --%>
+										<label class="switch">
+											<input type="checkbox" id="select-valid-${person.id}" ${person.programSize() == 0 ? 'disabled' : ''} onchange="updateUserValid(${person.id}, this);"" ${person.valid ? 'checked' : ''}> <!-- ${(subject.adminValid && user.role != "Assistant") ? '' : 'disabled'}  -->
+											<span class="slider round"></span>
+										</label>
 									</div>
 								</li>
 							</c:forEach>
@@ -208,7 +263,7 @@ function updateUserRole(pid, sel){
     });
 }
 function updateUserValid(pid, sel){
-	var valid = sel.value;
+	var valid = sel.checked;
     $.ajax({
         type : "GET",
         url : "UpdateUserValidServlet",

@@ -38,20 +38,8 @@
     <servlet-class>edu.polytechnique.inf553.ProgramManagementServlet</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>SubjectValidationPage</servlet-name>
-    <servlet-class>edu.polytechnique.inf553.SubjectValidationServlet</servlet-class>
-  </servlet>
-  <servlet>
     <servlet-name>SubjectManagementPage</servlet-name>
     <servlet-class>edu.polytechnique.inf553.SubjectManagementServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>SubjectAttributionPage</servlet-name>
-    <servlet-class>edu.polytechnique.inf553.SubjectAttributionServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>SubjectDeletionPage</servlet-name>
-    <servlet-class>edu.polytechnique.inf553.SubjectDeletionServlet</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>StudentViewPage</servlet-name>
@@ -94,20 +82,8 @@
     <url-pattern>/program-management</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>SubjectValidationPage</servlet-name>
-    <url-pattern>/subject-validation</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
     <servlet-name>SubjectManagementPage</servlet-name>
     <url-pattern>/subject-management</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>SubjectAttributionPage</servlet-name>
-    <url-pattern>/subject-attribution</url-pattern>
-  </servlet-mapping>
-    <servlet-mapping>
-    <servlet-name>SubjectDeletionPage</servlet-name>
-    <url-pattern>/subject-deletion</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>StudentViewPage</servlet-name>

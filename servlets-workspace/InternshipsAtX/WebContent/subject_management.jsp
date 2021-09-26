@@ -55,7 +55,7 @@
 .select2-container--default .select2-selection--multiple .select2-selection__rendered li{
 	margin: 5px 0px 0px 5px;
 }
- /* The switch - the box around the slider */
+/* The switch - the box around the slider */
 .switch {
   position: relative;
   display: inline-block;
@@ -126,8 +126,6 @@ input:checked + .slider:before {
 	            ${ (user.role == "Admin") ? '<li><a class="dropdown-item" href="./user-management">User management</a></li>' : '' }
 	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./program-management">Program management</a></li>' : '' }
 	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./subject-management">Subject management</a></li>' : '' }
-	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./subject-attribution">Subject attribution</a></li>' : '' }
-	            ${ (user.role == "Admin" || user.role == "Assistant") ? '<li><a class="dropdown-item" href="./subject-deletion">Subject deletion</a></li>' : '' }
 	            <li><hr class="dropdown-divider"></li>
 	            <li><a class="dropdown-item" href="./LogoutServlet">Log out</a></li>
 	          </ul>
@@ -185,18 +183,10 @@ input:checked + .slider:before {
 											<input type="checkbox" id="select-admin-valid-${subject.id}" onchange="updateSubjectAdminValid(${subject.id}, this);" ${subject.adminValid ? 'checked' : ''}>
 											<span class="slider round"></span>
 										</label>
-										<%-- <select id="select-admin-valid-${subject.id}" class="custom-select" onchange="updateSubjectAdminValid(${subject.id}, this);"> --%>
-											<%-- <option value="true" ${subject.adminValid ? 'selected' : ''}>valid</option> --%>
-											<%-- <option value="false" ${subject.adminValid ? '' : 'selected'}>invalid</option> --%>
-										<%-- </select> --%>
 									</div>
 									<div class="col col-1" data-label="SciValidate">
 										<!-- update the valid status of a user -->
 										<!-- need to select at least one program before validate a user -->
-										<%-- <select id="select-sci-valid-${subject.id}" class="custom-select" ${(subject.adminValid && user.role != "Assistant") ? '' : 'disabled'} onchange="updateSubjectSciValid(${subject.id}, this);"> --%>
-											<%-- <option value="true" ${(role != "Assistant") ? '' : 'disabled' } ${subject.sciValid ? 'selected' : ''}>valid</option> --%>
-										  	<%-- <option value="false" ${(role != "Assistant") ? '' : 'disabled' } ${subject.sciValid ? '' : 'selected'}>invalid</option> --%>
-										<%-- </select> --%>
 										<label class="switch">
 											<input type="checkbox" id="select-sci-valid-${subject.id}" onchange="updateSubjectSciValid(${subject.id}, this);" ${subject.sciValid ? 'checked' : ''}> <!-- ${(subject.adminValid && user.role != "Assistant") ? '' : 'disabled'}  -->
 											<span class="slider round"></span>
