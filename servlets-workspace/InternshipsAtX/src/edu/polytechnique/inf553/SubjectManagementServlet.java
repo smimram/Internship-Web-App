@@ -36,6 +36,7 @@ public class SubjectManagementServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println(this.getClass().getName() + " doGet method called with path " + request.getRequestURI() + " and parameters " + request.getQueryString());
 		// session management
 		HttpSession session = request.getSession(false);
 		if(session!=null && session.getAttribute("user")!= null) {
@@ -44,7 +45,24 @@ public class SubjectManagementServlet extends HttpServlet {
 			if (role.equals("Admin") || role.equals("Professor") || role.equals("Assistant")) {
 				
 				//======================== DATA LOADING PART ========================
-				List<Subject> subjects = getSubjects();
+//				String filename = (String)request.getParameter("filename");
+				String orderByColumn = (String)request.getParameter("orderByColumn");
+				String orderBySort = (String)request.getParameter("orderBySort");
+				System.out.println("orderByColumn=" + orderByColumn + " ; orderBySort=" + orderBySort);
+//				if(request.getParameterMap().containsKey("orderByColumn")) {
+//					System.out.println("yes for orderByColumn");
+//					orderByColumn = request.getParameter("orderByColumn").toString();
+//				} else {
+//					System.out.println("no for orderByColumn");
+//				}
+//				String orderBySort = null;
+//				if(request.getParameterMap().containsKey("orderBySort")) {
+//					System.out.println("yes for orderBySort");
+//					orderBySort = request.getParameter("orderBySort").toString();
+//				} else {
+//					System.out.println("no for orderBySort");
+//				}
+				List<Subject> subjects = getSubjects(orderByColumn, orderBySort);
 				getCategoriesForSubjects(subjects);
 				getAffiliatedStudentsForSubjects(subjects);
 				List<Program> programs = getAllPrograms();
@@ -78,7 +96,7 @@ public class SubjectManagementServlet extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	private List<Subject> getSubjects() {
+	private List<Subject> getSubjects(String orderByColumn, String orderBySort) {
 		Connection con = null;
 		try {
 			con = DbUtils.getInstance().getConnection();
@@ -88,10 +106,24 @@ public class SubjectManagementServlet extends HttpServlet {
 			
 			List<Subject> subjects = new ArrayList<>();
 			// get all subject list
+			System.out.println("getSubjects");
+			System.out.println(orderByColumn + " ; " + orderBySort);
+			if(orderByColumn == null) orderByColumn="id"; // if no parameter is provided
+			System.out.println(orderByColumn + " ; " + orderBySort);
+			if(orderBySort == null) orderBySort="ASC";
+			System.out.println(orderByColumn + " ; " + orderBySort);
+			if(orderByColumn.startsWith("'") && orderByColumn.endsWith("'")) orderByColumn = orderByColumn.substring(1, orderByColumn.length()-1); // if the value is encapsulated into '', e.g. 'id'
+			System.out.println(orderByColumn + " ; " + orderBySort);
+			if(orderBySort.startsWith("'") && orderBySort.endsWith("'")) orderBySort = orderBySort.substring(1, orderBySort.length()-1); // if the value is encapsulated into '', e.g. 'ASC'
+			System.out.println(orderByColumn + " ; " + orderBySort);
+			System.out.println("writing the query");
 			String query = "SELECT DISTINCT id, title, program_id, administr_validated, scientific_validated "
 					+ "FROM internship "
-					+ "ORDER BY id;";
+//					+ "ORDER BY ? ?"; // can't do that because ASC/DESC is not a column
+					+ "ORDER BY " + orderByColumn + " " + orderBySort + ";";
+			System.out.println("finished to write the query");
 			PreparedStatement preparedStatement = con.prepareStatement(query);
+			System.out.println("preparedStatement: " + preparedStatement.toString());
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while(resultSet.next()) {
 				Subject subject = new Subject(resultSet.getString("id"), resultSet.getString("title"), resultSet.getString("program_id"), 
@@ -119,7 +151,7 @@ public class SubjectManagementServlet extends HttpServlet {
 			
 			List<Category> categories = new ArrayList<>();
 			//get all the categories
-			String query = "SELECT * FROM categories ORDER BY id";
+			String query = "SELECT * FROM categories ORDER BY description";
 			PreparedStatement preparedStatement = con.prepareStatement(query);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while(resultSet.next()) {
@@ -147,7 +179,7 @@ public class SubjectManagementServlet extends HttpServlet {
 			
 			List<Program> programs = new ArrayList<>();
 			// get all program list
-			String query = "SELECT DISTINCT id, name, year FROM program;";
+			String query = "SELECT DISTINCT id, name, year FROM program ORDER BY name;";
 			PreparedStatement preparedStatement = con.prepareStatement(query);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while(resultSet.next()) {
@@ -179,7 +211,7 @@ public class SubjectManagementServlet extends HttpServlet {
 						"FROM categories c\n" + 
 						"INNER JOIN internship_category ic ON ic.category_id = c.id\n" + 
 						"WHERE ic.internship_id ="+subjects.get(i).getId()+"\n" + 
-						"ORDER BY c.id;";
+						"ORDER BY c.description;";
 				ResultSet resultSet = con.prepareStatement(query).executeQuery();
 				
 				while(resultSet.next()) {
@@ -267,7 +299,8 @@ public class SubjectManagementServlet extends HttpServlet {
 					+ "from person p "
 					+ "inner join person_roles pr on pr.person_id = p.id "
 					+ "inner join role_type rt on rt.id = pr.role_id "
-					+ "where rt.role = 'Student' AND p.valid IS TRUE AND p.id NOT IN (SELECT pi.person_id FROM person_internship pi);";
+					+ "where rt.role = 'Student' AND p.valid IS TRUE AND p.id NOT IN (SELECT pi.person_id FROM person_internship pi) " +
+					"ORDER BY  name;";
 			//creating connection with the database
 			con = DbUtils.getInstance().getConnection();
 			if (con == null) {

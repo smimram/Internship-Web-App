@@ -109,6 +109,10 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+/* icons */
+.fas {
+	color: black;
+}
 </style>
 <body>
 	<nav class="navbar navbar-dark bg-dark">
@@ -145,13 +149,29 @@ input:checked + .slider:before {
 					<div class="text-center">
 						<ul class="responsive-table">
 							<li class="table-header">
-								<div class="col col-1">Id </div>
-								<div class="col col-2">Title</div>
+								<%-- <div class="col col-1">Id <a href="./subject-management&orderByColumn=id&orderBySort=DESC"><i class="fas fa-sort-amount-up-alt"></i></a></div> --%>
+								<div class="col col-1">Id
+									<a href="./subject-management?orderByColumn=id&orderBySort=ASC"><i class="fas fa-sort-numeric-down" title="sort by increasing order"></i></a>
+									<a href="./subject-management?orderByColumn=id&orderBySort=DESC"><i class="fas fa-sort-numeric-down-alt" title="sort by decreasing order"></i></a>
+								</div>
+								<div class="col col-2">Title
+									<a href="./subject-management?orderByColumn=title&orderBySort=ASC"><i class="fas fa-sort-alpha-down" title="sort by increasing order"></i></a>
+									<a href="./subject-management?orderByColumn=title&orderBySort=DESC"><i class="fas fa-sort-alpha-down-alt" title="sort by decreasing order"></i></a>
+								</div>
 								<div class="col col-2">Categories</div>
-								<div class="col col-2">Program</div>
-								<div class="col col-1">Admin validate</div>
-								<div class="col col-1">Sci validate</div>
-								<div class="col col-2">Attributed to</div>
+								<div class="col col-2">Program</i></div>
+								<div class="col col-1">Admin. validation
+									<a href="./subject-management?orderByColumn=administr_validated&orderBySort=ASC"><i class="fas fa-sort-amount-down" title="sort by increasing order"></i></a>
+									<a href="./subject-management?orderByColumn=administr_validated&orderBySort=DESC"><i class="fas fa-sort-amount-down-alt" title="sort by decreasing order"></i></a>
+								</div>
+								<div class="col col-1">Scientific validation
+									<a href="./subject-management?orderByColumn=scientific_validated&orderBySort=ASC"><i class="fas fa-sort-amount-down" title="sort by increasing order"></i></a>
+									<a href="./subject-management?orderByColumn=scientific_validated&orderBySort=DESC"><i class="fas fa-sort-amount-down-alt" title="sort by decreasing order"></i></a>
+								</div>
+								<div class="col col-2">Attributed to 
+									<%-- <a href="./subject-management?orderByColumn=id&orderBySort=ASC"><i class="fas fa-sort-numeric-down" title="sort by increasing order"></i></a> --%>
+									<%-- <a href="./subject-management?orderByColumn=id&orderBySort=DESC"><i class="fas fa-sort-numeric-down-alt" title="sort by decreasing order"></i></a> --%>
+								</div>
 								<%-- <div class="col col-1">Download</div> --%>
 								<div class="col col-1">Actions</div>
 							</li>
@@ -434,6 +454,22 @@ input:checked + .slider:before {
 				}
 			});
 		}
+	}
+
+	function orderById() {
+		$.ajax({
+			type : "GET",
+			url : "SubjectManagementServlet",
+			data : "orderByColumn=id&orderBySort=DESC",
+			success : function(data) {
+				console.log("ordered subjects by id DESC");
+				// location.reload();
+			},
+			error: function(res){
+				alert("Failed to sort data");
+				// location.reload();
+			}
+		});
 	}
 </script>
 </body>
