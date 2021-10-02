@@ -48,7 +48,7 @@ public class UserManagementServlet extends HttpServlet {
 					}
 					
 					// get user list
-					String query0 = "SELECT p.id as id, p.name as name, rt.role as role, p.valid as valid\n" + 
+					String query0 = "SELECT p.id as id, p.name as name, rt.role as role, p.valid as valid, p.email AS email \n" +
 							"FROM person p inner join person_roles pr on p.id = pr.person_id\n" + 
 							"inner join role_type rt on pr.role_id = rt.id\n" + 
 							"WHERE rt.role != 'Proponent'\n" + 
@@ -56,7 +56,7 @@ public class UserManagementServlet extends HttpServlet {
 					PreparedStatement ps0 = con.prepareStatement(query0);
 					ResultSet rs0 = ps0.executeQuery();
 					while(rs0.next()) {
-						Person p = new Person(rs0.getString("name"), rs0.getInt("id"), rs0.getString("role"), rs0.getBoolean("valid"));
+						Person p = new Person(rs0.getString("name"), rs0.getInt("id"), rs0.getString("role"), rs0.getBoolean("valid"), rs0.getString("email"));
 						persons.add(p);
 					}
 					

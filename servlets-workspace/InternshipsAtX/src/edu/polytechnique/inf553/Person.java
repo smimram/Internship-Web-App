@@ -10,13 +10,15 @@ public class Person {
 	private String role;
 	private List<Program> programs;
 	private boolean valid;
+	private String email;
 	
-	public Person(String name, int id, String role, boolean valid) {
+	public Person(String name, int id, String role, boolean valid, String email) {
 		this.name = name;
 		this.id = id;
 		this.role = role;
 		this.valid = valid;
-		this.programs = new ArrayList<Program>();
+		this.programs = new ArrayList<>();
+		this.email = email;
 	}
 
 	public String getName() {
@@ -58,10 +60,17 @@ public class Person {
 	public int programSize() {
 		return programs.size();
 	}
+
 	public List<Program> getPrograms() {
 		return programs;
 	}
 	
-	
+	public String getEmail() { return this.email; }
 
+	public void setEmail(String email) { this.email = email; }
+
+	@Override
+	public String toString() {
+		return "Person{" + "name='" + name + '\'' + ", id=" + id + ", role='" + role + '\'' + ", programs=" + programs + ", valid=" + valid + ", email='" + email + '\'' + '}';
+	}
 }

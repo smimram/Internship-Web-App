@@ -107,7 +107,7 @@ public class SubjectAttributionServlet extends HttpServlet {
 		try {
 			
 			List<Person> students = new ArrayList<>();
-			String query = "select name, role, person_id, valid "
+			String query = "select name, role, person_id, valid, email "
 					+ "from person p inner join person_roles pr on pr.person_id = p.id inner join role_type rt on rt.id = pr.role_id "
 					+ "where rt.role = 'Student' AND valid IS TRUE;";
 			//creating connection with the database
@@ -118,7 +118,7 @@ public class SubjectAttributionServlet extends HttpServlet {
 			ResultSet resultSet = con.prepareStatement(query).executeQuery();
 			
 			while (resultSet.next()) {
-				user = new Person(resultSet.getString("name"), resultSet.getInt("person_id"), resultSet.getString("role"), resultSet.getBoolean("valid"));
+				user = new Person(resultSet.getString("name"), resultSet.getInt("person_id"), resultSet.getString("role"), resultSet.getBoolean("valid"), resultSet.getString("email"));
 				students.add(user);
 			}
 

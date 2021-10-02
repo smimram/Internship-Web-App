@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Nope</title>
+	<title>No access</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->	
@@ -47,6 +47,7 @@
 	            ${ (user.role == "Admin") ? '<li><a class="dropdown-item" href="./user-management">User management</a></li>' : '' }
 	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./program-management">Program management</a></li>' : '' }
 	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./subject-management">Subject management</a></li>' : '' }
+	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./defense-management">Defense management</a></li>' : '' }
 	            <li><hr class="dropdown-divider"></li>
 	            <li><a class="dropdown-item" href="./LogoutServlet">Log out</a></li>
 	          </ul>

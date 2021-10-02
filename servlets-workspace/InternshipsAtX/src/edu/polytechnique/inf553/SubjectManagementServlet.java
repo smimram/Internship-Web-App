@@ -45,23 +45,9 @@ public class SubjectManagementServlet extends HttpServlet {
 			if (role.equals("Admin") || role.equals("Professor") || role.equals("Assistant")) {
 				
 				//======================== DATA LOADING PART ========================
-//				String filename = (String)request.getParameter("filename");
 				String orderByColumn = (String)request.getParameter("orderByColumn");
 				String orderBySort = (String)request.getParameter("orderBySort");
 				System.out.println("orderByColumn=" + orderByColumn + " ; orderBySort=" + orderBySort);
-//				if(request.getParameterMap().containsKey("orderByColumn")) {
-//					System.out.println("yes for orderByColumn");
-//					orderByColumn = request.getParameter("orderByColumn").toString();
-//				} else {
-//					System.out.println("no for orderByColumn");
-//				}
-//				String orderBySort = null;
-//				if(request.getParameterMap().containsKey("orderBySort")) {
-//					System.out.println("yes for orderBySort");
-//					orderBySort = request.getParameter("orderBySort").toString();
-//				} else {
-//					System.out.println("no for orderBySort");
-//				}
 				List<Subject> subjects = getSubjects(orderByColumn, orderBySort);
 				getCategoriesForSubjects(subjects);
 				getAffiliatedStudentsForSubjects(subjects);
@@ -238,7 +224,7 @@ public class SubjectManagementServlet extends HttpServlet {
 
 			// get associated categories for each subject
 			for(int i=0; i<subjects.size(); ++i) {
-			String query = "SELECT p.id AS pid, p.name AS pName, r.role AS role, p.valid AS pValid " +
+			String query = "SELECT p.id AS pid, p.name AS pName, r.role AS role, p.valid AS pValid, p.email AS email " +
 						"FROM person p " +
 						"INNER JOIN person_internship pi ON pi.person_id = p.id " +
 						"LEFT JOIN person_roles pr ON pr.person_id = p.id " +
@@ -247,7 +233,8 @@ public class SubjectManagementServlet extends HttpServlet {
 				ResultSet resultSet = con.prepareStatement(query).executeQuery();
 
 				while(resultSet.next()) {
-					Person person = new Person(resultSet.getString("pName"), resultSet.getInt("pid"), resultSet.getString("role"), resultSet.getBoolean("pValid"));
+					Person person = new Person(resultSet.getString("pName"), resultSet.getInt("pid"), resultSet.getString("role"), resultSet.getBoolean("pValid"), resultSet.getString("email"));
+					System.out.println(person);
 					subjects.get(i).setAffiliatedStudent(person);
 				}
 			}
@@ -264,7 +251,7 @@ public class SubjectManagementServlet extends HttpServlet {
 		try {
 			
 			List<Person> students = new ArrayList<>();
-			String query = "select name, role, person_id, valid "
+			String query = "select name, role, person_id, valid, email "
 					+ "from person p inner join person_roles pr on pr.person_id = p.id inner join role_type rt on rt.id = pr.role_id "
 					+ "where rt.role = 'Student' AND valid IS TRUE;";
 			//creating connection with the database
@@ -275,7 +262,7 @@ public class SubjectManagementServlet extends HttpServlet {
 			ResultSet resultSet = con.prepareStatement(query).executeQuery();
 			
 			while (resultSet.next()) {
-				user = new Person(resultSet.getString("name"), resultSet.getInt("person_id"), resultSet.getString("role"), resultSet.getBoolean("valid"));
+				user = new Person(resultSet.getString("name"), resultSet.getInt("person_id"), resultSet.getString("role"), resultSet.getBoolean("valid"), resultSet.getString("email"));
 				students.add(user);
 			}
 
@@ -295,7 +282,7 @@ public class SubjectManagementServlet extends HttpServlet {
 		try {
 
 			List<Person> students = new ArrayList<>();
-			String query = "select p.name AS name, p.id AS person_id, rt.role AS role, p.valid AS valid "
+			String query = "select p.name AS name, p.id AS person_id, rt.role AS role, p.valid AS valid, p.email AS email "
 					+ "from person p "
 					+ "inner join person_roles pr on pr.person_id = p.id "
 					+ "inner join role_type rt on rt.id = pr.role_id "
@@ -309,7 +296,7 @@ public class SubjectManagementServlet extends HttpServlet {
 			ResultSet resultSet = con.prepareStatement(query).executeQuery();
 
 			while (resultSet.next()) {
-				Person user = new Person(resultSet.getString("name"), resultSet.getInt("person_id"), resultSet.getString("role"), resultSet.getBoolean("valid"));
+				Person user = new Person(resultSet.getString("name"), resultSet.getInt("person_id"), resultSet.getString("role"), resultSet.getBoolean("valid"), resultSet.getString("email"));
 				students.add(user);
 			}
 

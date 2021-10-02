@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Login V8</title>
+	<title>Dashboard</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->	
@@ -45,6 +45,7 @@
 	            ${ (user.role == "Admin") ? '<li><a class="dropdown-item" href="./user-management">User management</a></li>' : '' }
 	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./program-management">Program management</a></li>' : '' }
 	            ${ (user.role == "Admin" || user.role == "Professor" || user.role == "Assistant") ? '<li><a class="dropdown-item" href="./subject-management">Subject management</a></li>' : '' }
+	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./defense-management">Defense management</a></li>' : '' }
 	            <li><hr class="dropdown-divider"></li>
 	            <li><a class="dropdown-item" href="./LogoutServlet">Log out</a></li>
 	          </ul>
@@ -82,16 +83,6 @@
 					</div>			
 				</form>
 				' : '' }
-				
-				${ (user.role == "ssss") ? '
-				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="subject-validation">	
-					<div class="container-login100-form-btn p-t-25 p-b-25">
-						<button type="submit" class="login100-form-btn">
-							Subject validation
-						</button>
-					</div>			
-				</form>
-				' : '' }
 
 				${ (user.role == "Admin" || user.role == "Professor" || user.role == "Assistant") ? '
 				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="subject-management">	
@@ -102,22 +93,12 @@
 					</div>			
 				</form>
 				' : '' }
-				
-				${ (user.role == "Admin" || user.role == "Professor") ? '
-				<form class="login100-form validate-form  p-l-55 p-r-55" method="get" action="subject-attribution">	
+
+				${ (user.role == "Admin" || user.role == "Professor" || user.role == "Assistant") ? '
+				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="defense-management">	
 					<div class="container-login100-form-btn p-t-25 p-b-25">
 						<button type="submit" class="login100-form-btn">
-							Subject attribution
-						</button>
-					</div>			
-				</form>
-				' : '' }
-				
-				${ (user.role == "ssss") ? '
-				<form class="login100-form validate-form  p-l-55 p-r-55" method="get" action="subject-deletion">	
-					<div class="container-login100-form-btn p-t-25 p-b-25">
-						<button type="submit" class="login100-form-btn">
-							Subject deletion
+							Defense management	
 						</button>
 					</div>			
 				</form>

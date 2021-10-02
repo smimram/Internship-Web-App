@@ -42,6 +42,10 @@
     <servlet-class>edu.polytechnique.inf553.SubjectManagementServlet</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>DefenseManagementPage</servlet-name>
+    <servlet-class>edu.polytechnique.inf553.DefenseManagementServlet</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>StudentViewPage</servlet-name>
     <servlet-class>edu.polytechnique.inf553.StudentViewServlet</servlet-class>
   </servlet>
@@ -96,5 +100,9 @@
   <servlet-mapping>
     <servlet-name>ErrorPage</servlet-name>
     <url-pattern>/error</url-pattern>
+  </servlet-mapping>
+    <servlet-mapping>
+    <servlet-name>DefenseManagementPage</servlet-name>
+    <url-pattern>/defense-management</url-pattern>
   </servlet-mapping>
 </web-app>

@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Login V8</title>
+	<title>Subject management</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->	
@@ -130,6 +130,7 @@ input:checked + .slider:before {
 	            ${ (user.role == "Admin") ? '<li><a class="dropdown-item" href="./user-management">User management</a></li>' : '' }
 	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./program-management">Program management</a></li>' : '' }
 	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./subject-management">Subject management</a></li>' : '' }
+	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./defense-management">Defense management</a></li>' : '' }
 	            <li><hr class="dropdown-divider"></li>
 	            <li><a class="dropdown-item" href="./LogoutServlet">Log out</a></li>
 	          </ul>
@@ -149,7 +150,6 @@ input:checked + .slider:before {
 					<div class="text-center">
 						<ul class="responsive-table">
 							<li class="table-header">
-								<%-- <div class="col col-1">Id <a href="./subject-management&orderByColumn=id&orderBySort=DESC"><i class="fas fa-sort-amount-up-alt"></i></a></div> --%>
 								<div class="col col-1">Id
 									<a href="./subject-management?orderByColumn=id&orderBySort=ASC"><i class="fas fa-sort-numeric-down" title="sort by increasing order"></i></a>
 									<a href="./subject-management?orderByColumn=id&orderBySort=DESC"><i class="fas fa-sort-numeric-down-alt" title="sort by decreasing order"></i></a>
@@ -216,12 +216,15 @@ input:checked + .slider:before {
 										<c:choose>
 											<c:when test="${subject.affiliatedStudent != null}"> <!-- if there is an affiliated student, display it -->
 												${subject.affiliatedStudent.name}
+												<br>
+												<button type="button" class="btn btn-secondary btn-sm" onclick="unassignStudentToAffiliation(${subject.id},${subject.affiliatedStudent.id})"><i class="fas fa-trash" style="color: white"></i></button>
+												<button type="button" class="btn btn-secondary btn-sm" onclick="displayEmail('${subject.affiliatedStudent.email}')"><i class="fas fa-at" style="color: white"></i></button> <!-- encodeURIComponent(${subject.affiliatedStudent.email}) -->
 											</c:when>
 											<c:otherwise> <!-- else display the list of students without internships -->
 												<select class="custom-select" id="select-aff-student-subject-${subject.id}" name="assignedStudent" ${(user.role != "Assistant") ? '' : 'disabled'} onfocus="updateOldAffiliatedStudent(this)" onchange="updateSubjectAffiliatedStudent(${subject.id}, this);">
-													<option value="null">No student</option>
+													<option value="null" selected>No student</option>
 													<c:forEach items="${studentsNoInternship}" var="studentNoInternship">
-														<option value="${studentNoInternship.id}" ${subject.affiliatedStudent.id == studentNoInternship.id ? 'selected' : '' }>${studentNoInternship.name}</option>
+														<option value="${studentNoInternship.id}">${studentNoInternship.name}</option>
 													</c:forEach>
 												</select>
 											</c:otherwise>
@@ -229,9 +232,6 @@ input:checked + .slider:before {
 									</div>
 									<div class="col col-1">
 										<button type="button" class="btn btn-secondary btn-sm"><a href="/InternshipsAtX/download-subject?internshipId=${subject.id}" target="_blank"><i class="fas fa-download" style="color: white"></i></a></button>
-										
-									<%-- </div> --%>
-									<%-- <div class="col col-1" data-label="Delete"> --%>
 										<button type="button" class="btn btn-secondary btn-sm" onclick="deleteSubject(${subject.id}, '${subject.title}');"><i class="fas fa-trash"></i></button>
 									</div>
 								</li>
@@ -456,20 +456,14 @@ input:checked + .slider:before {
 		}
 	}
 
-	function orderById() {
-		$.ajax({
-			type : "GET",
-			url : "SubjectManagementServlet",
-			data : "orderByColumn=id&orderBySort=DESC",
-			success : function(data) {
-				console.log("ordered subjects by id DESC");
-				// location.reload();
-			},
-			error: function(res){
-				alert("Failed to sort data");
-				// location.reload();
-			}
-		});
+	// function displayEmail() {
+	// 	alert("Email: nelly.barret@test.com");
+	// }
+
+	function displayEmail(email) {
+		// console.log(decodeURIComponent(email));
+		// alert("Email: " + decodeURIComponent(email));
+		alert("Email: " + email);
 	}
 </script>
 </body>

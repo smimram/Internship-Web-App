@@ -108,7 +108,11 @@ public class LoginServlet extends HttpServlet {
 		Person user = null;
 		Connection con = null;
 		try {
-			String query = "select name, role, person_id, valid from person p inner join person_roles pr on pr.person_id = p.id inner join role_type rt on rt.id = pr.role_id where email = ?;";
+			String query = "select name, role, person_id, valid, email " +
+					"from person p " +
+					"inner join person_roles pr on pr.person_id = p.id " +
+					"inner join role_type rt on rt.id = pr.role_id " +
+					"where email = ?;";
 			//creating connection with the database
 			con = DbUtils.getInstance().getConnection();
 			if (con == null) {
@@ -119,7 +123,7 @@ public class LoginServlet extends HttpServlet {
 			ResultSet rs = ps.executeQuery();
 			
 			if (rs.next()) {
-				user = new Person(rs.getString("name"), rs.getInt("person_id"), rs.getString("role"), rs.getBoolean("valid"));
+				user = new Person(rs.getString("name"), rs.getInt("person_id"), rs.getString("role"), rs.getBoolean("valid"), rs.getString("email"));
 			}
 
 		}
