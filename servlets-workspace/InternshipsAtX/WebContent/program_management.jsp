@@ -100,7 +100,7 @@
 								<ul class="responsive-table">
 									<li class="table-header">
 										<div class="col col-2"> Id </div>
-										<div class="col col-7">Cetegory Description</div>
+										<div class="col col-7">Category Description</div>
 										<div class="col col-3">Action</div>
 									</li>
 									

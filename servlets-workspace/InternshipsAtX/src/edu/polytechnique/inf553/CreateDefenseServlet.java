@@ -34,13 +34,28 @@ public class CreateDefenseServlet extends HttpServlet {
 			Person user = (Person)session.getAttribute("user");
 			String role = user.getRole();
 			if (role.equals("Admin") || role.equals("Professor" )) {
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH); // TODO: set it to the current locale
-				LocalDate defenseDate = LocalDate.parse(request.getParameter("defenseDate"), formatter);
-				formatter = DateTimeFormatter.ofPattern("HH:mm", Locale.ENGLISH); // TODO: set it to the current locale
-				LocalTime defenseTime = LocalTime.parse(request.getParameter("defenseTime"), formatter);
-				int studentId = Integer.parseInt(request.getParameter("studentId"));
-				int referentId = Integer.parseInt(request.getParameter("referentId"));
-				int jury2Id = Integer.parseInt(request.getParameter("jury2Id"));
+				LocalDate defenseDate = null;
+				if(!request.getParameter("defenseDate").equals("") && !request.getParameter("defenseDate").equals("null")) {
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH); // TODO: set it to the current locale
+					defenseDate = LocalDate.parse(request.getParameter("defenseDate"), formatter);
+				}
+				LocalTime defenseTime = null;
+				if(!request.getParameter("defenseTime").equals("") && !request.getParameter("defenseTime").equals("null")) {
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm", Locale.ENGLISH); // TODO: set it to the current locale
+					defenseTime = LocalTime.parse(request.getParameter("defenseTime"), formatter);
+				}
+				int studentId = -1;
+				if(!request.getParameter("studentId").equals("") && !request.getParameter("studentId").equals("null")) {
+					studentId = Integer.parseInt(request.getParameter("studentId"));
+				}
+				int referentId =-1;
+				if(!request.getParameter("referentId").equals("") && !request.getParameter("referentId").equals("null")) {
+					referentId = Integer.parseInt(request.getParameter("referentId"));
+				}
+				int jury2Id = -1;
+				if(!request.getParameter("jury2Id").equals("") && !request.getParameter("jury2Id").equals("null")) {
+					jury2Id = Integer.parseInt(request.getParameter("jury2Id"));
+				}
 
 				Connection con = null;
 				try {
@@ -53,11 +68,31 @@ public class CreateDefenseServlet extends HttpServlet {
 							"values (?,?,?,?,?);\r\n" +
 							"COMMIT TRANSACTION;";;
 					PreparedStatement ps = con.prepareStatement(query);
-					ps.setDate(1, Date.valueOf(defenseDate));
-					ps.setTime(2, Time.valueOf(defenseTime));
-					ps.setInt(3, referentId);
-					ps.setInt(4, jury2Id);
-					ps.setInt(5, studentId);
+					if(defenseDate == null) {
+						ps.setNull(1, Types.DATE);
+					} else {
+						ps.setDate(1, Date.valueOf(defenseDate));
+					}
+					if(defenseTime == null) {
+						ps.setNull(2,Types.TIME);
+					} else {
+						ps.setTime(2, Time.valueOf(defenseTime));
+					}
+					if(referentId == -1) {
+						ps.setNull(3, Types.INTEGER);
+					} else {
+						ps.setInt(3, referentId);
+					}
+					if(jury2Id == -1) {
+						ps.setNull(4, Types.INTEGER);
+					} else {
+						ps.setInt(4, jury2Id);
+					}
+					if(studentId == -1) {
+						ps.setNull(5, Types.INTEGER);
+					} else {
+						ps.setInt(5, studentId);
+					}
 					ps.executeUpdate();
 
 					

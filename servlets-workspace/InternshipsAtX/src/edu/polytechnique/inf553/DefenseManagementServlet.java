@@ -189,7 +189,7 @@ public class DefenseManagementServlet extends HttpServlet {
 					"FROM person p " +
 					"LEFT JOIN person_roles pr ON p.id = pr.person_id " +
 					"LEFT JOIN role_type rt ON pr.role_id = rt.id " +
-					"WHERE rt.role = 'Student' AND p.id IN (SELECT pi.person_id FROM person_internship pi) " +
+					"WHERE rt.role = 'Student' AND p.id IN (SELECT pi.person_id FROM person_internship pi) AND p.id NOT IN (SELECT student_id FROM defense) " +
 					"ORDER BY p." + orderByColumn + " " + orderBySort + ";";
 			PreparedStatement preparedStatement = con.prepareStatement(query);
 			ResultSet resultSet = preparedStatement.executeQuery();

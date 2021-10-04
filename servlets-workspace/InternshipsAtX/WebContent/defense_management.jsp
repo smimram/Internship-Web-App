@@ -245,11 +245,65 @@ input:checked + .slider:before {
 							</c:forEach> 
 						</ul>
 					</div>
+					</div>
 				</form>
 			</div>
 		</div>
 	</div>
-	
+
+	<!-- Create a new defense -->
+	<div class="limiter">
+		<div class="container-login100 background_style" style="min-height:60vh;">
+			<div class="wrap-login100-V2">
+				<div class="login100-form validate-form p-l-55 p-r-55 p-t-178 p-b-40">
+					<span class="login100-form-title">
+						<h1> Create a defense </h1>
+					</span>
+
+					<!-- form to create new defense -->
+					<form class="create-defense m-t-10 text-center" onsubmit="createDefense();">
+						<div class="form-group">
+							<label for="newDefenseDate" class="mr-3">Date: </label>
+						    <input type="date" class="form-control w-50 d-inline" id="newDefenseDate">
+						</div>
+						<div class="form-group">
+							<label for="newDefenseTime" class="mr-3">Time: </label>
+						    <input type="time" class="form-control w-50 d-inline" id="newDefenseTime">
+						</div>
+						<div class="form-group">
+						  	<label for="newDefenseReferent" class="mr-3">Referent: </label>
+						    <select class="custom-select" id="newDefenseReferent" name="referent">
+								<option value="null" selected>No referent</option>
+								<c:forEach items="${professors}" var="professor">
+									<option value="${professor.id}">${professor.name}</option>
+								</c:forEach>
+							</select>
+						</div>
+						<div class="form-group">
+						  	<label for="newDefenseJury2" class="mr-3">Jury 2: </label>
+						    <select class="custom-select" id="newDefenseJury2" name="jury2">
+								<option value="null" selected>No jury 2</option>
+								<c:forEach items="${professors}" var="professor">
+									<option value="${professor.id}">${professor.name}</option>
+								</c:forEach>
+							</select>
+						</div>
+						<div class="form-group">
+						  	<label for="newDefenseStudent" class="mr-3">Student: </label>
+						    <select class="custom-select" id="newDefenseStudent" name="student">
+								<option value="null" selected>No student</option>
+								<c:forEach items="${students}" var="student">
+									<option value="${student.id}">${student.name}</option>
+								</c:forEach>
+							</select>
+						</div>
+					  <button type="button" class="btn btn-primary btn-sm" type="submit" onclick="createDefense();">Create defense</button>
+					</form>
+					
+				</div>
+			</div>
+		</div>
+	</div>
 <script>
 	function updateDefense(defenseId, date, time){
 		console.log(date)
@@ -361,16 +415,16 @@ input:checked + .slider:before {
 		});
 	}
 
-	function deleteDefense(defenseId, defenseDate, defenseTime){
-		var r = confirm("Are you sure you want to delete the defense scheduled on "+defenseDate+" at "+defenseTime+"?");
+	function deleteDefense(defenseId){
+		var r = confirm("Are you sure you want to delete the defense"+defenseId+"?");
 		if (r == true) {
 			$.ajax({
 				type : "GET",
 				url : "DeleteDefenseServlet",
 				data : "defenseId=" + defenseId ,
 				success : function(data) {
-					console.log("delete defense " + id);
-					alert("deleted defense " + id);
+					console.log("delete defense " + defenseId);
+					alert("deleted defense " + defenseId);
 					location.reload();
 				},
 				error: function(res){
@@ -382,6 +436,43 @@ input:checked + .slider:before {
 
 	function displayEmail(email) {
 		alert("Email: " + email);
+	}
+
+	function createDefense(){
+		console.log("creating a new defense");
+		var newDate = $("#newDefenseDate").val();
+		$("#newDefenseDate").val("");
+		console.log(newDate);
+		var newTime = $("#newDefenseTime").val();
+		$("#newDefenseTime").val("");
+		console.log(newTime);
+		var referentId = $("#newDefenseReferent").val();
+		$("#newDefenseReferent").val("");
+		console.log(referentId);
+		var jury2Id = $("#newDefenseJury2").val();
+		$("#newDefenseJury2").val("");
+		console.log(jury2Id);
+		var studentId = $("#newDefenseStudent").val();
+		$("#newDefenseStudent").val("");
+		console.log(studentId);
+		// TODO 
+		// if(cName.trim() == ''){
+			// alert('Please enter a category name');
+		// }else{
+			$.ajax({
+				type : "GET",
+				url : "CreateDefenseServlet",
+				data : "defenseDate=" + newDate+"&defenseTime="+newTime+"&referentId="+referentId+"&jury2Id="+jury2Id+"&studentId="+studentId,
+				success : function(data) {
+					console.log("created new defense for student "+studentId);
+					// reload the new data
+					location.reload();
+				},
+				error: function(res){
+					alert("Failed to create new defense");
+				}
+			});
+		// }
 	}
 </script>
 </body>
