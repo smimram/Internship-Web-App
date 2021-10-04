@@ -8,31 +8,7 @@
 <html lang="en">
 <head>
 	<title>Home</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-<!--===============================================================================================-->	
-	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
-<!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
-<!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="css/util.css">
-	<link rel="stylesheet" type="text/css" href="css/main.css">
-	<link rel="stylesheet" type="text/css" href="css/table.css">
-	<link rel="stylesheet" type="text/css" href="css/student_view.css">
-	
-<!--===============================================================================================-->
+	<%@ include file="meta.jsp" %>
 </head>
 <body>
 
@@ -41,26 +17,8 @@ Person user = (Person)session.getAttribute("user");
 String name = user.getName();
 String role = user.getRole();
 %>
-
-	<nav class="navbar navbar-dark bg-dark">
-	  <div class="container-fluid justify-content-start">
-	    <a class="navbar-brand" href="/InternshipsAtX/student-view">
-	      <img src="images/logo.png" style="max-height: 35px;">
-	      Internship Management
-	    </a>
-	    <div class="ml-auto d-flex">
-	        <div class="nav-item dropdown">
-	          <a class="text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-	            <%=role %>: <%=name %>
-	          </a>
-	          <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="right:0;left:auto;">
-	            <li><a class="dropdown-item" href="./LogoutServlet">Log out</a></li>
-	          </ul>
-	        </div>
-	    </div>
-	  </div>
-	</nav>
-	
+	<!-- navigation bar -->
+	<jsp:include page="header.jsp"></jsp:include>
 	
 	<%
 		// show user internship if he has
@@ -95,7 +53,7 @@ String role = user.getRole();
 											<div class="col col-3" data-label="Supervisor Name"><%=userSubjectSupervisorName %></div>
 											<div class="col col-4" data-label="Supervisor Email"><%=userSubjectSupervisorEmail %></div>
 											<div class="col col-5" data-label="Subject">
-												<a href="downloadsubject?internshipId=<%=userSubjectId %>" target="_blank">Download</a>
+												<button type="button" class="btn btn-secondary btn-sm"><a href="/InternshipsAtX/download-subject?internshipId=<%=userSubjectId %>" target="_blank"><i class="fas fa-download" style="color: white"></i></a></button>
 											</div>
 										</li>
 									</ul>
@@ -215,7 +173,7 @@ String role = user.getRole();
 						newRow.innerHTML += '<li class="table-header"><div class="col col-1"> Id </div><div class="col col-2">Subject Title</div><div class="col col-3">Supervisor Name</div><div class="col col-4">Supervisor Email</div><div class="col col-5">Subject</div></li>';		
 						
 						for(const subject of subjects) {
-							var downloadForm = '<a href="downloadsubject?internshipId='+subject.id+'" target="_blank">Download</a>';
+							var downloadForm = '<button type="button" class="btn btn-secondary btn-sm"><a href="/InternshipsAtX/download-subject?internshipId='+subject.id+'" target="_blank"><i class="fas fa-download" style="color: white"></i></a></button>';
 							var newRowE = document.getElementById(k.concat(category.key).concat("pctable"));
 							newRowE.innerHTML += '<li class="table-row"><div class="col col-1" data-label="Id">' + subject.id + '</div>'+
 															'<div class="col col-2" data-label="Subject Title">'+subject.title+'</div>'+
@@ -257,7 +215,7 @@ String role = user.getRole();
 					newRow.innerHTML += '<li class="table-header"><div class="col col-1"> Id </div><div class="col col-2">Subject Title</div><div class="col col-3">Supervisor Name</div><div class="col col-4">Supervisor Email</div><div class="col col-5">Subject</div></li>';		
 					
 					for(const subject of subjects) {
-						var downloadForm = '<a href="downloadsubject?internshipId='+subject.id+'" target="_blank">Download</a>';
+						var downloadForm = '<button type="button" class="btn btn-secondary btn-sm"><a href="/InternshipsAtX/download-subject?internshipId='+subject.id+'" target="_blank"><i class="fas fa-download" style="color: white"></i></a></button>';
 						var newRowE = document.getElementById(pId.concat(category.key).concat("pctable"));
 						newRowE.innerHTML += '<li class="table-row"><div class="col col-1" data-label="Id">' + subject.id + '</div>'+
 														'<div class="col col-2" data-label="Subject Title">'+subject.title+'</div>'+
