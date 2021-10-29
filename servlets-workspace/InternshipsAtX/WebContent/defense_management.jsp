@@ -83,7 +83,7 @@ input:checked + .slider:before {
 }
 /* icons */
 .fas {
-	color: black;
+	color: white;
 }
 </style>
 <body>

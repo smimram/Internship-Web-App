@@ -80,14 +80,14 @@ public class SubjectAttributionServlet extends HttpServlet {
 			
 			List<Subject> subjects = new ArrayList<>();
 			// get all subject list
-			String query = "SELECT DISTINCT id, title, program_id, administr_validated, scientific_validated "
+			String query = "SELECT DISTINCT id, title, program_id, administr_validated, scientific_validated, confidential_internship "
 					+ "FROM internship "
 					+ "WHERE is_taken IS FALSE AND administr_validated IS TRUE AND scientific_validated IS TRUE;";
 			PreparedStatement preparedStatement = con.prepareStatement(query);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while(resultSet.next()) {
 				Subject subject = new Subject(resultSet.getString("id"), resultSet.getString("title"), resultSet.getString("program_id"), 
-						resultSet.getBoolean("administr_validated"), resultSet.getBoolean("scientific_validated"));
+						resultSet.getBoolean("administr_validated"), resultSet.getBoolean("scientific_validated"), resultSet.getBoolean("confidential_internship"));
 				subjects.add(subject);
 			}
 

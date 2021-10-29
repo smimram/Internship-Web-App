@@ -37,7 +37,6 @@
 						</button>
 					</div>			
 				</form>
-				<h1 class="easter-egg" style="visibility:hidden; font-size:0;">Remi Delacourt was here</h1> <!-- An easter-egg ! -->
 			</div>
 		</div>
 	</div>

@@ -51,13 +51,24 @@
 
 					<div class="wrap-input100 validate-input" data-validate = "Please choose your role">
 			
-						<select name="role" class="input100" >
+						<select name="role" class="input100" id="selectRole">  <!-- onchange="displayProgramsForStudents();">-->
 	        				<option value="" selected disabled hidden>--Please choose a role--</option>
 	        				<option value="Admin" selected>Admin</option>
 	        				<option value="Assistant">Assistant</option>
 	        				<option value="Professor">Professor</option>
 	        				<option value="Student">Student</option>
 	        			</select>
+						<span class="focus-input100"></span>
+					</div>
+
+					<div id ="programsForStudents" class="wrap-input100 validate-input" data-validate = "Please choose your program">
+						<select class="input100" name="programStudent">
+							<option value="null">Select a program</option>
+							<c:forEach items="${programs}" var="program">
+								<option value="${program.id}">${program.name} - ${program.year}</option>
+							</c:forEach>
+						</select>
+						<span class="focus-input100"></span>
 					</div>
 
 
@@ -74,7 +85,6 @@
 					<div class="text-red flex-col-c p-t-100 p-b-40">
 						<p class="text-red" style="color:red;">${err_message}</p>
 					</div>
-					<h1 class="easter-egg" style="visibility:hidden; font-size:0;">Victor Radermecker was here</h1> <!-- An easter-egg ! -->
 				</form>
 				
 			</div>
@@ -85,3 +95,15 @@
 
 </body>
 </html>
+
+<script type="text/javascript">
+// $("#programsForStudents").hide(); // by default, hide the program select. Show it only for students
+
+// function displayProgramsForStudents() {
+// 	if($("#selectRole option:selected").text() == "Student") {
+// 		$("#programsForStudents").show();
+// 	} else {
+// 		$("#programsForStudents").hide();
+// 	}
+// }
+</script>

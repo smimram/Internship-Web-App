@@ -51,7 +51,19 @@
   </servlet>
   <servlet>
     <servlet-name>DownloadTopicPage</servlet-name>
-    <servlet-class>edu.polytechnique.inf553.DownloadServlet</servlet-class>
+    <servlet-class>edu.polytechnique.inf553.DownloadTopicServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>DownloadFichePage</servlet-name>
+    <servlet-class>edu.polytechnique.inf553.DownloadFicheServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>DownloadReportPage</servlet-name>
+    <servlet-class>edu.polytechnique.inf553.DownloadReportServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>DownloadSlidesPage</servlet-name>
+    <servlet-class>edu.polytechnique.inf553.DownloadSlidesServlet</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>ErrorPage</servlet-name>
@@ -96,6 +108,18 @@
   <servlet-mapping>
     <servlet-name>DownloadTopicPage</servlet-name>
     <url-pattern>/download-subject</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DownloadFichePage</servlet-name>
+    <url-pattern>/download-fiche</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DownloadReportPage</servlet-name>
+    <url-pattern>/download-report</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DownloadSlidesPage</servlet-name>
+    <url-pattern>/download-slides</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>ErrorPage</servlet-name>

@@ -6,34 +6,7 @@
 <html lang="en">
 <head>
 	<title>User management</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-<!--===============================================================================================-->	
-	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
-<!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
-<!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="css/util.css">
-	<link rel="stylesheet" type="text/css" href="css/main.css">
-	<link rel="stylesheet" type="text/css" href="css/table.css">
-<!--===============================================================================================-->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
-	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
-<!--===============================================================================================-->
+	<%@ include file="meta.jsp" %>
 </head>
 <style>
 .mul-select{
@@ -110,30 +83,8 @@ input:checked + .slider:before {
 }
 </style>
 <body>
-
-	<nav class="navbar navbar-dark bg-dark">
-	  <div class="container-fluid justify-content-start">
-	    <a class="navbar-brand" href="/InternshipsAtX/dashboard">
-	      <img src="images/logo.png" style="max-height: 35px;">
-	      Internship Management
-	    </a>
-	    <div class="ml-auto d-flex">
-	        <div class="nav-item dropdown">
-	          <a class="text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-	            ${user.role}: ${user.name}
-	          </a>
-	          <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="right:0;left:auto;">
-	            ${ (user.role == "Admin") ? '<li><a class="dropdown-item" href="./user-management">User management</a></li>' : '' }
-	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./program-management">Program management</a></li>' : '' }
-	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./subject-management">Subject management</a></li>' : '' }
-	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./defense-management">Defense management</a></li>' : '' }
-	            <li><hr class="dropdown-divider"></li>
-	            <li><a class="dropdown-item" href="./LogoutServlet">Log out</a></li>
-	          </ul>
-	        </div>
-	    </div>
-	  </div>
-	</nav>
+	<!-- navigation bar -->
+	<jsp:include page="header.jsp"></jsp:include>
 	
 	<div class="limiter">
 		<div class="container-login100 background_style">
@@ -156,7 +107,7 @@ input:checked + .slider:before {
 							<c:forEach items="${persons}" var="person">
 								<li class="table-row">
 									<div class="col col-1" data-label="Id">${person.id}</div>
-									<div class="col col-2" data-label="Name">${person.name}</div>
+									<div class="col col-2" data-label="Name">${person.name}</br><button type="button" class="btn btn-secondary btn-sm" onclick="displayEmail('${person.email}')"><i class="fas fa-at" style="color: white"></i></button></div>
 									<div class="col col-2" data-label="Role">
 										<!-- update the role of a user -->
 										<select class="custom-select" name="role" onchange="updateUserRole(${person.id}, this);">
@@ -277,6 +228,12 @@ function updateUserValid(pid, sel){
         	location.reload();
         }
     });
+}
+
+function displayEmail(email) {
+	// console.log(decodeURIComponent(email));
+	// alert("Email: " + decodeURIComponent(email));
+	alert("Email: " + email);
 }
 </script>
 

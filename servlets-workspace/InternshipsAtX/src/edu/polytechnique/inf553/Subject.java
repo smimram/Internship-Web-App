@@ -16,8 +16,10 @@ public class Subject {
 	private boolean sciValid;
 	private List<Category> categories;
 	private Person affiliatedStudent;
-	
-	public Subject(String title, String id, String supervisorEmail, String supervisorName, String programId, boolean adminValid, boolean sciValid) {
+	private boolean isConfidentialInternship;
+	private boolean isConfidentialReport;
+
+	public Subject(String title, String id, String supervisorEmail, String supervisorName, String programId, boolean adminValid, boolean sciValid, boolean isConfidentialInternship) {
 		this.title = title;
 		this.id = id;
 		this.supervisorEmail = supervisorEmail;
@@ -27,9 +29,10 @@ public class Subject {
 		this.programId = programId;
 		this.categories = new ArrayList<>();
 		this.affiliatedStudent = null;
+		this.isConfidentialInternship = isConfidentialInternship;
 	}
 	
-	public Subject(String id, String title, String programId, boolean adminValid, boolean sciValid) {
+	public Subject(String id, String title, String programId, boolean adminValid, boolean sciValid, boolean isConfidentialInternship) {
 		this.title = title;
 		this.id = id;
 		this.adminValid = adminValid;
@@ -37,15 +40,17 @@ public class Subject {
 		this.programId = programId;
 		this.categories = new ArrayList<>();
 		this.affiliatedStudent = null;
+		this.isConfidentialInternship = isConfidentialInternship;
 	}
 	
-	public Subject(String title, String id, String supervisorEmail, String supervisorName) {
+	public Subject(String title, String id, String supervisorEmail, String supervisorName, boolean isConfidentialInternship) {
 		this.title = title;
 		this.id = id;
 		this.supervisorEmail = supervisorEmail;
 		this.supervisorName = supervisorName;
 		this.categories = new ArrayList<>();
 		this.affiliatedStudent = null;
+		this.isConfidentialInternship = isConfidentialInternship;
 	}
 
 	public String getTitle() {
@@ -78,17 +83,21 @@ public class Subject {
 
 	public Person getAffiliatedStudent() { return this.affiliatedStudent; }
 	
+	public boolean isConfidentialInternship() {  return this.isConfidentialInternship; }
+
+	public boolean isConfidentialReport() {  return this.isConfidentialReport; }
+
 	public void addCategory(Category category) {
 		categories.add(category);
 	}
-	
+
 	public int categorySize() {
 		return categories.size();
 	}
 	public List<Category> getCategories() {
 		return categories;
 	}
-	
+
 	public void setAffiliatedStudent(Person affiliatedStudent) {
 		this.affiliatedStudent = affiliatedStudent;
 	}

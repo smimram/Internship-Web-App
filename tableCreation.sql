@@ -28,11 +28,17 @@ create table internship(
    title varchar not null,
    creation_date date not null,
    content bytea not null,
+   fiche_stage bytea,
+   report bytea,
+   slides bytea,
    supervisor_id int, foreign key (supervisor_id) references person(id) on delete cascade,
    scientific_validated boolean not null,
    administr_validated boolean not null,
    is_taken boolean not null,
    program_id int, foreign key (program_id) references program(id)
+   confidential_internship boolean not null DEFAULT 0, -- default is false
+   confidential_report boolean DEFAULT 0
+
 );
  
 create table internship_category(

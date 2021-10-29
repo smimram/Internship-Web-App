@@ -61,6 +61,7 @@ public class SubjectManagementServlet extends HttpServlet {
 				request.setAttribute("programs", programs);
 				request.setAttribute("categories", categories);
 				request.setAttribute("subjects", subjects);
+				System.out.println(subjects);
 				request.getRequestDispatcher("subject_management.jsp").forward(request, response);
 			}else {
 				// the user is not admin or professor, redirect to the error page
@@ -102,20 +103,18 @@ public class SubjectManagementServlet extends HttpServlet {
 			System.out.println(orderByColumn + " ; " + orderBySort);
 			if(orderBySort.startsWith("'") && orderBySort.endsWith("'")) orderBySort = orderBySort.substring(1, orderBySort.length()-1); // if the value is encapsulated into '', e.g. 'ASC'
 			System.out.println(orderByColumn + " ; " + orderBySort);
-			System.out.println("writing the query");
-			String query = "SELECT DISTINCT id, title, program_id, administr_validated, scientific_validated "
+			String query = "SELECT DISTINCT id, title, program_id, administr_validated, scientific_validated, confidential_internship "
 					+ "FROM internship "
-//					+ "ORDER BY ? ?"; // can't do that because ASC/DESC is not a column
 					+ "ORDER BY " + orderByColumn + " " + orderBySort + ";";
-			System.out.println("finished to write the query");
 			PreparedStatement preparedStatement = con.prepareStatement(query);
 			System.out.println("preparedStatement: " + preparedStatement.toString());
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while(resultSet.next()) {
 				Subject subject = new Subject(resultSet.getString("id"), resultSet.getString("title"), resultSet.getString("program_id"), 
-						resultSet.getBoolean("administr_validated"), resultSet.getBoolean("scientific_validated"));
+						resultSet.getBoolean("administr_validated"), resultSet.getBoolean("scientific_validated"), resultSet.getBoolean("confidential_internship"));
 				subjects.add(subject);
 			}
+			System.out.println(subjects);
 			
 			return subjects;
 			

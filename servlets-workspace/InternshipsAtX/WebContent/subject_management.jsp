@@ -6,35 +6,7 @@
 <html lang="en">
 <head>
 	<title>Subject management</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-<!--===============================================================================================-->	
-	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
-<!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
-<!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
-	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="css/util.css">
-	<link rel="stylesheet" type="text/css" href="css/main.css">
-	<link rel="stylesheet" type="text/css" href="css/table.css">
-<!--===============================================================================================-->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
-	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
-<!--===============================================================================================-->
+	<%@ include file="meta.jsp" %>
 </head>
 <style>
 .mul-select{
@@ -111,33 +83,12 @@ input:checked + .slider:before {
 }
 /* icons */
 .fas {
-	color: black;
+	color: white;
 }
 </style>
 <body>
-	<nav class="navbar navbar-dark bg-dark">
-	  <div class="container-fluid justify-content-start">
-	    <a class="navbar-brand" href="/InternshipsAtX/dashboard">
-	      <img src="images/logo.png" style="max-height: 35px;">
-	      Internship Management
-	    </a>
-	    <div class="ml-auto d-flex">
-	        <div class="nav-item dropdown">
-	          <a class="text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-	            ${user.role}: ${user.name}
-	          </a>
-	          <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="right:0;left:auto;">
-	            ${ (user.role == "Admin") ? '<li><a class="dropdown-item" href="./user-management">User management</a></li>' : '' }
-	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./program-management">Program management</a></li>' : '' }
-	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./subject-management">Subject management</a></li>' : '' }
-	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./defense-management">Defense management</a></li>' : '' }
-	            <li><hr class="dropdown-divider"></li>
-	            <li><a class="dropdown-item" href="./LogoutServlet">Log out</a></li>
-	          </ul>
-	        </div>
-	    </div>
-	  </div>
-	</nav>
+	<!-- navigation bar -->
+	<jsp:include page="header.jsp"></jsp:include>
 	
 	<div class="limiter">
 		<div class="container-login100 background_style">
@@ -159,7 +110,7 @@ input:checked + .slider:before {
 									<a href="./subject-management?orderByColumn=title&orderBySort=DESC"><i class="fas fa-sort-alpha-down-alt" title="sort by decreasing order"></i></a>
 								</div>
 								<div class="col col-2">Categories</div>
-								<div class="col col-2">Program</i></div>
+								<div class="col col-1">Program</i></div>
 								<div class="col col-1">Admin. validation
 									<a href="./subject-management?orderByColumn=administr_validated&orderBySort=ASC"><i class="fas fa-sort-amount-down" title="sort by increasing order"></i></a>
 									<a href="./subject-management?orderByColumn=administr_validated&orderBySort=DESC"><i class="fas fa-sort-amount-down-alt" title="sort by decreasing order"></i></a>
@@ -169,10 +120,9 @@ input:checked + .slider:before {
 									<a href="./subject-management?orderByColumn=scientific_validated&orderBySort=DESC"><i class="fas fa-sort-amount-down-alt" title="sort by decreasing order"></i></a>
 								</div>
 								<div class="col col-2">Attributed to 
-									<%-- <a href="./subject-management?orderByColumn=id&orderBySort=ASC"><i class="fas fa-sort-numeric-down" title="sort by increasing order"></i></a> --%>
-									<%-- <a href="./subject-management?orderByColumn=id&orderBySort=DESC"><i class="fas fa-sort-numeric-down-alt" title="sort by decreasing order"></i></a> --%>
 								</div>
-								<%-- <div class="col col-1">Download</div> --%>
+								<div class="col col-1">Confidential subject
+								</div>
 								<div class="col col-1">Actions</div>
 							</li>
 							
@@ -188,7 +138,7 @@ input:checked + .slider:before {
 											</c:forEach>
 										</select>
 									</div>
-									<div class="col col-2" data-label="Program">
+									<div class="col col-1" data-label="Program">
 										<!-- update the program of a subject -->
 										<select class="custom-select" name="role" ${(user.role != "Assistant") ? '' : 'disabled'}  onchange="updateSubjectProgram(${subject.id}, this);">
 											<c:forEach items="${programs}" var="program">
@@ -218,7 +168,7 @@ input:checked + .slider:before {
 												${subject.affiliatedStudent.name}
 												<br>
 												<button type="button" class="btn btn-secondary btn-sm" onclick="unassignStudentToAffiliation(${subject.id},${subject.affiliatedStudent.id})"><i class="fas fa-trash" style="color: white"></i></button>
-												<button type="button" class="btn btn-secondary btn-sm" onclick="displayEmail('${subject.affiliatedStudent.email}')"><i class="fas fa-at" style="color: white"></i></button> <!-- encodeURIComponent(${subject.affiliatedStudent.email}) -->
+												<button type="button" class="btn btn-secondary btn-sm" onclick="displayEmail('${subject.affiliatedStudent.email}')"><i class="fas fa-at" style="color: white"></i></button>
 											</c:when>
 											<c:otherwise> <!-- else display the list of students without internships -->
 												<select class="custom-select" id="select-aff-student-subject-${subject.id}" name="assignedStudent" ${(user.role != "Assistant") ? '' : 'disabled'} onfocus="updateOldAffiliatedStudent(this)" onchange="updateSubjectAffiliatedStudent(${subject.id}, this);">
@@ -230,8 +180,17 @@ input:checked + .slider:before {
 											</c:otherwise>
 										</c:choose>
 									</div>
+									<div class="col col-1" data-label="confidentialSubject">
+										<label class="switch">
+											<input type="checkbox" disabled ${subject.isConfidentialInternship() ? 'checked' : ''}>
+											<span class="slider round"></span>
+										</label>
+									</div>
 									<div class="col col-1">
-										<button type="button" class="btn btn-secondary btn-sm"><a href="/InternshipsAtX/download-subject?internshipId=${subject.id}" target="_blank"><i class="fas fa-download" style="color: white"></i></a></button>
+										<button type="button" class="btn btn-secondary btn-sm"><a href="/InternshipsAtX/download-subject?internshipId=${subject.id}" target="_blank">Download subject</a></button>
+										<button type="button" class="btn btn-secondary btn-sm"><a href="/InternshipsAtX/download-fiche?internshipId=${subject.id}" target="_blank">Download fiche de stage</a></button>
+										<button type="button" class="btn btn-secondary btn-sm"><a href="/InternshipsAtX/download-report?internshipId=${subject.id}" target="_blank">Download report</a></button>
+										<button type="button" class="btn btn-secondary btn-sm"><a href="/InternshipsAtX/download-slides?internshipId=${subject.id}" target="_blank">Download slides</a></button>
 										<button type="button" class="btn btn-secondary btn-sm" onclick="deleteSubject(${subject.id}, '${subject.title}');"><i class="fas fa-trash"></i></button>
 									</div>
 								</li>
@@ -455,10 +414,6 @@ input:checked + .slider:before {
 			});
 		}
 	}
-
-	// function displayEmail() {
-	// 	alert("Email: nelly.barret@test.com");
-	// }
 
 	function displayEmail(email) {
 		// console.log(decodeURIComponent(email));

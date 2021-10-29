@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.mail.internet.InternetAddress;
 import javax.servlet.RequestDispatcher;
@@ -32,6 +34,10 @@ public class SigninServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println(this.getClass().getName() + " doGet method called with path " + request.getRequestURI() + " and parameters " + request.getQueryString());
+		List<Program> programs = getAllPrograms();
+		System.out.println(programs);
+		request.setAttribute("programs", programs);
+		System.out.println(request.getAttributeNames().toString());
 		request.getRequestDispatcher("signin.jsp").include(request, response);
 	}
 
@@ -46,6 +52,7 @@ public class SigninServlet extends HttpServlet {
 		String pass = request.getParameter("pass");
 		String confirmPass = request.getParameter("confirmPass");
 		String role = request.getParameter("role");
+		int programStudent = Integer.parseInt(request.getParameter("programStudent"));
 
 		String concatName = lastName+", "+firstName;
 
@@ -78,6 +85,13 @@ public class SigninServlet extends HttpServlet {
 				ps2.setString(1, role);
 				ps2.setString(2, email);
 				ps2.executeUpdate();
+
+				if(role.equals("Student")) {
+					query2 = "INSERT INTO person_program (program_id, person_id) VALUES (" + programStudent + " AS program_id, SELECT p.id FROM person p WHERE p.email = ?)";
+					ps = con.prepareStatement(query2);
+					ps.setString(1, email);
+					ps.executeUpdate();
+				}
 
 			}
 			catch(SQLException e) {
@@ -164,5 +178,33 @@ public class SigninServlet extends HttpServlet {
 				return "Please enter a valid email.";
 			}
 		}  
+	}
+
+	private List<Program> getAllPrograms() {
+		Connection con = null;
+		try {
+			con = DbUtils.getInstance().getConnection();
+			if (con == null) {
+				return null;
+			}
+
+			List<Program> programs = new ArrayList<>();
+			// get all program list
+			String query = "SELECT DISTINCT id, name, year FROM program ORDER BY name;";
+			PreparedStatement preparedStatement = con.prepareStatement(query);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while(resultSet.next()) {
+				Program program = new Program(resultSet.getString("id"), resultSet.getString("name"), resultSet.getString("year"));
+				programs.add(program);
+			}
+
+			return programs;
+
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			DbUtils.getInstance().releaseConnection(con);
+		}
 	}
 }
