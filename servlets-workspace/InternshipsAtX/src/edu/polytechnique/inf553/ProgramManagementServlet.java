@@ -63,7 +63,7 @@ public class ProgramManagementServlet extends HttpServlet {
 					PreparedStatement ps1 = con.prepareStatement(query1);
 					ResultSet rs1 = ps1.executeQuery();
 					while(rs1.next()) {
-						Program p = new Program(rs1.getString("id"), rs1.getString("name"), rs1.getString("year"));
+						Program p = new Program(rs1.getInt("id"), rs1.getString("name"), rs1.getString("year"));
 						programs.add(p);
 					}
 					

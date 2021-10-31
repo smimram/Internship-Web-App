@@ -1,16 +1,5 @@
 package edu.polytechnique.inf553;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.ServletException;
@@ -19,6 +8,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /*
  * Test out the hack! (only works if forgotten to put the '?' instead of the strings concatenation) Put this in passwords in SigninServlet : 
@@ -51,19 +49,15 @@ public class UploadTopicServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("Coucou");
 		System.out.println("doPost called with parameter "+request.getQueryString());
-		System.out.println("c'est moi");
 
 		String firstName = request.getParameter("firstName");
 		String lastName = request.getParameter("lastName");
 		String email = request.getParameter("email").toLowerCase();
 		String topicTitle = request.getParameter("topicTitle");
-		System.out.println(topicTitle);
 		String program_id_string = request.getParameter("programs");
 		String category_id_string = request.getParameter("categories");
 		String confidentiality = request.getParameter("confidentiality");
-		System.out.println(confidentiality);
 		Part uploadFile = request.getPart("uploadFile");
 		
 		String errorMessage = checkEntries(firstName, lastName, email, topicTitle, program_id_string, category_id_string, uploadFile);
@@ -183,7 +177,7 @@ public class UploadTopicServlet extends HttpServlet {
 			PreparedStatement ps1 = con.prepareStatement(query1);
 			ResultSet rs1 = ps1.executeQuery();
 			while(rs1.next()) {
-				Program p = new Program(rs1.getString("id"), rs1.getString("name"), rs1.getString("year"));
+				Program p = new Program(rs1.getInt("id"), rs1.getString("name"), rs1.getString("year"));
 				programs.add(p);
 			}
 			

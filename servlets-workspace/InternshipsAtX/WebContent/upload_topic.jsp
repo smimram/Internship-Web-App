@@ -57,13 +57,14 @@
 					</div>
 
 					<div class="wrap-input100 validate-input m-b-16" data-validate="Check this if the subject is confidential">
+						<label for="confidentiality">Confidential subject: </label>
 						<label class="switch">
 							<input type="checkbox" id="confidentiality" name="confidentiality">
 							<span class="slider round"></span>
 						</label>
 					</div>
 
-					<div class="wrap-input100 validate-input m-b-5 class="input100">
+					<div class="wrap-input100 validate-input m-b-5" class="input100">
 						<p class="text-black"> <b> Please upload the PDF describing the internship offer. </b> </p>
 						<input type="file" name="uploadFile" accept="application/pdf"/>
 		  				<br><br>

@@ -168,7 +168,7 @@ public class SubjectManagementServlet extends HttpServlet {
 			PreparedStatement preparedStatement = con.prepareStatement(query);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while(resultSet.next()) {
-				Program program = new Program(resultSet.getString("id"), resultSet.getString("name"), resultSet.getString("year"));
+				Program program = new Program(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getString("year"));
 				programs.add(program);
 			}
 

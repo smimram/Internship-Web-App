@@ -77,6 +77,17 @@ ul, li {
 }
 
 
+.ul-simple {
+  padding-left: 1em !important; 
+  list-style: disc !important;
+}
+
+.li-simple { 
+  padding-left: 1em !important; 
+  list-style-type: disc !important;
+}
+
+
 /*---------------------------------------------*/
 input {
 	outline: none;

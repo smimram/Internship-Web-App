@@ -17,7 +17,6 @@ public class Subject {
 	private List<Category> categories;
 	private Person affiliatedStudent;
 	private boolean isConfidentialInternship;
-	private boolean isConfidentialReport;
 
 	public Subject(String title, String id, String supervisorEmail, String supervisorName, String programId, boolean adminValid, boolean sciValid, boolean isConfidentialInternship) {
 		this.title = title;
@@ -84,8 +83,6 @@ public class Subject {
 	public Person getAffiliatedStudent() { return this.affiliatedStudent; }
 	
 	public boolean isConfidentialInternship() {  return this.isConfidentialInternship; }
-
-	public boolean isConfidentialReport() {  return this.isConfidentialReport; }
 
 	public void addCategory(Category category) {
 		categories.add(category);

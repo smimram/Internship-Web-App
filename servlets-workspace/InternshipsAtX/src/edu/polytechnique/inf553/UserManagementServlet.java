@@ -61,16 +61,16 @@ public class UserManagementServlet extends HttpServlet {
 					}
 					
 					// get program list for each user
-					for(int i = 0; i < persons.size(); i++) {
-						String query1 = "SELECT DISTINCT program_id, name, year\n" + 
-								"FROM program p inner join person_program pp on p.id = pp.program_id\n" + 
+					for (Person person : persons) {
+						String query1 = "SELECT DISTINCT program_id, name, year\n" +
+								"FROM program p inner join person_program pp on p.id = pp.program_id\n" +
 								"WHERE pp.person_id = ?";
 						PreparedStatement ps1 = con.prepareStatement(query1);
-						ps1.setInt(1, persons.get(i).getId());
+						ps1.setInt(1, person.getId());
 						ResultSet rs1 = ps1.executeQuery();
-						while(rs1.next()) {
-							Program pr = new Program(rs1.getString("program_id"), rs1.getString("name"), rs1.getString("year"));
-							persons.get(i).addProgram(pr);
+						while (rs1.next()) {
+							Program pr = new Program(rs1.getInt("program_id"), rs1.getString("name"), rs1.getString("year"));
+							person.addProgram(pr);
 						}
 					}
 					
@@ -79,7 +79,7 @@ public class UserManagementServlet extends HttpServlet {
 					PreparedStatement ps2 = con.prepareStatement(query2);
 					ResultSet rs2 = ps2.executeQuery();
 					while(rs2.next()) {
-						Program p = new Program(rs2.getString("id"), rs2.getString("name"), rs2.getString("year"));
+						Program p = new Program(rs2.getInt("id"), rs2.getString("name"), rs2.getString("year"));
 						programs.add(p);
 					}
 					
@@ -95,7 +95,7 @@ public class UserManagementServlet extends HttpServlet {
 			}else {
 				// the user is not admin, redirect to the error page
 				request.setAttribute("errorMessage", "Please check your user role.");
-				request.getRequestDispatcher("no_auser_managementccess_page.jsp").forward(request, response);
+				request.getRequestDispatcher("no_access_page.jsp").forward(request, response);
 			}
 		}else {
 			// the user is not logged in, redirect to the error page

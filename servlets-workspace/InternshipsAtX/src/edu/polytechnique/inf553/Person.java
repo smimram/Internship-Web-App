@@ -11,6 +11,7 @@ public class Person {
 	private List<Program> programs;
 	private boolean valid;
 	private String email;
+	private boolean hasInternship;
 	
 	public Person(String name, int id, String role, boolean valid, String email) {
 		this.name = name;
@@ -19,6 +20,7 @@ public class Person {
 		this.valid = valid;
 		this.programs = new ArrayList<>();
 		this.email = email;
+		this.hasInternship = false;
 	}
 
 	public String getName() {
@@ -68,6 +70,8 @@ public class Person {
 	public String getEmail() { return this.email; }
 
 	public void setEmail(String email) { this.email = email; }
+
+	public boolean hasInternship() { return this.hasInternship; }
 
 	@Override
 	public String toString() {

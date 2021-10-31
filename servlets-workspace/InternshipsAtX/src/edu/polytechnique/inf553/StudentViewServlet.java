@@ -66,14 +66,14 @@ public class StudentViewServlet extends HttpServlet {
 					}
 					
 					//show only programs associated to the user
-					String query1 = "SELECT DISTINCT p.id as id, p.name as name, p.year as year\n" + 
-							"FROM program p inner join person_program pp on p.id = pp.program_id\n" + 
+					String query1 = "SELECT DISTINCT p.id as id, p.name as name, p.year as year\n" +
+							"FROM program p inner join person_program pp on p.id = pp.program_id\n" +
 							"WHERE pp.person_id = ?";
 					PreparedStatement ps1 = con.prepareStatement(query1);
 					ps1.setInt(1, userId);
 					ResultSet rs1 = ps1.executeQuery();
 					while(rs1.next()) {
-						Program p = new Program(rs1.getString("id"), rs1.getString("name"), rs1.getString("year"));
+						Program p = new Program(rs1.getInt("id"), rs1.getString("name"), rs1.getString("year"));
 						programs.add(p);
 					}
 
@@ -83,7 +83,7 @@ public class StudentViewServlet extends HttpServlet {
 								"INNER JOIN program_category pc ON pc.cat_id = c.id\n" +
 								"WHERE pc.program_id = ?;";
 						PreparedStatement stmt = con.prepareStatement(query);
-						stmt.setInt(1, Integer.parseInt(programs.get(i).getId()));
+						stmt.setInt(1, programs.get(i).getId());
 						ResultSet rs = stmt.executeQuery();
 
 						while(rs.next()) {
@@ -96,7 +96,7 @@ public class StudentViewServlet extends HttpServlet {
 									"INNER JOIN person p on i.supervisor_id = p.id " +
 									"WHERE program_id = ? AND c.id = ? AND i.is_taken=false AND scientific_validated=true AND administr_validated=true;";
 							PreparedStatement stmt2 = con.prepareStatement(query_subjects);
-							stmt2.setInt(1, Integer.parseInt(programs.get(i).getId()));
+							stmt2.setInt(1, programs.get(i).getId());
 							stmt2.setInt(2, Integer.parseInt(categoryId));
 							ResultSet rs_subjects = stmt2.executeQuery();
 									List<Subject> subjectsOfCategory = new ArrayList<Subject>();
@@ -104,7 +104,7 @@ public class StudentViewServlet extends HttpServlet {
 								Subject s = new Subject(rs_subjects.getString("title"), rs_subjects.getString("id"), rs_subjects.getString("email"), rs_subjects.getString("name"), rs_subjects.getBoolean("confidential_internship"));
 								subjectsOfCategory.add(s);
 							}
-							subjectsPerCategory.add(new SubjectsPerCategory(programs.get(i).getId().toString(), categoryId, subjectsOfCategory));
+							subjectsPerCategory.add(new SubjectsPerCategory(""+programs.get(i).getId(), categoryId, subjectsOfCategory));
 
 							Category c = new Category(rs.getString("desc"), categoryId);
 							programs.get(i).addCategory(c);

@@ -33,6 +33,7 @@ public class DownloadFicheServlet extends HttpServlet {
 		System.out.println(this.getClass().getName() + " doGet method called with path " + request.getRequestURI() + " and parameters " + request.getQueryString());
 
 		int internshipId = Integer.parseInt(request.getParameter("internshipId"));
+		String returnFileName = "file_not_found.jsp";
 
 		Connection con = null;
 		try {
@@ -41,12 +42,13 @@ public class DownloadFicheServlet extends HttpServlet {
 				response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			}
 
-			String query = "SELECT fiche_stage, title " + "FROM internship " + "WHERE internship.id = ?;";
+			String query = "SELECT fiche, title " + "FROM internship " + "WHERE internship.id = ? AND fiche IS NOT NULL;";
 			PreparedStatement ps = con.prepareStatement(query);
 			ps.setInt(1, internshipId);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-				InputStream inputStream = rs.getBinaryStream("fiche_stage");
+				returnFileName = "download_complete_fiche.jsp";
+				InputStream inputStream = rs.getBinaryStream("fiche");
 				ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 				byte[] buffer = new byte[BUFFER_SIZE];
 				int bytesRead = -1;
@@ -70,6 +72,15 @@ public class DownloadFicheServlet extends HttpServlet {
 		} finally {
 			DbUtils.getInstance().releaseConnection(con);
 		}
+
+		request.getRequestDispatcher(returnFileName).forward(request, response);
 	}
-	
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
 }

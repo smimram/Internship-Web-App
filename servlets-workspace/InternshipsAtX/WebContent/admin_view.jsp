@@ -17,11 +17,11 @@
 				
 				<form class="login100-form validate-form p-l-55 p-r-55 p-t-178">
 					<span class="login100-form-title">
-						<h1>Welcome ${user.name} ! </h1>
+						<h1>Welcome ${user.name}! </h1>
 					</span>
 				</form>
 
-				${ (user.role == "Admin") ? '
+				<%-- ${ (user.role == "Admin") ? ' --%>
 				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="user-management">	
 					<div class="container-login100-form-btn p-t-50 p-b-25">
 						<button type="submit" class="login100-form-btn">
@@ -29,9 +29,19 @@
 						</button>
 					</div>			
 				</form>
-				' : '' }
+				<%-- ' : '' } --%>
+
+				<%-- ${ (user.role == "Admin" || user.role == "Professor") ? ' --%>
+				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="student-management">	
+					<div class="container-login100-form-btn p-t-25 p-b-25">
+						<button type="submit" class="login100-form-btn">
+							Student management	
+						</button>
+					</div>			
+				</form>
+				<%-- ' : '' } --%>
 				
-				${ (user.role == "Admin" || user.role == "Professor") ? '
+				<%-- ${ (user.role == "Admin" || user.role == "Professor") ? ' --%>
 				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="program-management">	
 					<div class="container-login100-form-btn p-t-25 p-b-25">
 						<button type="submit" class="login100-form-btn">
@@ -39,9 +49,9 @@
 						</button>
 					</div>			
 				</form>
-				' : '' }
+				<%-- ' : '' } --%>
 				
-				${ (user.role == "Admin" || user.role == "Assistant" || user.role == "Professor") ? '
+				<%-- ${ (user.role == "Admin" || user.role == "Assistant" || user.role == "Professor") ? ' --%>
 				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="subject-validation">	
 					<div class="container-login100-form-btn p-t-25 p-b-25">
 						<button type="submit" class="login100-form-btn">
@@ -49,9 +59,9 @@
 						</button>
 					</div>			
 				</form>
-				' : '' }
+				<%-- ' : '' } --%>
 
-				${ (user.role == "Admin" || user.role == "Professor") ? '
+				<%-- ${ (user.role == "Admin" || user.role == "Professor") ? ' --%>
 				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="subject-management">	
 					<div class="container-login100-form-btn p-t-25 p-b-25">
 						<button type="submit" class="login100-form-btn">
@@ -59,9 +69,9 @@
 						</button>
 					</div>			
 				</form>
-				' : '' }
+				<%-- ' : '' } --%>
 				
-				${ (user.role == "Admin" || user.role == "Professor") ? '
+				<%-- ${ (user.role == "Admin" || user.role == "Professor") ? ' --%>
 				<form class="login100-form validate-form  p-l-55 p-r-55" method="get" action="subject-attribution">	
 					<div class="container-login100-form-btn p-t-25 p-b-25">
 						<button type="submit" class="login100-form-btn">
@@ -69,9 +79,9 @@
 						</button>
 					</div>			
 				</form>
-				' : '' }
+				<%-- ' : '' } --%>
 				
-				${ (user.role == "Admin" || user.role == "Assistant") ? '
+				<%-- ${ (user.role == "Admin" || user.role == "Assistant") ? ' --%>
 				<form class="login100-form validate-form  p-l-55 p-r-55" method="get" action="subject-deletion">	
 					<div class="container-login100-form-btn p-t-25 p-b-25">
 						<button type="submit" class="login100-form-btn">
@@ -79,7 +89,7 @@
 						</button>
 					</div>			
 				</form>
-				' : '' }
+				<%-- ' : '' } --%>
 					
 			</div>
 		</div>

@@ -187,11 +187,11 @@ input:checked + .slider:before {
 										</label>
 									</div>
 									<div class="col col-1">
-										<button type="button" class="btn btn-secondary btn-sm"><a href="/InternshipsAtX/download-subject?internshipId=${subject.id}" target="_blank">Download subject</a></button>
-										<button type="button" class="btn btn-secondary btn-sm"><a href="/InternshipsAtX/download-fiche?internshipId=${subject.id}" target="_blank">Download fiche de stage</a></button>
-										<button type="button" class="btn btn-secondary btn-sm"><a href="/InternshipsAtX/download-report?internshipId=${subject.id}" target="_blank">Download report</a></button>
-										<button type="button" class="btn btn-secondary btn-sm"><a href="/InternshipsAtX/download-slides?internshipId=${subject.id}" target="_blank">Download slides</a></button>
-										<button type="button" class="btn btn-secondary btn-sm" onclick="deleteSubject(${subject.id}, '${subject.title}');"><i class="fas fa-trash"></i></button>
+										<button type="button" class="btn btn-primary btn-sm"><a href="/InternshipsAtX/download-subject?internshipId=${subject.id}" target="_blank" style="color: white">Download subject</a></button>
+										<button type="button" class="btn btn-primary btn-sm"><a href="/InternshipsAtX/download-fiche?internshipId=${subject.id}" target="_blank" style="color: white">Download fiche de stage</a></button>
+										<button type="button" class="btn btn-primary btn-sm"><a href="/InternshipsAtX/download-report?internshipId=${subject.id}" target="_blank" style="color: white">Download report</a></button>
+										<button type="button" class="btn btn-primary btn-sm"><a href="/InternshipsAtX/download-slides?internshipId=${subject.id}" target="_blank" style="color: white">Download slides</a></button>
+										<button type="button" class="btn btn-danger btn-sm" onclick="deleteSubject(${subject.id}, '${subject.title}');"><i class="fas fa-trash"></i></button>
 									</div>
 								</li>
 							</c:forEach>

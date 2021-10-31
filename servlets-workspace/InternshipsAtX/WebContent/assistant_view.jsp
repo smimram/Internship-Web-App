@@ -21,6 +21,14 @@
 					</span>
 				</form>
 
+				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="student-management">	
+					<div class="container-login100-form-btn p-t-25 p-b-25">
+						<button type="submit" class="login100-form-btn">
+							Student management	
+						</button>
+					</div>			
+				</form>
+
 				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="subject-validation">	
 					<div class="container-login100-form-btn p-t-25 p-b-25">
 						<button type="submit" class="login100-form-btn">

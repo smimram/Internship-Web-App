@@ -33,6 +33,7 @@ public class DownloadSlidesServlet extends HttpServlet {
 		System.out.println(this.getClass().getName() + " doGet method called with path " + request.getRequestURI() + " and parameters " + request.getQueryString());
 
 		int internshipId = Integer.parseInt(request.getParameter("internshipId"));
+		String returnFileName = "file_not_found.jsp";
 		
 		Connection con = null;
 		try {
@@ -43,12 +44,12 @@ public class DownloadSlidesServlet extends HttpServlet {
 			
 			String query = "SELECT slides, title " +
 						   "FROM internship " +
-						   "WHERE internship.id = ?;";
+						   "WHERE internship.id = ? AND slides IS NOT NULL;";
 			PreparedStatement ps = con.prepareStatement(query);
 			ps.setInt(1, internshipId);
 			ResultSet rs = ps.executeQuery();
 			if(rs.next()) {
-
+				returnFileName = "download_complete_slides.jsp";
 				InputStream inputStream = rs.getBinaryStream("slides");
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 byte[] buffer = new byte[BUFFER_SIZE];
@@ -73,6 +74,8 @@ public class DownloadSlidesServlet extends HttpServlet {
 		} finally {
 			DbUtils.getInstance().releaseConnection(con);
 		}
+
+		request.getRequestDispatcher(returnFileName).forward(request, response);
 	}
 	
 }

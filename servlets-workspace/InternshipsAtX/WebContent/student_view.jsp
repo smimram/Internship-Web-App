@@ -12,76 +12,98 @@
 </head>
 <body>
 
-<%
-Person user = (Person)session.getAttribute("user");
-String name = user.getName();
-String role = user.getRole();
-%>
+	<%
+	Person user = (Person)session.getAttribute("user");
+	String name = user.getName();
+	String role = user.getRole();
+	%>
+
 	<!-- navigation bar -->
 	<jsp:include page="header.jsp"></jsp:include>
 	
-	<%
-		// show user internship if he has
-		Subject subject = (Subject)request.getAttribute("userSubject");
-		if(subject!=null){
-			%>
-			<div class="limiter">
-				<div class="container-login100 background_style" style="min-height:auto;">
-					<div class="wrap-login100-V2">
-							<form class="login100-form validate-form p-l-55 p-r-55 p-t-178">
-								<span class="login100-form-title">
-									<h1>My Internship</h1>
-								</span>
-								<div class="text-center">
-									<ul class="responsive-table">
-										<li class="table-header">
-											<div class="col col-1"> Id </div>
-											<div class="col col-2">Subject Title</div>
-											<div class="col col-2">Supervisor Name</div>
-											<div class="col col-1">Download Subject</div>
-											<div class="col col-1">Upload Fiche de Stage</div>
-											<div class="col col-1">Upload Report</div>
-											<div class="col col-1">Upload Slides</div>
-											<div class="col col-1">Confidential internship</div>
-											<div class="col col-1">Confidential report</div>
-										</li>
-										<li class="table-row">
-											<div class="col col-1" data-label="Id"><%=subject.getId() %></div>
-											<div class="col col-3" data-label="Subject Title"><%=subject.getTitle() %></div>
-											<div class="col col-2" data-label="Supervisor Name" title="<%=subject.getSupervisorEmail() %>"><%=subject.getSupervisorName() %></div>
-											<div class="col col-1" data-label="Subject">
-												<button type="button" class="btn btn-secondary btn-sm"><a href="/InternshipsAtX/download-subject?internshipId=<%=subject.getId() %>" target="_blank"><i class="fas fa-download" style="color: white"></i></a></button>
-											</div>
-											<div class="col col-1" data-label="Fiche de stage">
-												<p class="text-black"> <b> Please upload your fiche de stage in PDF format. </b> </p>
-												<button type="file" name="uploadFiche" accept="application/pdf"/>
-												<br><br>
-											</div>
-											<div class="col col-1" data-label="Report">
-												<p class="text-black"> <b> Please upload your report in PDF format. </b> </p>
-												<input type="file" name="uploadReport" accept="application/pdf"/>
-												<br><br>
-											</div>
-											<div class="col col-1" data-label="Slides">
-												<p class="text-black"> <b> Please upload your slides in PDF format. </b> </p>
-												<input type="file" name="uploadSlides" accept="application/pdf"/>
-												<br><br>
-											</div>
-											<div class="col col-1" data-label="Confidential subject"><%=subject.isConfidentialInternship() %></div>
-											<div class="col col-1" data-label="Confidential report"><%=subject.isConfidentialReport() %></div>
-										</li>
-									</ul>
-								</div>
-							</form>
-						
-					</div>
-				</div>
-			</div>			
-			<%
-		}
-	%>
 	
-
+	<div class="limiter">
+		<div class="container-login100 background_style" style="min-height:auto;">
+			<div class="wrap-login100-V2">
+				<div class="login100-form validate-form p-l-55 p-r-55 p-t-178">
+					<span class="login100-form-title">
+						<h1>My Internship</h1>
+					</span>
+					<%
+						// show user internship if he has
+						Subject subject = (Subject)request.getAttribute("userSubject");
+						if(subject!=null){
+					%>
+					<div class="text-center">
+						<ul class="responsive-table">
+							<li class="table-header">
+								<div class="col col-1"> Id </div>
+								<div class="col col-3">Subject Title</div>
+								<div class="col col-2">Supervisor Name</div>
+								<div class="col col-1">Subject</div>
+								<div class="col col-1">Fiche de Stage</div>
+								<div class="col col-1">Report</div>
+								<div class="col col-1">Slides</div>
+								<div class="col col-1">Confidential internship</div>
+							</li>
+							<li class="table-row">
+								<div class="col col-1" data-label="Id"><%=subject.getId() %></div>
+								<div class="col col-3" data-label="Subject Title"><%=subject.getTitle() %></div>
+								<div class="col col-2" data-label="Supervisor Name" title="<%=subject.getSupervisorEmail()%>"><%=subject.getSupervisorName() %></div>
+								<div class="col col-1" data-label="Subject">
+									<button type="button" class="btn btn-secondary btn-sm"><a href="/InternshipsAtX/download-subject?internshipId=<%=subject.getId() %>" target="_blank"><i class="fas fa-download" style="color: white"></i></a></button>
+								</div>
+								<div class="col col-1" data-label="Fiche de stage">
+									<form method="post" action="upload-fiche" enctype="multipart/form-data">
+										<input name="subjectId" value="<%=subject.getId()%>" hidden />
+										<input name="userId" value="<%=user.getId()%>" hidden />
+										<input id="fiche" type="file" name="fiche" accept="application/pdf" title="Please upload your fiche de stage in PDF format." onchange="this.form.submit()"/> <!-- onchange to avoid submit button -->
+									</form>
+									<div class="col col-1" data-label="Fiche">
+										<button type="button" class="btn btn-secondary btn-sm"><a href="/InternshipsAtX/download-fiche?internshipId=<%=subject.getId() %>" target="_blank"><i class="fas fa-download" style="color: white"></i></a></button>
+									</div>
+								</div>
+								<div class="col col-1" data-label="Report">
+									<form method="post" action="upload-report" enctype="multipart/form-data">
+										<input name="subjectId" value="<%=subject.getId()%>" hidden />
+										<input name="userId" value="<%=user.getId()%>" hidden />
+										<input id="report" type="file" name="report" accept="application/pdf" title="Please upload your report in PDF format." onchange="this.form.submit()"/>
+									</form>
+									<div class="col col-1" data-label="Report">
+										<button type="button" class="btn btn-secondary btn-sm"><a href="/InternshipsAtX/download-report?internshipId=<%=subject.getId() %>" target="_blank"><i class="fas fa-download" style="color: white"></i></a></button>
+									</div>
+								</div>
+								<div class="col col-1" data-label="Slides">
+									<form method="post" action="upload-slides" enctype="multipart/form-data">
+										<input name="subjectId" value="<%=subject.getId()%>" hidden />
+										<input name="userId" value="<%=user.getId()%>" hidden />
+										<input id="slides" type="file" name="slides" accept="application/pdf" title="Please upload your slides in PDF format." onchange="this.form.submit()"/>
+									</form>
+									<div class="col col-1" data-label="Slides">
+										<button type="button" class="btn btn-secondary btn-sm"><a href="/InternshipsAtX/download-slides?internshipId=<%=subject.getId() %>" target="_blank"><i class="fas fa-download" style="color: white"></i></a></button>
+									</div>
+								</div>
+								<div class="col col-1" data-label="Confidential subject">
+									<label class="switch">
+										<input type="checkbox" disabled ${subject.isConfidentialInternship == true ? 'checked' : ''}>
+										<span class="slider round"></span>
+									</label>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<%
+						} else {
+					%>
+					<p style="text-align: center; font-size: 2em;"> No internship. </p>
+					<%
+						}
+					%>
+				</div>
+			</div>
+		</div>
+	</div>			
+			
 	
 	<div class="limiter">
 		<div class="container-login100 background_style">
@@ -173,7 +195,7 @@ String role = user.getRole();
 							programs_categories2.forEach((v, k) => {
 								programList.innerHTML += '<div class="program", id="'+k+'">'; 
 								programList.innerHTML += '<div class="container-login100-form-btn-V2  p-t-50 p-b-25 p-l-250 p-r-250">'+
-															'<h2 class="login100-form-btn-V2 p-l-5 p-r-5">' + program_name_id.get(k) + '</h2></div>';
+								'<h2 class="login100-form-btn-V2 p-l-5 p-r-5">' + program_name_id.get(k) + '</h2></div>';
 								for (const category of v) {
 									var subjects = categories_to_subjects.get(k).get(category.key);
 									if(subjects.length>0) {

@@ -30,6 +30,18 @@
     <servlet-class>edu.polytechnique.inf553.UploadTopicServlet</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>UploadFichePage</servlet-name>
+    <servlet-class>edu.polytechnique.inf553.UploadFicheServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>UploadReportPage</servlet-name>
+    <servlet-class>edu.polytechnique.inf553.UploadReportServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>UploadSlidesPage</servlet-name>
+    <servlet-class>edu.polytechnique.inf553.UploadSlidesServlet</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>UserManagementPage</servlet-name>
     <servlet-class>edu.polytechnique.inf553.UserManagementServlet</servlet-class>
   </servlet>
@@ -48,6 +60,10 @@
   <servlet>
     <servlet-name>StudentViewPage</servlet-name>
     <servlet-class>edu.polytechnique.inf553.StudentViewServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>StudentManagementPage</servlet-name>
+    <servlet-class>edu.polytechnique.inf553.StudentManagementServlet</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>DownloadTopicPage</servlet-name>
@@ -90,6 +106,18 @@
     <url-pattern>/upload-topic</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
+    <servlet-name>UploadFichePage</servlet-name>
+    <url-pattern>/upload-fiche</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UploadReportPage</servlet-name>
+    <url-pattern>/upload-report</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UploadSlidesPage</servlet-name>
+    <url-pattern>/upload-slides</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
     <servlet-name>UserManagementPage</servlet-name>
     <url-pattern>/user-management</url-pattern>
   </servlet-mapping>
@@ -104,6 +132,10 @@
   <servlet-mapping>
     <servlet-name>StudentViewPage</servlet-name>
     <url-pattern>/student-view</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>StudentManagementPage</servlet-name>
+    <url-pattern>/student-management</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>DownloadTopicPage</servlet-name>
