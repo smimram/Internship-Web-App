@@ -1,20 +1,18 @@
 package edu.polytechnique.inf553;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Servlet implementation class DeleteSubjectServlet
@@ -60,7 +58,7 @@ public class DeleteSubjectServlet extends HttpServlet {
 					String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
 							"DELETE FROM internship\r\n" + 
 							"WHERE id = ?;\r\n" + 
-							"COMMIT TRANSACTION;";;
+							"COMMIT TRANSACTION;";
 					PreparedStatement ps = con.prepareStatement(query);
 					ps.setInt(1, subjectId);
 					ps.executeUpdate();
@@ -102,7 +100,6 @@ public class DeleteSubjectServlet extends HttpServlet {
 				return false;
 			}
 			
-			List<Subject> subjects = new ArrayList<>();
 			// get all subject list
 			String query = "SELECT is_taken "
 					+ "FROM internship "

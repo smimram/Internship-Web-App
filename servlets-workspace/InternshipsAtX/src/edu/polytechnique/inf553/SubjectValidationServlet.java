@@ -1,20 +1,18 @@
 package edu.polytechnique.inf553;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Servlet implementation class SubjectValidationServlet
@@ -85,7 +83,7 @@ public class SubjectValidationServlet extends HttpServlet {
 			PreparedStatement preparedStatement = con.prepareStatement(query);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while(resultSet.next()) {
-				Subject subject = new Subject(resultSet.getString("id"), resultSet.getString("title"), resultSet.getString("program_id"), 
+				Subject subject = new Subject(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getInt("program_id"),
 						resultSet.getBoolean("administr_validated"), resultSet.getBoolean("scientific_validated"), resultSet.getBoolean("confidential_internship"));
 				subjects.add(subject);
 			}

@@ -4,17 +4,17 @@ import java.util.List;
 
 public class SubjectsPerCategory {
 	
-	private String programId;
-	private String categoryId;
+	private int programId;
+	private int categoryId;
 	private List<Subject> subjects;
 	
-	public SubjectsPerCategory(String programId, String categoryId, List<Subject> subjects) {
+	public SubjectsPerCategory(int programId, int categoryId, List<Subject> subjects) {
 		this.subjects = subjects;
 		this.categoryId = categoryId;
 		this.programId = programId;
 	}
 	
-	public String getCategoryId() {
+	public int getCategoryId() {
 		return categoryId;
 	}
 	
@@ -22,7 +22,7 @@ public class SubjectsPerCategory {
 		return subjects;
 	}
 	
-	public String getProgramId() {
+	public int getProgramId() {
 		return programId;
 	}
 }

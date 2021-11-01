@@ -58,10 +58,6 @@ public class Person {
 	public void addProgram(Program program) {
 		programs.add(program);
 	}
-	
-	public int programSize() {
-		return programs.size();
-	}
 
 	public List<Program> getPrograms() {
 		return programs;

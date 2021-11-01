@@ -15,7 +15,6 @@ import java.util.List;
 
 public class StudentViewServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final int BUFFER_SIZE = 16177215;
 
 	/**
 	 * Constructor 
@@ -61,7 +60,7 @@ public class StudentViewServlet extends HttpServlet {
 					ps0.setInt(1, userId);
 					ResultSet rs0 = ps0.executeQuery();
 					while(rs0.next()) {
-						Subject userSubject = new Subject(rs0.getString("title"), rs0.getString("id"), rs0.getString("email"), rs0.getString("name"), rs0.getBoolean("confidential_internship"));
+						Subject userSubject = new Subject(rs0.getString("title"), rs0.getInt("id"), rs0.getString("email"), rs0.getString("name"), rs0.getBoolean("confidential_internship"));
 						request.setAttribute("userSubject", userSubject);
 					}
 					
@@ -77,17 +76,17 @@ public class StudentViewServlet extends HttpServlet {
 						programs.add(p);
 					}
 
-					for(int i=0; i<programs.size(); ++i) {
+					for (Program program : programs) {
 						String query = "SELECT DISTINCT c.description AS desc, c.id as id \n" +
 								"FROM categories c\n" +
 								"INNER JOIN program_category pc ON pc.cat_id = c.id\n" +
 								"WHERE pc.program_id = ?;";
 						PreparedStatement stmt = con.prepareStatement(query);
-						stmt.setInt(1, programs.get(i).getId());
+						stmt.setInt(1, program.getId());
 						ResultSet rs = stmt.executeQuery();
 
-						while(rs.next()) {
-							String categoryId = rs.getString("id");
+						while (rs.next()) {
+							int categoryId = rs.getInt("id");
 
 							String query_subjects = "SELECT i.id as id, i.title as title, i.confidential_internship as confidential_internship, p.email as email, p.name as name " +
 									"FROM internship i " +
@@ -96,18 +95,18 @@ public class StudentViewServlet extends HttpServlet {
 									"INNER JOIN person p on i.supervisor_id = p.id " +
 									"WHERE program_id = ? AND c.id = ? AND i.is_taken=false AND scientific_validated=true AND administr_validated=true;";
 							PreparedStatement stmt2 = con.prepareStatement(query_subjects);
-							stmt2.setInt(1, programs.get(i).getId());
-							stmt2.setInt(2, Integer.parseInt(categoryId));
+							stmt2.setInt(1, program.getId());
+							stmt2.setInt(2, categoryId);
 							ResultSet rs_subjects = stmt2.executeQuery();
-									List<Subject> subjectsOfCategory = new ArrayList<Subject>();
-							while(rs_subjects.next()) {
-								Subject s = new Subject(rs_subjects.getString("title"), rs_subjects.getString("id"), rs_subjects.getString("email"), rs_subjects.getString("name"), rs_subjects.getBoolean("confidential_internship"));
+							List<Subject> subjectsOfCategory = new ArrayList<>();
+							while (rs_subjects.next()) {
+								Subject s = new Subject(rs_subjects.getString("title"), rs_subjects.getInt("id"), rs_subjects.getString("email"), rs_subjects.getString("name"), rs_subjects.getBoolean("confidential_internship"));
 								subjectsOfCategory.add(s);
 							}
-							subjectsPerCategory.add(new SubjectsPerCategory(""+programs.get(i).getId(), categoryId, subjectsOfCategory));
+							subjectsPerCategory.add(new SubjectsPerCategory(program.getId(), categoryId, subjectsOfCategory));
 
 							Category c = new Category(rs.getString("desc"), categoryId);
-							programs.get(i).addCategory(c);
+							program.addCategory(c);
 						}
 					}
 				} catch(SQLException e) {

@@ -9,10 +9,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Servlet implementation class DeleteSubjectServlet
@@ -50,7 +47,7 @@ public class DeleteDefenseServlet extends HttpServlet {
 					String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
 							"DELETE FROM defense \r\n" +
 							"WHERE id = ?;\r\n" + 
-							"COMMIT TRANSACTION;";;
+							"COMMIT TRANSACTION;";
 					PreparedStatement ps = con.prepareStatement(query);
 					ps.setInt(1, defenseId);
 					ps.executeUpdate();
@@ -82,35 +79,4 @@ public class DeleteDefenseServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
-	
-	private boolean checkIsTaken(int subjectId) {
-		boolean taken = true;
-		Connection con = null;
-		try {
-			con = DbUtils.getInstance().getConnection();
-			if (con == null) {
-				return false;
-			}
-			
-			List<Subject> subjects = new ArrayList<>();
-			// get all subject list
-			String query = "SELECT is_taken "
-					+ "FROM internship "
-					+ "WHERE id=?;";
-			PreparedStatement preparedStatement = con.prepareStatement(query);
-			preparedStatement.setInt(1, subjectId);
-			ResultSet resultSet = preparedStatement.executeQuery();
-			if(resultSet.next()) {
-				taken = resultSet.getBoolean("is_taken");
-			}
-
-			
-		} catch(SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DbUtils.getInstance().releaseConnection(con);
-		}
-		return taken;
-	}
-
 }

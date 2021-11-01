@@ -1,20 +1,18 @@
 package edu.polytechnique.inf553;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -80,13 +78,13 @@ public class SubjectAttributionServlet extends HttpServlet {
 			
 			List<Subject> subjects = new ArrayList<>();
 			// get all subject list
-			String query = "SELECT DISTINCT id, title, program_id, administr_validated, scientific_validated, confidential_internship "
+			String query = "SELECT DISTINCT id, title, program_id, administr_validated, scientific_validated, confidential_internship, timestamp_fiche, timestamp_report, timestamp_slides "
 					+ "FROM internship "
 					+ "WHERE is_taken IS FALSE AND administr_validated IS TRUE AND scientific_validated IS TRUE;";
 			PreparedStatement preparedStatement = con.prepareStatement(query);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while(resultSet.next()) {
-				Subject subject = new Subject(resultSet.getString("id"), resultSet.getString("title"), resultSet.getString("program_id"), 
+				Subject subject = new Subject(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getInt("program_id"),
 						resultSet.getBoolean("administr_validated"), resultSet.getBoolean("scientific_validated"), resultSet.getBoolean("confidential_internship"));
 				subjects.add(subject);
 			}

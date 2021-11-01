@@ -1,21 +1,18 @@
 package edu.polytechnique.inf553;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Servlet implementation class SubjectManagementServlet
@@ -45,8 +42,8 @@ public class SubjectManagementServlet extends HttpServlet {
 			if (role.equals("Admin") || role.equals("Professor") || role.equals("Assistant")) {
 				
 				//======================== DATA LOADING PART ========================
-				String orderByColumn = (String)request.getParameter("orderByColumn");
-				String orderBySort = (String)request.getParameter("orderBySort");
+				String orderByColumn = request.getParameter("orderByColumn");
+				String orderBySort = request.getParameter("orderBySort");
 				System.out.println("orderByColumn=" + orderByColumn + " ; orderBySort=" + orderBySort);
 				List<Subject> subjects = getSubjects(orderByColumn, orderBySort);
 				getCategoriesForSubjects(subjects);
@@ -103,15 +100,18 @@ public class SubjectManagementServlet extends HttpServlet {
 			System.out.println(orderByColumn + " ; " + orderBySort);
 			if(orderBySort.startsWith("'") && orderBySort.endsWith("'")) orderBySort = orderBySort.substring(1, orderBySort.length()-1); // if the value is encapsulated into '', e.g. 'ASC'
 			System.out.println(orderByColumn + " ; " + orderBySort);
-			String query = "SELECT DISTINCT id, title, program_id, administr_validated, scientific_validated, confidential_internship "
+			String query = "SELECT DISTINCT id, title, program_id, administr_validated, scientific_validated, confidential_internship, timestamp_fiche, timestamp_report, timestamp_slides "
 					+ "FROM internship "
 					+ "ORDER BY " + orderByColumn + " " + orderBySort + ";";
 			PreparedStatement preparedStatement = con.prepareStatement(query);
 			System.out.println("preparedStatement: " + preparedStatement.toString());
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while(resultSet.next()) {
-				Subject subject = new Subject(resultSet.getString("id"), resultSet.getString("title"), resultSet.getString("program_id"), 
+				Subject subject = new Subject(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getInt("program_id"),
 						resultSet.getBoolean("administr_validated"), resultSet.getBoolean("scientific_validated"), resultSet.getBoolean("confidential_internship"));
+				subject.setDateFiche(resultSet.getTimestamp("timestamp_fiche"));
+				subject.setDateReport(resultSet.getTimestamp("timestamp_report"));
+				subject.setDateSlides(resultSet.getTimestamp("timestamp_slides"));
 				subjects.add(subject);
 			}
 			System.out.println(subjects);
@@ -140,7 +140,7 @@ public class SubjectManagementServlet extends HttpServlet {
 			PreparedStatement preparedStatement = con.prepareStatement(query);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while(resultSet.next()) {
-				Category category = new Category(resultSet.getString("description"), resultSet.getString("id"));
+				Category category = new Category(resultSet.getString("description"), resultSet.getInt("id"));
 				categories.add(category);
 			}
 
@@ -191,17 +191,19 @@ public class SubjectManagementServlet extends HttpServlet {
 			}
 			
 			// get associated categories for each subject
-			for(int i=0; i<subjects.size(); ++i) {
-				String query = "SELECT DISTINCT c.description AS desc, c.id as id \n" + 
-						"FROM categories c\n" + 
-						"INNER JOIN internship_category ic ON ic.category_id = c.id\n" + 
-						"WHERE ic.internship_id ="+subjects.get(i).getId()+"\n" + 
+			for (Subject subject : subjects) {
+				String query = "SELECT DISTINCT c.description AS desc, c.id as id \n" +
+						"FROM categories c\n" +
+						"INNER JOIN internship_category ic ON ic.category_id = c.id\n" +
+						"WHERE ic.internship_id = ? \n" +
 						"ORDER BY c.description;";
-				ResultSet resultSet = con.prepareStatement(query).executeQuery();
-				
-				while(resultSet.next()) {
-					Category category = new Category(resultSet.getString("desc"), resultSet.getString("id"));
-					subjects.get(i).addCategory(category);
+				PreparedStatement stmt = con.prepareStatement(query);
+				stmt.setInt(1, subject.getId());
+				ResultSet resultSet = stmt.executeQuery();
+
+				while (resultSet.next()) {
+					Category category = new Category(resultSet.getString("desc"), resultSet.getInt("id"));
+					subject.addCategory(category);
 				}
 			}
 
@@ -222,19 +224,21 @@ public class SubjectManagementServlet extends HttpServlet {
 			}
 
 			// get associated categories for each subject
-			for(int i=0; i<subjects.size(); ++i) {
-			String query = "SELECT p.id AS pid, p.name AS pName, r.role AS role, p.valid AS pValid, p.email AS email " +
+			for (Subject subject : subjects) {
+				String query = "SELECT p.id AS pid, p.name AS pName, r.role AS role, p.valid AS pValid, p.email AS email " +
 						"FROM person p " +
 						"INNER JOIN person_internship pi ON pi.person_id = p.id " +
 						"LEFT JOIN person_roles pr ON pr.person_id = p.id " +
 						"LEFT JOIN role_type r ON pr.role_id = r.id " +
-						"WHERE pi.internship_id ="+subjects.get(i).getId()+";";
-				ResultSet resultSet = con.prepareStatement(query).executeQuery();
+						"WHERE pi.internship_id = ? ;";
+				PreparedStatement stmt = con.prepareStatement(query);
+				stmt.setInt(1, subject.getId());
+				ResultSet resultSet = stmt.executeQuery();
 
-				while(resultSet.next()) {
+				while (resultSet.next()) {
 					Person person = new Person(resultSet.getString("pName"), resultSet.getInt("pid"), resultSet.getString("role"), resultSet.getBoolean("pValid"), resultSet.getString("email"));
 					System.out.println(person);
-					subjects.get(i).setAffiliatedStudent(person);
+					subject.setAffiliatedStudent(person);
 				}
 			}
 		} catch(SQLException e) {
@@ -246,7 +250,7 @@ public class SubjectManagementServlet extends HttpServlet {
 	
 	private List<Person> getStudents() {
 		Connection con = null;
-		Person user = null;
+		Person user;
 		try {
 			
 			List<Person> students = new ArrayList<>();

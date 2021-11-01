@@ -66,7 +66,7 @@ public class CreateDefenseServlet extends HttpServlet {
 					String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
 							"insert into defense(date, time, referent_id, jury2_id, student_id)\r\n" +
 							"values (?,?,?,?,?);\r\n" +
-							"COMMIT TRANSACTION;";;
+							"COMMIT TRANSACTION;";
 					PreparedStatement ps = con.prepareStatement(query);
 					if(defenseDate == null) {
 						ps.setNull(1, Types.DATE);

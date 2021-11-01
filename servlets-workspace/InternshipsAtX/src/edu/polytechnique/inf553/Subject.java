@@ -1,24 +1,26 @@
 package edu.polytechnique.inf553;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.Part;
-
 public class Subject {
 
+	private int id;
 	private String title;
-	private String id;
 	private String supervisorEmail;
 	private String supervisorName;
-	private String programId;
+	private int programId;
 	private boolean adminValid;
 	private boolean sciValid;
 	private List<Category> categories;
 	private Person affiliatedStudent;
 	private boolean isConfidentialInternship;
+	private Timestamp dateFiche;
+	private Timestamp dateReport;
+	private Timestamp dateSlides;
 
-	public Subject(String title, String id, String supervisorEmail, String supervisorName, String programId, boolean adminValid, boolean sciValid, boolean isConfidentialInternship) {
+	public Subject(String title, int id, String supervisorEmail, String supervisorName, int programId, boolean adminValid, boolean sciValid, boolean isConfidentialInternship) {
 		this.title = title;
 		this.id = id;
 		this.supervisorEmail = supervisorEmail;
@@ -31,7 +33,7 @@ public class Subject {
 		this.isConfidentialInternship = isConfidentialInternship;
 	}
 	
-	public Subject(String id, String title, String programId, boolean adminValid, boolean sciValid, boolean isConfidentialInternship) {
+	public Subject(int id, String title, int programId, boolean adminValid, boolean sciValid, boolean isConfidentialInternship) {
 		this.title = title;
 		this.id = id;
 		this.adminValid = adminValid;
@@ -42,7 +44,7 @@ public class Subject {
 		this.isConfidentialInternship = isConfidentialInternship;
 	}
 	
-	public Subject(String title, String id, String supervisorEmail, String supervisorName, boolean isConfidentialInternship) {
+	public Subject(String title, int id, String supervisorEmail, String supervisorName, boolean isConfidentialInternship) {
 		this.title = title;
 		this.id = id;
 		this.supervisorEmail = supervisorEmail;
@@ -56,7 +58,7 @@ public class Subject {
 		return title;
 	}
 	
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 	
@@ -68,7 +70,7 @@ public class Subject {
 		return supervisorName;
 	}
 	
-	public String getProgramId() {
+	public int getProgramId() {
 		return programId;
 	}
 	
@@ -81,21 +83,35 @@ public class Subject {
 	}
 
 	public Person getAffiliatedStudent() { return this.affiliatedStudent; }
-	
+
+	public Timestamp getDateFiche() { return this.dateFiche; }
+
+	public Timestamp getDateReport() { return this.dateReport; }
+
+	public Timestamp getDateSlides() { return this.dateSlides; }
+
 	public boolean isConfidentialInternship() {  return this.isConfidentialInternship; }
 
 	public void addCategory(Category category) {
 		categories.add(category);
 	}
 
-	public int categorySize() {
-		return categories.size();
-	}
 	public List<Category> getCategories() {
 		return categories;
 	}
 
 	public void setAffiliatedStudent(Person affiliatedStudent) {
 		this.affiliatedStudent = affiliatedStudent;
+	}
+
+	public void setDateFiche(Timestamp dateFiche) { this.dateFiche = dateFiche; }
+
+	public void setDateReport(Timestamp dateReport) { this.dateReport = dateReport; }
+
+	public void setDateSlides(Timestamp dateSlides) { this.dateSlides = dateSlides; }
+
+	@Override
+	public String toString() {
+		return "Subject{" + "id=" + id + ", title='" + title + '\'' + ", dateFiche=" + dateFiche + ", dateReport=" + dateReport + ", dateSlides=" + dateSlides + '}';
 	}
 }

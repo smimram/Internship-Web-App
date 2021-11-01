@@ -1,20 +1,17 @@
 package edu.polytechnique.inf553;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 public class UserManagementServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -36,8 +33,8 @@ public class UserManagementServlet extends HttpServlet {
 			Person user = (Person)session.getAttribute("user");
 			String role = user.getRole();
 			if (role.equals("Admin")) {
-				List<Person> persons = new ArrayList<Person>();
-				List<Program> programs = new ArrayList<Program>();
+				List<Person> persons = new ArrayList<>();
+				List<Program> programs = new ArrayList<>();
 				
 				//======================== DATA LOADING PART ========================
 				Connection con = null;

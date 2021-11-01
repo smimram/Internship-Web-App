@@ -70,9 +70,6 @@ public class UpdateDefenseServlet extends HttpServlet {
 							"WHERE id = ?;\r\n" +
 							"COMMIT TRANSACTION;";
 					PreparedStatement ps = con.prepareStatement(query);
-					System.out.println("===");
-					System.out.println(ps.toString());
-					System.out.println("===");
 					if (defenseDate == null) {
 						ps.setNull(1, Types.DATE);
 					} else {
@@ -84,12 +81,7 @@ public class UpdateDefenseServlet extends HttpServlet {
 						ps.setTime(2, Time.valueOf(defenseTime));
 					}
 					ps.setInt(3, defenseId);
-					System.out.println("---");
-					System.out.println(ps.toString());
-					System.out.println("---");
 					ps.executeUpdate();
-
-					
 				} catch(SQLException e) {
 					e.printStackTrace();
 				} finally {

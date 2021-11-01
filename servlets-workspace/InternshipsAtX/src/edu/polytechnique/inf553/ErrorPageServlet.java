@@ -37,7 +37,7 @@ public class ErrorPageServlet extends HttpServlet {
 		if(session!=null) {
 			String method = (String)session.getAttribute("method");
 			String decription = (String)session.getAttribute("description");
-			Integer user = Integer.parseInt((String)session.getAttribute("userId"));
+			int user = Integer.parseInt((String)session.getAttribute("userId"));
 			System.out.println("IDIDIDID: " + user);
 			Connection con = null;
 			try {
@@ -67,8 +67,7 @@ public class ErrorPageServlet extends HttpServlet {
 				DbUtils.getInstance().releaseConnection(con);
 			}
 			response.setStatus( 200 );
-		}
-		else {
+		} else {
 			response.setStatus( 200 );
 		}
 		

@@ -39,10 +39,6 @@ public class Program {
 		this.students.add(student);
 	}
 
-	public int categorySize() {
-		return categories.size();
-	}
-
 	public List<Category> getCategories() {
 		return categories;
 	}

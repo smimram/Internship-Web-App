@@ -1,24 +1,15 @@
 package edu.polytechnique.inf553;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import javax.mail.internet.AddressException;
+import java.io.IOException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SigninServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -69,11 +60,12 @@ public class SigninServlet extends HttpServlet {
 				
 				//add the user into 'person' table
 				String query = "insert into person(name, email, creation_date, valid, password)\n" + 
-						" values (?, ?, '"+java.time.LocalDate.now().toString()+"', false, crypt(?, gen_salt('bf'))) ;";
+						" values (?, ?, ?, false, crypt(?, gen_salt('bf'))) ;";
 				PreparedStatement ps = con.prepareStatement(query);
 				ps.setString(1, concatName);
 				ps.setString(2, email);
-				ps.setString(3, pass);
+				ps.setDate(3, Date.valueOf(java.time.LocalDate.now()));
+				ps.setString(4, pass);
 				ps.executeUpdate();
 				
 				//add a person_role relation into 'person_roles' table
@@ -145,7 +137,7 @@ public class SigninServlet extends HttpServlet {
 				emailIsValid = false;
 			}
 			if(emailIsValid) {
-				boolean emailTaken = false;
+				boolean emailTaken;
 				Connection con = null;
 				try {
 					String query = "SELECT COUNT(*) as count\n" + 
@@ -154,7 +146,7 @@ public class SigninServlet extends HttpServlet {
 					//creating connection with the database
 					con = DbUtils.getInstance().getConnection();
 					if (con == null) {
-						return "failed connection to fatabase!";
+						return "failed connection to database!";
 					}
 					PreparedStatement ps = con.prepareStatement(query);
 					ps.setString(1, email);
