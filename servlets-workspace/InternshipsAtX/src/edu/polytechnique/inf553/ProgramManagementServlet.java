@@ -72,7 +72,7 @@ public class ProgramManagementServlet extends HttpServlet {
 								"WHERE pc.program_id = ? \n" +
 								"ORDER BY c.id;";
 						PreparedStatement stmt = con.prepareStatement(query);
-						stmt.setInt(1, program.getId());
+						stmt.setInt(1, Integer.parseInt(program.getId()));
 						ResultSet rs = stmt.executeQuery();
 
 						while (rs.next()) {

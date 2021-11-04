@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,27 +50,24 @@
 					</div>
 
 					<div class="wrap-input100 validate-input" data-validate = "Please choose your role">
-			
-						<select name="role" class="input100" id="selectRole">  <!-- onchange="displayProgramsForStudents();">-->
-	        				<option value="" selected disabled hidden>--Please choose a role--</option>
-	        				<option value="Admin" selected>Admin</option>
-	        				<option value="Assistant">Assistant</option>
-	        				<option value="Professor">Professor</option>
-	        				<option value="Student">Student</option>
-	        			</select>
+						<select name="role" class="input100" id="selectRole" onchange="displayProgramsForStudents();">
+								<option value="" selected disabled hidden>--Please choose a role--</option>
+								<option value="Admin" selected>Admin</option>
+								<option value="Assistant">Assistant</option>
+								<option value="Professor">Professor</option>
+								<option value="Student">Student</option>
+							</select>
 						<span class="focus-input100"></span>
 					</div>
 
 					<div id ="programsForStudents" class="wrap-input100 validate-input" data-validate = "Please choose your program">
-						<select class="input100" name="programStudent">
-							<option value="null">Select a program</option>
+						<select name="programStudent" class="input100">
+							<option value="null" selected>Select a program</option>
 							<c:forEach items="${programs}" var="program">
-								<option value="${program.id}">${program.name} - ${program.year}</option>
+								<option value="${program.id}">${program.name}</option>
 							</c:forEach>
 						</select>
-						<span class="focus-input100"></span>
 					</div>
-
 
 					<div class="wrap-input100 validate-input">
 						<span class="focus-input100"></span>
@@ -97,13 +94,13 @@
 </html>
 
 <script type="text/javascript">
-// $("#programsForStudents").hide(); // by default, hide the program select. Show it only for students
+$("#programsForStudents").hide(); // by default, hide the program select. Show it only for students
 
-// function displayProgramsForStudents() {
-// 	if($("#selectRole option:selected").text() == "Student") {
-// 		$("#programsForStudents").show();
-// 	} else {
-// 		$("#programsForStudents").hide();
-// 	}
-// }
+function displayProgramsForStudents() {
+	if($("#selectRole option:selected").text() == "Student") {
+		$("#programsForStudents").show();
+	} else {
+		$("#programsForStudents").hide();
+	}
+}
 </script>

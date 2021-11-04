@@ -64,7 +64,7 @@ public class StudentManagementServlet extends HttpServlet {
 								"WHERE pp.program_id = ?"+
 								"ORDER BY p.name";
 						ps0 = con.prepareStatement(query);
-						ps0.setInt(1, p.getId());
+						ps0.setInt(1, Integer.parseInt(p.getId()));
 						rs0 = ps0.executeQuery();
 						while(rs0.next()) {
 							Person student = new Person(rs0.getString(1), rs0.getInt(2), rs0.getString(3), rs0.getBoolean(4), rs0.getString(5));

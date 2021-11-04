@@ -28,14 +28,13 @@ public class SigninServlet extends HttpServlet {
 		List<Program> programs = getAllPrograms();
 		System.out.println(programs);
 		request.setAttribute("programs", programs);
-		System.out.println(request.getAttributeNames().toString());
-		request.getRequestDispatcher("signin.jsp").include(request, response);
+		System.out.println(programs);
+		request.getRequestDispatcher("signin.jsp").forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println(this.getClass().getName() + " doPost method called with path " + request.getRequestURI());
 
-		
 		String firstName = request.getParameter("firstName");
 		String lastName = request.getParameter("lastName");
 		String email = request.getParameter("email").toLowerCase();
@@ -93,9 +92,7 @@ public class SigninServlet extends HttpServlet {
 			}
 			request.setAttribute("email", email);
 			request.getRequestDispatcher("signin_complete.jsp").forward(request, response);
-		}
-		else
-		{
+		} else {
 			request.setAttribute("firstName", firstName);
 			request.setAttribute("lastName", lastName);
 			request.setAttribute("email", email);

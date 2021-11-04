@@ -186,7 +186,7 @@ public class UploadTopicServlet extends HttpServlet {
 						"INNER JOIN program_category pc ON pc.cat_id = c.id\n" +
 						"WHERE pc.program_id = ? ;";
 				PreparedStatement stmt = con.prepareStatement(query);
-				stmt.setInt(1, program.getId());
+				stmt.setInt(1, Integer.parseInt(program.getId()));
 				ResultSet rs = stmt.executeQuery();
 				while (rs.next()) {
 					Category c = new Category(rs.getString("desc"), rs.getInt("id"));

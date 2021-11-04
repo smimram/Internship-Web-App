@@ -47,7 +47,7 @@
 								<div class="col col-1">Confidential internship</div>
 							</li>
 							<li class="table-row">
-								<div class="col col-1" data-label="Id"><%=subject.getId() %></div>
+								<div class="col col-1" data-label="Id"><%=subject.getId()%></div> <!--  %>-->
 								<div class="col col-3" data-label="Subject Title"><%=subject.getTitle() %></div>
 								<div class="col col-2" data-label="Supervisor Name" title="<%=subject.getSupervisorEmail()%>"><%=subject.getSupervisorName() %></div>
 								<div class="col col-1" data-label="Subject">

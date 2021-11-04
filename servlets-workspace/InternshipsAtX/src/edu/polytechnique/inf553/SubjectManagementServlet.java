@@ -198,7 +198,7 @@ public class SubjectManagementServlet extends HttpServlet {
 						"WHERE ic.internship_id = ? \n" +
 						"ORDER BY c.description;";
 				PreparedStatement stmt = con.prepareStatement(query);
-				stmt.setInt(1, subject.getId());
+				stmt.setInt(1, Integer.parseInt(subject.getId()));
 				ResultSet resultSet = stmt.executeQuery();
 
 				while (resultSet.next()) {
@@ -232,7 +232,7 @@ public class SubjectManagementServlet extends HttpServlet {
 						"LEFT JOIN role_type r ON pr.role_id = r.id " +
 						"WHERE pi.internship_id = ? ;";
 				PreparedStatement stmt = con.prepareStatement(query);
-				stmt.setInt(1, subject.getId());
+				stmt.setInt(1, Integer.parseInt(subject.getId()));
 				ResultSet resultSet = stmt.executeQuery();
 
 				while (resultSet.next()) {

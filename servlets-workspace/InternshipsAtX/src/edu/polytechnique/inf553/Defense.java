@@ -21,8 +21,8 @@ public class Defense {
 		this.student = student;
 	}
 
-	public int getId() {
-		return id;
+	public String getId() {
+		return String.valueOf(id);
 	}
 
 	public Date getDate() {

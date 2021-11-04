@@ -14,15 +14,15 @@ public class SubjectsPerCategory {
 		this.programId = programId;
 	}
 	
-	public int getCategoryId() {
-		return categoryId;
+	public String getCategoryId() {
+		return String.valueOf(categoryId);
 	}
 	
 	public List<Subject> getSubjects() {
 		return subjects;
 	}
 	
-	public int getProgramId() {
-		return programId;
+	public String getProgramId() {
+		return String.valueOf(programId);
 	}
 }

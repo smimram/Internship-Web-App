@@ -44,9 +44,9 @@ public class UpdatePersonDefenseServlet extends HttpServlet {
 			if (role.equals("Admin") || role.equals("Professor")  ) {
 				// get ids
 				int defenseId = Integer.parseInt(request.getParameter("defenseId"));
-				int studentId = this.getId("studentId", request);
-				int referentId =  this.getId("referentId", request);
-				int jury2Id = this.getId("jury2Id", request);
+				int studentId = Integer.parseInt(this.getId("studentId", request));
+				int referentId =  Integer.parseInt(this.getId("referentId", request));
+				int jury2Id = Integer.parseInt(this.getId("jury2Id", request));
 				System.out.println("defenseId="+defenseId+";studentId="+studentId+";referentId="+referentId+";jury2Id="+jury2Id);
 				// update the database;
 				if(referentId != -2) {
@@ -68,13 +68,13 @@ public class UpdatePersonDefenseServlet extends HttpServlet {
 		}
 	}
 
-	private int getId(String idName, HttpServletRequest request) {
+	private String getId(String idName, HttpServletRequest request) {
 		if(request.getParameter(idName).equals("NULL")) {
-			return -1;
+			return String.valueOf("-1");
 		} else if(request.getParameter(idName).equals("SAME")) {
-			return -2;
+			return String.valueOf(-2);
 		} else {
-			return Integer.parseInt(request.getParameter(idName));
+			return request.getParameter(idName);
 		}
 	}
 

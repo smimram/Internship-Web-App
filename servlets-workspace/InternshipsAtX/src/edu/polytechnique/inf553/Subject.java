@@ -58,8 +58,8 @@ public class Subject {
 		return title;
 	}
 	
-	public int getId() {
-		return id;
+	public String getId() {
+		return String.valueOf(id);
 	}
 	
 	public String getSupervisorEmail() {
@@ -70,8 +70,8 @@ public class Subject {
 		return supervisorName;
 	}
 	
-	public int getProgramId() {
-		return programId;
+	public String getProgramId() {
+		return String.valueOf(programId);
 	}
 	
 	public boolean getAdminValid() {
