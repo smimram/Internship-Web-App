@@ -41,7 +41,7 @@
 				</form>
 				' : '' }
 
-				${ (user.role == "Admin") ? '
+				${ (user.role == "Admin" || user.role == "Professor" || user.role == "Assistant") ? '
 				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="student-management">	
 					<div class="container-login100-form-btn p-t-50 p-b-25">
 						<button type="submit" class="login100-form-btn">
