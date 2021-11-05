@@ -44,13 +44,9 @@ public class DefenseManagementServlet extends HttpServlet {
 				//======================== DATA LOADING PART ========================
 				String orderByColumn = request.getParameter("orderByColumn");
 				String orderBySort = request.getParameter("orderBySort");
-				System.out.println("orderByColumn=" + orderByColumn + " ; orderBySort=" + orderBySort);
 				List<Defense> defenses = getDefenses(orderByColumn, orderBySort);
-				System.out.println(defenses);
 				List<Person> professors = getProfessors(orderByColumn, orderBySort);
-				System.out.println(professors);
 				List<Person> students = getStudents(orderByColumn, orderBySort);
-				System.out.println(students);
 				request.setAttribute("defenses", defenses);
 				request.setAttribute("professors", professors);
 				request.setAttribute("students", students);

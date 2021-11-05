@@ -36,7 +36,7 @@ public class DeleteDefenseServlet extends HttpServlet {
 		if(session!=null && session.getAttribute("user")!= null) {
 			Person user = (Person)session.getAttribute("user");
 			String role = user.getRole();
-			if (role.equals("Admin") || role.equals("Assistant" )) {
+			if (role.equals("Admin") || role.equals("Assistant") || role.equals("Professor")) {
 				int defenseId = Integer.parseInt(request.getParameter("defenseId"));
 				Connection con = null;
 				try {

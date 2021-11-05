@@ -36,10 +36,9 @@ public class AssignStudentSubjectServlet extends HttpServlet {
 		if(session!=null && session.getAttribute("user")!= null) {
 			Person user = (Person)session.getAttribute("user");
 			String role = user.getRole();
-			if (role.equals("Admin") || role.equals("Professor")) {
+			if (role.equals("Admin") || role.equals("Professor") || role.equals("Assistant")) {
 				int studentId = Integer.parseInt(request.getParameter("studentId"));
 				int subjectId = Integer.parseInt(request.getParameter("subjectId"));
-				System.out.println(studentId + " " + subjectId);
 				Connection con = null;
 				try {
 					con = DbUtils.getInstance().getConnection();

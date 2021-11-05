@@ -17,16 +17,13 @@ public class Program {
 		this.year = year;
 		this.categories = new ArrayList<>();
 		this.students = new ArrayList<>();
-		System.out.println("ne program: (" + this.name + ", " + this.id + ", " + this.year + ")" );
 	}
 	
 	public String getId() {
-		System.out.println("calling getId");
 		return String.valueOf(id);
 	}
 
 	public String getName() {
-		System.out.println("calling getName");
 		return name;
 	}
 	

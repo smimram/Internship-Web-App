@@ -39,7 +39,6 @@ public class UnassignStudentSubjectServlet extends HttpServlet {
 			if (role.equals("Admin") || role.equals("Professor")) {
 				int studentId = Integer.parseInt(request.getParameter("studentId"));
 				int subjectId = Integer.parseInt(request.getParameter("subjectId"));
-				System.out.println(studentId + " " + subjectId);
 				Connection con = null;
 				try {
 					con = DbUtils.getInstance().getConnection();

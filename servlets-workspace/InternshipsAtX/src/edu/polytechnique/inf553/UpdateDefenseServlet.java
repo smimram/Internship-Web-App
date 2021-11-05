@@ -38,9 +38,7 @@ public class UpdateDefenseServlet extends HttpServlet {
 		if(session!=null && session.getAttribute("user")!= null) {
 			Person user = (Person)session.getAttribute("user");
 			String role = user.getRole();
-			System.out.println(user + " -> " + role);
 			if (role.equals("Admin")) {
-				System.out.println("in the right place");
 				int defenseId = Integer.parseInt(request.getParameter("defenseId"));
 				LocalTime defenseTime = null;
 				LocalDate defenseDate = null;
@@ -52,10 +50,6 @@ public class UpdateDefenseServlet extends HttpServlet {
 					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm", Locale.ENGLISH); // TODO: set it to the current locale
 					defenseTime = LocalTime.parse(request.getParameter("defenseTime"), formatter);
 				}
-				System.out.println("***");
-				System.out.println("defenseDate: " + defenseDate);
-				System.out.println("defenseTime: " + defenseTime);
-				System.out.println("***");
 
 				Connection con = null;
 				try {

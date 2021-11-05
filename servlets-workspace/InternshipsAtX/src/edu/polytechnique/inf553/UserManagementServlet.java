@@ -87,6 +87,7 @@ public class UserManagementServlet extends HttpServlet {
 				}
 				
 				request.setAttribute("persons", persons);
+				System.out.println(persons);
 				request.setAttribute("programs", programs);
 				request.getRequestDispatcher("user_management.jsp").forward(request, response);
 			}else {

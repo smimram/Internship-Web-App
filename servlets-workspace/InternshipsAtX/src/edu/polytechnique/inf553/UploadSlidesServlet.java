@@ -60,7 +60,6 @@ public class UploadSlidesServlet extends HttpServlet {
 				ps.setBinaryStream(1, inputStream);
 				ps.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
 				ps.setInt(3, subjectId);
-				System.out.println(ps);
 				int row = ps.executeUpdate();
 				if (row <= 0) {
 					System.out.println("ERROR: File was not uploaded and saved into database");

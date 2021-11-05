@@ -39,7 +39,7 @@ public class SubjectAttributionServlet extends HttpServlet {
 		if(session!=null && session.getAttribute("user")!= null) {
 			Person user = (Person)session.getAttribute("user");
 			String role = user.getRole();
-			if (role.equals("Admin") || role.equals("Professor")) {
+			if (role.equals("Admin") || role.equals("Professor") || role.equals("Assistant")) {
 				
 				//======================== DATA LOADING PART ========================
 				List<Subject> subjects = getSubjects();

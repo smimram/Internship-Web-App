@@ -24,7 +24,7 @@
 					</form>
 					
 					<form>
-						<span class="subtitle" style="color:black;"> <h4> <br> <br> Your application will be reviewed and you will be notified by email at ${email} when your account is validated. </h4> <br> <br> </span>
+						<span class="subtitle" style="color:black;"> <h4> <br> <br> Your application will be reviewed</h4> <br> <br> <!-- and you will be notified by email at ${email} when your account is validated. </span>-->
 					</form>
 					
 				

@@ -91,20 +91,14 @@ public class SubjectManagementServlet extends HttpServlet {
 			List<Subject> subjects = new ArrayList<>();
 			// get all subject list
 			System.out.println("getSubjects");
-			System.out.println(orderByColumn + " ; " + orderBySort);
 			if(orderByColumn == null) orderByColumn="id"; // if no parameter is provided
-			System.out.println(orderByColumn + " ; " + orderBySort);
 			if(orderBySort == null) orderBySort="ASC";
-			System.out.println(orderByColumn + " ; " + orderBySort);
 			if(orderByColumn.startsWith("'") && orderByColumn.endsWith("'")) orderByColumn = orderByColumn.substring(1, orderByColumn.length()-1); // if the value is encapsulated into '', e.g. 'id'
-			System.out.println(orderByColumn + " ; " + orderBySort);
 			if(orderBySort.startsWith("'") && orderBySort.endsWith("'")) orderBySort = orderBySort.substring(1, orderBySort.length()-1); // if the value is encapsulated into '', e.g. 'ASC'
-			System.out.println(orderByColumn + " ; " + orderBySort);
 			String query = "SELECT DISTINCT id, title, program_id, administr_validated, scientific_validated, confidential_internship, timestamp_fiche, timestamp_report, timestamp_slides "
 					+ "FROM internship "
 					+ "ORDER BY " + orderByColumn + " " + orderBySort + ";";
 			PreparedStatement preparedStatement = con.prepareStatement(query);
-			System.out.println("preparedStatement: " + preparedStatement.toString());
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while(resultSet.next()) {
 				Subject subject = new Subject(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getInt("program_id"),
@@ -114,8 +108,7 @@ public class SubjectManagementServlet extends HttpServlet {
 				subject.setDateSlides(resultSet.getTimestamp("timestamp_slides"));
 				subjects.add(subject);
 			}
-			System.out.println(subjects);
-			
+
 			return subjects;
 			
 		} catch(SQLException e) {
@@ -237,7 +230,6 @@ public class SubjectManagementServlet extends HttpServlet {
 
 				while (resultSet.next()) {
 					Person person = new Person(resultSet.getString("pName"), resultSet.getInt("pid"), resultSet.getString("role"), resultSet.getBoolean("pValid"), resultSet.getString("email"));
-					System.out.println(person);
 					subject.setAffiliatedStudent(person);
 				}
 			}

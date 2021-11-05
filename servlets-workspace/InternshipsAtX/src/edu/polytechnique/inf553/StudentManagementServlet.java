@@ -32,7 +32,7 @@ public class StudentManagementServlet extends HttpServlet {
 		if(session!=null && session.getAttribute("user")!= null) {
 			Person user = (Person)session.getAttribute("user");
 			String role = user.getRole();
-			if (role.equals("Admin")) {
+			if (role.equals("Admin") || role.equals("Professor") || role.equals("Assistant")) {
 				List<Program> programs = new ArrayList<>();
 				
 				//======================== DATA LOADING PART ========================

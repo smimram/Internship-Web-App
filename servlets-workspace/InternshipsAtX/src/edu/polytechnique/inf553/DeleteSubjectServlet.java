@@ -39,13 +39,12 @@ public class DeleteSubjectServlet extends HttpServlet {
 		if(session!=null && session.getAttribute("user")!= null) {
 			Person user = (Person)session.getAttribute("user");
 			String role = user.getRole();
-			if (role.equals("Admin") || role.equals("Assistant" )) {
+			if (role.equals("Admin") || role.equals("Assistant") || role.equals("Professor")) {
 				int subjectId = Integer.parseInt(request.getParameter("subjectId"));
 				if (checkIsTaken(subjectId)) {
 					session.setAttribute("description", "Cannot delete subject if it is already assigned to a student!");
 					session.setAttribute("method", "doGet method of DeleteSubjectServlet");
 					session.setAttribute("userId", String.valueOf(user.getId()));
-					System.out.println("IDDDDD: " + user.getId());
 					request.getRequestDispatcher("/ErrorPageServlet").forward(request, response);
 					//response.sendError(HttpServletResponse.SC_FORBIDDEN);
 				}

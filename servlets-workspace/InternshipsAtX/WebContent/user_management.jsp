@@ -89,7 +89,7 @@ input:checked + .slider:before {
 	<div class="limiter">
 		<div class="container-login100 background_style">
 			<div class="wrap-login100-V2">
-				<form class="login100-form validate-form p-l-55 p-r-55 p-t-178">
+				<div class="login100-form validate-form p-l-55 p-r-55 p-t-178">
 					<span class="login100-form-title">
 						<h1> User Management </h1>
 					</span>
@@ -98,7 +98,7 @@ input:checked + .slider:before {
 						<ul class="responsive-table">
 							<li class="table-header">
 								<div class="col col-1"> Id </div>
-								<div class="col col-2">Name</div>
+								<div class="col col-3">Name</div>
 								<div class="col col-2">Role</div>
 								<div class="col col-4">Program</div>
 								<div class="col col-2">Validate</div>
@@ -107,7 +107,7 @@ input:checked + .slider:before {
 							<c:forEach items="${persons}" var="person">
 								<li class="table-row">
 									<div class="col col-1" data-label="Id">${person.id}</div>
-									<div class="col col-2" data-label="Name">${person.name}</br><button type="button" class="btn btn-secondary btn-sm" onclick="displayEmail('${person.email}')"><i class="fas fa-at" style="color: white"></i></button></div>
+									<div class="col col-3" data-label="Name">${person.name}</br><button type="button" class="btn btn-secondary btn-sm" onclick="displayEmail('${person.email}')"><i class="fas fa-at" style="color: white"></i></button></div>
 									<div class="col col-2" data-label="Role">
 										<!-- update the role of a user -->
 										<select class="custom-select" name="role" onchange="updateUserRole(${person.id}, this);">
@@ -133,7 +133,7 @@ input:checked + .slider:before {
 										  <%-- <option value="false" ${person.valid ? '' : 'selected'}>Invalid</option> --%>
 										<%-- </select> --%>
 										<label class="switch">
-											<input type="checkbox" id="select-valid-${person.id}" ${person.programSize() == 0 ? 'disabled' : ''} onchange="updateUserValid(${person.id}, this);"" ${person.valid ? 'checked' : ''}> <!-- ${(subject.adminValid && user.role != "Assistant") ? '' : 'disabled'}  -->
+											<input type="checkbox" id="select-valid-${person.id}" onchange="updateUserValid(${person.id}, this);"" ${person.valid ? 'checked' : ''}> <!-- ${(subject.adminValid && user.role != "Assistant") ? '' : 'disabled'}  -->
 											<span class="slider round"></span>
 										</label>
 									</div>
@@ -142,9 +142,7 @@ input:checked + .slider:before {
 							
 						</ul>
 					</div>
-				</form>
-				
-
+				</div>
 			</div>
 		</div>
 	</div>

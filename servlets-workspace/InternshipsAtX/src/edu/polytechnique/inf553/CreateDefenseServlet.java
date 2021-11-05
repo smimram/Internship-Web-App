@@ -33,7 +33,7 @@ public class CreateDefenseServlet extends HttpServlet {
 		if(session!=null && session.getAttribute("user")!= null) {
 			Person user = (Person)session.getAttribute("user");
 			String role = user.getRole();
-			if (role.equals("Admin") || role.equals("Professor" )) {
+			if (role.equals("Admin") || role.equals("Professor") || role.equals("Assistant")) {
 				LocalDate defenseDate = null;
 				if(!request.getParameter("defenseDate").equals("") && !request.getParameter("defenseDate").equals("null")) {
 					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH); // TODO: set it to the current locale

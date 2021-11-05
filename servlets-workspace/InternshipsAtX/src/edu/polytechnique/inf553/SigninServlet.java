@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class SigninServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -26,9 +27,7 @@ public class SigninServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println(this.getClass().getName() + " doGet method called with path " + request.getRequestURI() + " and parameters " + request.getQueryString());
 		List<Program> programs = getAllPrograms();
-		System.out.println(programs);
 		request.setAttribute("programs", programs);
-		System.out.println(programs);
 		request.getRequestDispatcher("signin.jsp").forward(request, response);
 	}
 
@@ -42,7 +41,10 @@ public class SigninServlet extends HttpServlet {
 		String pass = request.getParameter("pass");
 		String confirmPass = request.getParameter("confirmPass");
 		String role = request.getParameter("role");
-		int programStudent = Integer.parseInt(request.getParameter("programStudent"));
+		int programStudent = -1;
+		if(request.getParameter("programStudent") != null && !Objects.equals(request.getParameter("programStudent"), "null")) {
+			 programStudent = Integer.parseInt(request.getParameter("programStudent"));
+		}
 
 		String concatName = lastName+", "+firstName;
 
@@ -77,7 +79,7 @@ public class SigninServlet extends HttpServlet {
 				ps2.setString(2, email);
 				ps2.executeUpdate();
 
-				if(role.equals("Student")) {
+				if(role.equals("Student") && programStudent != -1) {
 					query2 = "INSERT INTO person_program (program_id, person_id) VALUES (" + programStudent + " AS program_id, SELECT p.id FROM person p WHERE p.email = ?)";
 					ps = con.prepareStatement(query2);
 					ps.setString(1, email);
