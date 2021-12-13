@@ -40,7 +40,7 @@ public class StudentViewServlet extends HttpServlet {
 				
 				List<Program> programs = new ArrayList<>();
 				List<SubjectsPerCategory> subjectsPerCategory = new ArrayList<>();
-				int userId = Integer.parseInt(user.getId());
+				int userId = user.getId();
 				
 				//======================== DATA LOADING PART ========================
 				Connection con = null;

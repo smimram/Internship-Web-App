@@ -63,7 +63,7 @@ public class UserManagementServlet extends HttpServlet {
 								"FROM program p inner join person_program pp on p.id = pp.program_id\n" +
 								"WHERE pp.person_id = ?";
 						PreparedStatement ps1 = con.prepareStatement(query1);
-						ps1.setInt(1, Integer.parseInt(person.getId()));
+						ps1.setInt(1, person.getId());
 						ResultSet rs1 = ps1.executeQuery();
 						while (rs1.next()) {
 							Program pr = new Program(rs1.getInt("program_id"), rs1.getString("name"), rs1.getString("year"));
