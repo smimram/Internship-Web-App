@@ -37,8 +37,7 @@ All those libraries are included in the GitHub repository so installation should
 
 ### Detailed instructions
 
-1. Clone the project using: 
-`git clone https://github.com/victor-radermecker/Internship-Web-App.git`
+1. Clone this project.
 
 2. Set the working directory of Eclipse to the repository `servlets-workspace`.
 

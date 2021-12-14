@@ -105,13 +105,13 @@ insert into program(name, year) values ('bio', 2020);
 insert into program(name, year) values ('mat', 2020);
 insert into program(name, year) values ('phys', 2020);
 
-copy person from '/home/aleksamarusic/Internship-Web-App/data/person.csv' CSV header;
-copy internship from '/home/aleksamarusic/Internship-Web-App/data/internship.csv' CSV header;
-copy categories from '/home/aleksamarusic/Internship-Web-App/data/categories.csv' CSV header;
-copy internship_category from '/home/aleksamarusic/Internship-Web-App/data/internship_category.csv' CSV header;
-copy person_roles from '/home/aleksamarusic/Internship-Web-App/data/person_roles.csv' CSV header;
-copy person_program from '/home/aleksamarusic/Internship-Web-App/data/person_program.csv' CSV header;
-copy program_category from '/home/aleksamarusic/Internship-Web-App/data/program_category.csv' CSV header;
+copy person from 'data/person.csv' CSV header;
+copy internship from 'data/internship.csv' CSV header;
+copy categories from 'data/categories.csv' CSV header;
+copy internship_category from 'data/internship_category.csv' CSV header;
+copy person_roles from 'data/person_roles.csv' CSV header;
+copy person_program from 'data/person_program.csv' CSV header;
+copy program_category from 'data/program_category.csv' CSV header;
 
 
 SELECT setval('person_id_seq', (SELECT MAX(id) FROM person)+1);
