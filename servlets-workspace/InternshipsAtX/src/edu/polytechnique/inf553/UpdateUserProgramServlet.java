@@ -1,17 +1,15 @@
 package edu.polytechnique.inf553;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
  * Servlet implementation class UpdateUserProgramServlet
@@ -33,16 +31,16 @@ public class UpdateUserProgramServlet extends HttpServlet {
 			Person user = (Person)session.getAttribute("user");
 			String role = user.getRole();
 			if (role.equals("Admin")) {
-				Boolean add = Boolean.parseBoolean(request.getParameter("select"));
+				boolean add = Boolean.parseBoolean(request.getParameter("select"));
 				int pid = Integer.parseInt(request.getParameter("pid"));
-				int programid = Integer.parseInt(request.getParameter("programid"));
+				int programId = Integer.parseInt(request.getParameter("programid"));
 				Connection con = null;
 				try {
 					con = DbUtils.getInstance().getConnection();
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
-					String query = null;
+					String query;
 					// update user program, set isolation level SERIALIZABLE
 					if (add) {
 						// add program
@@ -58,7 +56,7 @@ public class UpdateUserProgramServlet extends HttpServlet {
 								"COMMIT TRANSACTION;";
 					}
 					PreparedStatement ps = con.prepareStatement(query);
-					ps.setInt(1, programid);
+					ps.setInt(1, programId);
 					ps.setInt(2, pid);
 					ps.executeUpdate();
 

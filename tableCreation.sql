@@ -28,11 +28,19 @@ create table internship(
    title varchar not null,
    creation_date date not null,
    content bytea not null,
+   fiche bytea,
+   timestamp_fiche timestamp,
+   report bytea,
+   timestamp_report timestamp,
+   slides bytea,
+   timestamp_slides timestamp,
    supervisor_id int, foreign key (supervisor_id) references person(id) on delete cascade,
    scientific_validated boolean not null,
    administr_validated boolean not null,
    is_taken boolean not null,
    program_id int, foreign key (program_id) references program(id)
+   confidential_internship boolean not null DEFAULT 0, -- default is false
+   -- confidential_report boolean DEFAULT 0
 );
  
 create table internship_category(
@@ -44,6 +52,15 @@ create table internship_category(
 create table role_type(
    id serial primary key,
    role varchar(32)
+);
+
+create table defense(
+   id serial primary key,
+   date date,-- not null,
+   time time,-- not null,
+   referent_id int, foreign key (referent_id) references person(id) on delete cascade,
+   jury2_id int, foreign key (jury2_id) references person(id) on delete cascade,
+   student_id int, foreign key (student_id) references person(id) on delete cascade
 );
  
 create table person_roles(
@@ -105,13 +122,13 @@ insert into program(name, year) values ('bio', 2020);
 insert into program(name, year) values ('mat', 2020);
 insert into program(name, year) values ('phys', 2020);
 
-copy person from 'data/person.csv' CSV header;
-copy internship from 'data/internship.csv' CSV header;
-copy categories from 'data/categories.csv' CSV header;
-copy internship_category from 'data/internship_category.csv' CSV header;
-copy person_roles from 'data/person_roles.csv' CSV header;
-copy person_program from 'data/person_program.csv' CSV header;
-copy program_category from 'data/program_category.csv' CSV header;
+-- copy person from 'data/person.csv' CSV header;
+-- copy internship from 'data/internship.csv' CSV header;
+-- copy categories from 'data/categories.csv' CSV header;
+-- copy internship_category from 'data/internship_category.csv' CSV header;
+-- copy person_roles from 'data/person_roles.csv' CSV header;
+-- copy person_program from 'data/person_program.csv' CSV header;
+-- copy program_category from 'data/program_category.csv' CSV header;
 
 
 SELECT setval('person_id_seq', (SELECT MAX(id) FROM person)+1);

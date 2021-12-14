@@ -1,28 +1,26 @@
 package edu.polytechnique.inf553;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Base64;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-public class DownloadServlet extends HttpServlet {
+public class DownloadTopicServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final int BUFFER_SIZE = 16177215;
 
 	/**
 	 * Constructor 
 	 */
-	public DownloadServlet() {
+	public DownloadTopicServlet() {
 		super();	
 		try {
 			Class.forName("org.postgresql.Driver");
@@ -34,8 +32,8 @@ public class DownloadServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println(this.getClass().getName() + " doGet method called with path " + request.getRequestURI() + " and parameters " + request.getQueryString());
 
-		String internshipId = request.getParameter("internshipId"); 
-		
+		int internshipId = Integer.parseInt(request.getParameter("internshipId"));
+
 		String returnFileName = "file_not_found.jsp";
 		Connection con = null;
 		try {
@@ -44,14 +42,12 @@ public class DownloadServlet extends HttpServlet {
 				response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			}
 			
-			String query = "SELECT content, title " +
-						   "FROM internship " +
-						   "WHERE internship.id ='"+internshipId+"';";
+			String query = "SELECT content, title " + "FROM internship " + "WHERE internship.id = ? AND content IS NOT NULL;";
 			PreparedStatement ps = con.prepareStatement(query);
+			ps.setInt(1, internshipId);
 			ResultSet rs = ps.executeQuery();
 			if(rs.next()) {
-				returnFileName = "download_complete.jsp";
-				
+				returnFileName = "download_complete_topic.jsp";
 				InputStream inputStream = rs.getBinaryStream("content");
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 byte[] buffer = new byte[BUFFER_SIZE];
@@ -76,8 +72,8 @@ public class DownloadServlet extends HttpServlet {
 		} finally {
 			DbUtils.getInstance().releaseConnection(con);
 		}
-		
-		request.getRequestDispatcher(returnFileName).forward(request, response);
+
+		 request.getRequestDispatcher(returnFileName).forward(request, response);
 	}
 	
 }

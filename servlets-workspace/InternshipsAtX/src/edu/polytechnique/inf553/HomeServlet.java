@@ -1,19 +1,11 @@
 package edu.polytechnique.inf553;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 
 public class HomeServlet extends HttpServlet {
@@ -35,8 +27,6 @@ public class HomeServlet extends HttpServlet {
 		// session management
 		HttpSession session = request.getSession(false);
 		if(session!=null && session.getAttribute("user")!= null) {
-			Person user = (Person)session.getAttribute("user");
-			String role = user.getRole();
 			request.getRequestDispatcher("dashboard.jsp").forward(request, response);
 			
 		}else {

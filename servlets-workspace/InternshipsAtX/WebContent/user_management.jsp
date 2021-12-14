@@ -5,35 +5,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Login V8</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-<!--===============================================================================================-->	
-	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
-<!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
-<!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="css/util.css">
-	<link rel="stylesheet" type="text/css" href="css/main.css">
-	<link rel="stylesheet" type="text/css" href="css/table.css">
-<!--===============================================================================================-->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
-	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
-<!--===============================================================================================-->
+	<title>User management</title>
+	<%@ include file="meta.jsp" %>
 </head>
 <style>
 .mul-select{
@@ -54,39 +27,69 @@
 .select2-container--default .select2-selection--multiple .select2-selection__rendered li{
 	margin: 5px 0px 0px 5px;
 }
+ /* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+input:checked + .slider {
+  background-color: #2196F3;
+}
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+.slider.round:before {
+  border-radius: 50%;
+}
 </style>
 <body>
-
-	<nav class="navbar navbar-dark bg-dark">
-	  <div class="container-fluid justify-content-start">
-	    <a class="navbar-brand" href="/InternshipsAtX/dashboard">
-	      <img src="images/logo.png" style="max-height: 35px;">
-	      Internship Management
-	    </a>
-	    <div class="ml-auto d-flex">
-	        <div class="nav-item dropdown">
-	          <a class="text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-	            ${user.role}: ${user.name}
-	          </a>
-	          <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="right:0;left:auto;">
-	            ${ (user.role == "Admin") ? '<li><a class="dropdown-item" href="./user-management">User management</a></li>' : '' }
-	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./program-management">Program management</a></li>' : '' }
-	            ${ (user.role == "Admin" || user.role == "Assistant" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./subject-validation">Subject validation</a></li>' : '' }
-	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./subject-management">Subject management</a></li>' : '' }
-	            ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./subject-attribution">Subject attribution</a></li>' : '' }
-	            ${ (user.role == "Admin" || user.role == "Assistant") ? '<li><a class="dropdown-item" href="./subject-deletion">Subject deletion</a></li>' : '' }
-	            <li><hr class="dropdown-divider"></li>
-	            <li><a class="dropdown-item" href="./LogoutServlet">Log out</a></li>
-	          </ul>
-	        </div>
-	    </div>
-	  </div>
-	</nav>
+	<!-- navigation bar -->
+	<jsp:include page="header.jsp"></jsp:include>
 	
 	<div class="limiter">
 		<div class="container-login100 background_style">
 			<div class="wrap-login100-V2">
-				<form class="login100-form validate-form p-l-55 p-r-55 p-t-178">
+				<div class="login100-form validate-form p-l-55 p-r-55 p-t-178">
 					<span class="login100-form-title">
 						<h1> User Management </h1>
 					</span>
@@ -95,7 +98,7 @@
 						<ul class="responsive-table">
 							<li class="table-header">
 								<div class="col col-1"> Id </div>
-								<div class="col col-2">Name</div>
+								<div class="col col-3">Name</div>
 								<div class="col col-2">Role</div>
 								<div class="col col-4">Program</div>
 								<div class="col col-2">Validate</div>
@@ -104,7 +107,7 @@
 							<c:forEach items="${persons}" var="person">
 								<li class="table-row">
 									<div class="col col-1" data-label="Id">${person.id}</div>
-									<div class="col col-2" data-label="Name">${person.name}</div>
+									<div class="col col-3" data-label="Name">${person.name}</br><button type="button" class="btn btn-secondary btn-sm" onclick="displayEmail('${person.email}')"><i class="fas fa-at" style="color: white"></i></button></div>
 									<div class="col col-2" data-label="Role">
 										<!-- update the role of a user -->
 										<select class="custom-select" name="role" onchange="updateUserRole(${person.id}, this);">
@@ -125,19 +128,21 @@
 									<div class="col col-2" data-label="Validate">
 										<!-- update the valid status of a user -->
 										<!-- need to select at least one program before validate a user -->
-										<select id="select-valid-${person.id}" class="custom-select" ${person.programSize() == 0 ? 'disabled' : ''} onchange="updateUserValid(${person.id}, this);">
-										  <option value="true" ${person.valid ? 'selected' : ''}>Valid</option>
-										  <option value="false" ${person.valid ? '' : 'selected'}>Invalid</option>
-										</select>
+										<%-- <select id="select-valid-${person.id}" class="custom-select" ${person.programSize() == 0 ? 'disabled' : ''} onchange="updateUserValid(${person.id}, this);"> --%>
+										  <%-- <option value="true" ${person.valid ? 'selected' : ''}>Valid</option> --%>
+										  <%-- <option value="false" ${person.valid ? '' : 'selected'}>Invalid</option> --%>
+										<%-- </select> --%>
+										<label class="switch">
+											<input type="checkbox" id="select-valid-${person.id}" onchange="updateUserValid(${person.id}, this);"" ${person.valid ? 'checked' : ''}> <!-- ${(subject.adminValid && user.role != "Assistant") ? '' : 'disabled'}  -->
+											<span class="slider round"></span>
+										</label>
 									</div>
 								</li>
 							</c:forEach>
 							
 						</ul>
 					</div>
-				</form>
-				
-
+				</div>
 			</div>
 		</div>
 	</div>
@@ -208,7 +213,7 @@ function updateUserRole(pid, sel){
     });
 }
 function updateUserValid(pid, sel){
-	var valid = sel.value;
+	var valid = sel.checked;
     $.ajax({
         type : "GET",
         url : "UpdateUserValidServlet",
@@ -221,6 +226,12 @@ function updateUserValid(pid, sel){
         	location.reload();
         }
     });
+}
+
+function displayEmail(email) {
+	// console.log(decodeURIComponent(email));
+	// alert("Email: " + decodeURIComponent(email));
+	alert("Email: " + email);
 }
 </script>
 

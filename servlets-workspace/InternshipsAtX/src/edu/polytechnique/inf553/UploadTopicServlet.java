@@ -1,15 +1,5 @@
 package edu.polytechnique.inf553;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.ServletException;
@@ -18,6 +8,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /*
  * Test out the hack! (only works if forgotten to put the '?' instead of the strings concatenation) Put this in passwords in SigninServlet : 
@@ -46,18 +42,19 @@ public class UploadTopicServlet extends HttpServlet {
 
 		List<Program> programs = loadData();
 		request.setAttribute("programs", programs);
-		request.getRequestDispatcher("uploadtopic.jsp").include(request, response);
+		request.getRequestDispatcher("upload_topic.jsp").include(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("doPost called with parameter "+request.getQueryString());
-		
+
 		String firstName = request.getParameter("firstName");
 		String lastName = request.getParameter("lastName");
 		String email = request.getParameter("email").toLowerCase();
 		String topicTitle = request.getParameter("topicTitle");
 		String program_id_string = request.getParameter("programs");
 		String category_id_string = request.getParameter("categories");
+		String confidentiality = request.getParameter("confidentiality");
 		Part uploadFile = request.getPart("uploadFile");
 		
 		String errorMessage = checkEntries(firstName, lastName, email, topicTitle, program_id_string, category_id_string, uploadFile);
@@ -66,6 +63,7 @@ public class UploadTopicServlet extends HttpServlet {
 			//Conversion from String to Integer, exception impossible by construction of values in html files for each category and each program
 			int program_id = Integer.parseInt(program_id_string);
 			int category_id = Integer.parseInt(category_id_string);
+			boolean confidentialSubject = Objects.equals(confidentiality, "on"); // the checkbox is checked
 			Connection con = null;
 			try {
 				int supervisor_id;
@@ -76,14 +74,15 @@ public class UploadTopicServlet extends HttpServlet {
 				}
 
 				if(!checkEmail(email)) {
-					String defaultPass = "12345678";
+					String defaultPass = "password";
 					String concatName = lastName+", "+firstName;
 					String query1 = "insert into person(name, email, creation_date, valid, password)" + 
-							" values (?, ?, '"+java.time.LocalDate.now().toString()+"', true, crypt(?, gen_salt('bf'))) ;";
+							" values (?, ?, ?, true, crypt(?, gen_salt('bf'))) ;";
 					PreparedStatement ps1 = con.prepareStatement(query1);
 					ps1.setString(1, concatName);
 					ps1.setString(2, email);
-					ps1.setString(3, defaultPass);
+					ps1.setDate(3, Date.valueOf(java.time.LocalDate.now()));
+					ps1.setString(4, defaultPass);
 					ps1.executeUpdate();
 					
 					
@@ -109,16 +108,18 @@ public class UploadTopicServlet extends HttpServlet {
 				supervisor_id = rs4.getInt("id");
 				
 				
-				String query5 = "insert into internship(title, creation_date, content, supervisor_id, scientific_validated, administr_validated, is_taken, program_id)" + 
-						" values (?, '"+java.time.LocalDate.now().toString()+"', ?, ?, false, false, false, ?) ;";
+				String query5 = "insert into internship(title, creation_date, content, supervisor_id, scientific_validated, administr_validated, is_taken, program_id, is_confidential)" +
+						" values (?, ?, ?, ?, false, false, false, ?, ?) ;";
 				
 				PreparedStatement ps5 = con.prepareStatement(query5);
 				InputStream inputStream = uploadFile.getInputStream();
 		        if (inputStream != null) {
 		        	ps5.setString(1, topicTitle);
-	                ps5.setBinaryStream(2, inputStream);
-	                ps5.setInt(3, supervisor_id);
-	                ps5.setInt(4, program_id);
+					ps5.setDate(2, Date.valueOf(java.time.LocalDate.now()));
+	                ps5.setBinaryStream(3, inputStream);
+	                ps5.setInt(4, supervisor_id);
+	                ps5.setInt(5, program_id);
+					ps5.setBoolean(6, confidentialSubject);
 	                int row = ps5.executeUpdate();
 	                if (row <= 0) {
 	                    System.out.println("ERROR: File was not uploaded and saved into database");
@@ -158,12 +159,12 @@ public class UploadTopicServlet extends HttpServlet {
 			request.setAttribute("err_message", errorMessage);
 			List<Program> programs = loadData();
 			request.setAttribute("programs", programs);
-			request.getRequestDispatcher("uploadtopic.jsp").forward(request, response);
+			request.getRequestDispatcher("upload_topic.jsp").forward(request, response);
 		}
 	}
 	
 	private List<Program> loadData() {
-		List<Program> programs = new ArrayList<Program>();
+		List<Program> programs = new ArrayList<>();
 		Connection con = null;
 		try {
 			con = DbUtils.getInstance().getConnection();
@@ -175,19 +176,21 @@ public class UploadTopicServlet extends HttpServlet {
 			PreparedStatement ps1 = con.prepareStatement(query1);
 			ResultSet rs1 = ps1.executeQuery();
 			while(rs1.next()) {
-				Program p = new Program(rs1.getString("id"), rs1.getString("name"), rs1.getString("year"));
+				Program p = new Program(rs1.getInt("id"), rs1.getString("name"), rs1.getString("year"));
 				programs.add(p);
 			}
-			
-			for(int i=0; i<programs.size(); ++i) {
-				String query = "SELECT DISTINCT c.description AS desc, c.id as id \n" + 
-						"FROM categories c\n" + 
-						"INNER JOIN program_category pc ON pc.cat_id = c.id\n" + 
-						"WHERE pc.program_id ="+programs.get(i).getId()+";";
-				ResultSet rs = con.prepareStatement(query).executeQuery();
-				while(rs.next()) {
-					Category c = new Category(rs.getString("desc"), rs.getString("id"));
-					programs.get(i).addCategory(c);
+
+			for (Program program : programs) {
+				String query = "SELECT DISTINCT c.description AS desc, c.id as id \n" +
+						"FROM categories c\n" +
+						"INNER JOIN program_category pc ON pc.cat_id = c.id\n" +
+						"WHERE pc.program_id = ? ;";
+				PreparedStatement stmt = con.prepareStatement(query);
+				stmt.setInt(1, Integer.parseInt(program.getId()));
+				ResultSet rs = stmt.executeQuery();
+				while (rs.next()) {
+					Category c = new Category(rs.getString("desc"), rs.getInt("id"));
+					program.addCategory(c);
 				}
 			}
 
