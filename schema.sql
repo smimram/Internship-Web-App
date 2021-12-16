@@ -38,9 +38,8 @@ create table internship(
    scientific_validated boolean not null,
    administr_validated boolean not null,
    is_taken boolean not null,
-   program_id int, foreign key (program_id) references program(id)
-   confidential_internship boolean not null DEFAULT 0, -- default is false
-   -- confidential_report boolean DEFAULT 0
+   program_id int, foreign key (program_id) references program(id),
+   confidential_internship boolean not null DEFAULT false
 );
  
 create table internship_category(
@@ -105,14 +104,12 @@ insert into role_type(role) values ('Professor');
 insert into role_type(role) values ('Proponent');
 insert into role_type(role) values ('Admin');
  
-insert into person(name, email, creation_date, valid, password) values ('Manolescu, Ioana', 'ioana.manolescu@inria.fr', current_date, 'true', crypt('iloveDBMS', gen_salt('bf')));
+insert into person(name, email, creation_date, valid, password) values ('Charlie Root', 'charlie.root@example.org', current_date, 'true', crypt('charlie', gen_salt('bf')));
 
-insert into person_roles(role_id, person_id) values (5, 1);
-
-insert into person(name, email, creation_date, valid, password) values ('Macron, Emmanuel', 'emmanuel.macron@gouv.fr', current_date, 'true', crypt('iloveFRANCE', gen_salt('bf')));
-SELECT setval('person_id_seq', (SELECT MAX(id) FROM person)+1);
-insert into person_roles(role_id, person_id) values (3, 2);
-
+insert into person_roles(role_id, person_id) values (
+  (select id from role_type where role = 'Admin'),
+  (select id from person where email = 'charlie.root@example.org')
+);
 
 -- add rows to the database
  
@@ -121,20 +118,3 @@ insert into program(name, year) values ('map', 2020);
 insert into program(name, year) values ('bio', 2020);
 insert into program(name, year) values ('mat', 2020);
 insert into program(name, year) values ('phys', 2020);
-
--- copy person from 'data/person.csv' CSV header;
--- copy internship from 'data/internship.csv' CSV header;
--- copy categories from 'data/categories.csv' CSV header;
--- copy internship_category from 'data/internship_category.csv' CSV header;
--- copy person_roles from 'data/person_roles.csv' CSV header;
--- copy person_program from 'data/person_program.csv' CSV header;
--- copy program_category from 'data/program_category.csv' CSV header;
-
-
-SELECT setval('person_id_seq', (SELECT MAX(id) FROM person)+1);
-SELECT setval('internship_id_seq', (SELECT MAX(id) FROM internship)+1);
-SELECT setval('categories_id_seq', (SELECT MAX(id) FROM categories)+1);
-SELECT setval('internship_category_id_seq', (SELECT MAX(id) FROM internship_category)+1);
-SELECT setval('person_roles_id_seq', (SELECT MAX(id) FROM person_roles)+1);
-SELECT setval('person_program_id_seq', (SELECT MAX(id) FROM person_program)+1);
-SELECT setval('program_category_id_seq', (SELECT MAX(id) FROM program_category)+1);
