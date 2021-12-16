@@ -11,11 +11,11 @@ import java.util.List;
  */
 public class DbUtils {
 
-	private static final String dbName = "internship_webapp";
-	private static final String dbHost = "localhost";
+	private static final String dbName = "internships";
+	private static final String dbHost = "host.docker.internal";
 	private static final String dbPort = "5432";
-	private static final String dbUser = "postgres";
-	private static final String dbPassword = "postgres";
+	private static final String dbUser = "internships";
+	private static final String dbPassword = "";
 	
 	private static final String dbUrl = "jdbc:postgresql://"+dbHost+":"+dbPort+"/"+dbName;
 
