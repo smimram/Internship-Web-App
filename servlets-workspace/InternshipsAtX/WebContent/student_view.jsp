@@ -51,7 +51,7 @@
 								<div class="col col-3" data-label="Subject Title"><%=subject.getTitle() %></div>
 								<div class="col col-2" data-label="Supervisor Name" title="<%=subject.getSupervisorEmail()%>"><%=subject.getSupervisorName() %></div>
 								<div class="col col-1" data-label="Subject">
-									<button type="button" class="btn btn-secondary btn-sm"><a href="/InternshipsAtX/download-subject?internshipId=<%=subject.getId() %>" target="_blank"><i class="fas fa-download" style="color: white"></i></a></button>
+									<button type="button" class="btn btn-secondary btn-sm"><a href="/download-subject?internshipId=<%=subject.getId() %>" target="_blank"><i class="fas fa-download" style="color: white"></i></a></button>
 								</div>
 								<div class="col col-1" data-label="Fiche de stage">
 									<form method="post" action="upload-fiche" enctype="multipart/form-data">
@@ -60,7 +60,7 @@
 										<input id="fiche" type="file" name="fiche" accept="application/pdf" title="Please upload your fiche de stage in PDF format." onchange="this.form.submit()"/> <!-- onchange to avoid submit button -->
 									</form>
 									<div class="col col-1" data-label="Fiche">
-										<button type="button" class="btn btn-secondary btn-sm"><a href="/InternshipsAtX/download-fiche?internshipId=<%=subject.getId() %>" target="_blank"><i class="fas fa-download" style="color: white"></i></a></button>
+										<button type="button" class="btn btn-secondary btn-sm"><a href="/download-fiche?internshipId=<%=subject.getId() %>" target="_blank"><i class="fas fa-download" style="color: white"></i></a></button>
 									</div>
 								</div>
 								<div class="col col-1" data-label="Report">
@@ -70,7 +70,7 @@
 										<input id="report" type="file" name="report" accept="application/pdf" title="Please upload your report in PDF format." onchange="this.form.submit()"/>
 									</form>
 									<div class="col col-1" data-label="Report">
-										<button type="button" class="btn btn-secondary btn-sm"><a href="/InternshipsAtX/download-report?internshipId=<%=subject.getId() %>" target="_blank"><i class="fas fa-download" style="color: white"></i></a></button>
+										<button type="button" class="btn btn-secondary btn-sm"><a href="/download-report?internshipId=<%=subject.getId() %>" target="_blank"><i class="fas fa-download" style="color: white"></i></a></button>
 									</div>
 								</div>
 								<div class="col col-1" data-label="Slides">
@@ -80,7 +80,7 @@
 										<input id="slides" type="file" name="slides" accept="application/pdf" title="Please upload your slides in PDF format." onchange="this.form.submit()"/>
 									</form>
 									<div class="col col-1" data-label="Slides">
-										<button type="button" class="btn btn-secondary btn-sm"><a href="/InternshipsAtX/download-slides?internshipId=<%=subject.getId() %>" target="_blank"><i class="fas fa-download" style="color: white"></i></a></button>
+										<button type="button" class="btn btn-secondary btn-sm"><a href="/download-slides?internshipId=<%=subject.getId() %>" target="_blank"><i class="fas fa-download" style="color: white"></i></a></button>
 									</div>
 								</div>
 								<div class="col col-1" data-label="Confidential subject">
@@ -207,7 +207,7 @@
 										var newRow = document.getElementById(k.concat(category.key).concat("pctable"));
 										newRow.innerHTML += '<li class="table-header"><div class="col col-1"> Id </div><div class="col col-3">Subject Title</div><div class="col col-3">Supervisor Name</div><div class="col col-3">Supervisor Email</div><div class="col col-1">Subject</div><div class="col col-1">Confidential internship</div></li>';
 										for(const subject of subjects) {
-											var downloadForm = '<button type="button" class="btn btn-secondary btn-sm"><a href="/InternshipsAtX/download-subject?internshipId='+subject.id+'" target="_blank"><i class="fas fa-download" style="color: white"></i></a></button>';
+											var downloadForm = '<button type="button" class="btn btn-secondary btn-sm"><a href="/download-subject?internshipId='+subject.id+'" target="_blank"><i class="fas fa-download" style="color: white"></i></a></button>';
 											var newRowE = document.getElementById(k.concat(category.key).concat("pctable"));
 											console.log(${subject.isConfidentialInternship()});
 											newRowE.innerHTML += '<li class="table-row">' + 

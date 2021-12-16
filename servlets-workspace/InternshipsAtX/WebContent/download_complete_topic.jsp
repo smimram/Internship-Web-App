@@ -25,7 +25,7 @@
 					
 					<form>
 						<span class="subtitle" style="color:black;"> <h4> <br> <br> Did not work ? <br> 
-						<a class="subtitle" style="color:black;" href="/InternshipsAtX/download-subject?internshipId=${internshipId}">Try again here</a>
+						<a class="subtitle" style="color:black;" href="/download-subject?internshipId=${internshipId}">Try again here</a>
 						 </h4> <br> <br> </span>
 					</form>
 					

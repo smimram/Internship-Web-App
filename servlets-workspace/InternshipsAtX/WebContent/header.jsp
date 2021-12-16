@@ -1,7 +1,7 @@
 <!-- navigation bar -->
 <nav class="navbar navbar-dark bg-dark">
   <div class="container-fluid justify-content-start">
-  <a class="navbar-brand" href="/InternshipsAtX/dashboard"><img src="images/logo.png" style="max-height: 35px;">Internship Management</a>
+  <a class="navbar-brand" href="/dashboard"><img src="images/logo.png" style="max-height: 35px;">Internship Management</a>
   <div class="ml-auto d-flex">
     <div class="nav-item dropdown">
       <a class="text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">${user.name} (${user.role})</a>
