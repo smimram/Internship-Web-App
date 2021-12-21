@@ -1,26 +1,20 @@
 package edu.polytechnique.inf553;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StudentViewServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final int BUFFER_SIZE = 16177215;
 
 	/**
 	 * Constructor 
@@ -44,8 +38,8 @@ public class StudentViewServlet extends HttpServlet {
 			String role = user.getRole();
 			if (role.equals("Student")) {
 				
-				List<Program> programs = new ArrayList<Program>();
-				List<SubjectsPerCategory> subjectsPerCategory = new ArrayList<SubjectsPerCategory>();
+				List<Program> programs = new ArrayList<>();
+				List<SubjectsPerCategory> subjectsPerCategory = new ArrayList<>();
 				int userId = user.getId();
 				
 				//======================== DATA LOADING PART ========================
@@ -57,7 +51,7 @@ public class StudentViewServlet extends HttpServlet {
 					}
 					
 					// check if the user already has an internship
-					String query0 = "select i.id as id, i.title as title, p.email as email, p.name as name\n" + 
+					String query0 = "select i.id as id, i.title as title, p.email as email, p.name as name, i.confidential_internship as confidential_internship\n" +
 							"FROM internship i\n" + 
 							"INNER JOIN person p on i.supervisor_id = p.id\n" + 
 							"INNER JOIN person_internship pi on i.id = pi.internship_id\n" + 
@@ -66,48 +60,53 @@ public class StudentViewServlet extends HttpServlet {
 					ps0.setInt(1, userId);
 					ResultSet rs0 = ps0.executeQuery();
 					while(rs0.next()) {
-						Subject userSubject = new Subject(rs0.getString("title"), rs0.getString("id"), rs0.getString("email"), rs0.getString("name"));
+						Subject userSubject = new Subject(rs0.getString("title"), rs0.getInt("id"), rs0.getString("email"), rs0.getString("name"), rs0.getBoolean("confidential_internship"));
 						request.setAttribute("userSubject", userSubject);
 					}
 					
 					//show only programs associated to the user
-					String query1 = "SELECT DISTINCT p.id as id, p.name as name, p.year as year\n" + 
-							"FROM program p inner join person_program pp on p.id = pp.program_id\n" + 
+					String query1 = "SELECT DISTINCT p.id as id, p.name as name, p.year as year\n" +
+							"FROM program p inner join person_program pp on p.id = pp.program_id\n" +
 							"WHERE pp.person_id = ?";
 					PreparedStatement ps1 = con.prepareStatement(query1);
 					ps1.setInt(1, userId);
 					ResultSet rs1 = ps1.executeQuery();
 					while(rs1.next()) {
-						Program p = new Program(rs1.getString("id"), rs1.getString("name"), rs1.getString("year"));
+						Program p = new Program(rs1.getInt("id"), rs1.getString("name"), rs1.getString("year"));
 						programs.add(p);
 					}
-					
-					for(int i=0; i<programs.size(); ++i) {
-						String query = "SELECT DISTINCT c.description AS desc, c.id as id \n" + 
-								"FROM categories c\n" + 
-								"INNER JOIN program_category pc ON pc.cat_id = c.id\n" + 
-								"WHERE pc.program_id ="+programs.get(i).getId()+";";
-						ResultSet rs = con.prepareStatement(query).executeQuery();
-						
-						while(rs.next()) {
-							String categoryId = rs.getString("id");
-							
-							String query_subjects = "SELECT i.id as id, i.title as title, p.email as email, p.name as name " + 
-									"FROM internship i " + 
-									"INNER JOIN internship_category ic ON i.id = ic.internship_id " + 
-									"INNER JOIN categories c ON c.id = ic.category_id " + 
-									"INNER JOIN person p on i.supervisor_id = p.id " + 
-									"WHERE program_id ="+programs.get(i).getId()+" AND c.id = "+categoryId+" AND i.is_taken=false;";
-							ResultSet rs_subjects = con.prepareStatement(query_subjects).executeQuery();
-							List<Subject> subjectsOfCategory = new ArrayList<Subject>();
-							while(rs_subjects.next()) {
-								Subject s = new Subject(rs_subjects.getString("title"), rs_subjects.getString("id"), rs_subjects.getString("email"), rs_subjects.getString("name"));
+
+					for (Program program : programs) {
+						String query = "SELECT DISTINCT c.description AS desc, c.id as id \n" +
+								"FROM categories c\n" +
+								"INNER JOIN program_category pc ON pc.cat_id = c.id\n" +
+								"WHERE pc.program_id = ?;";
+						PreparedStatement stmt = con.prepareStatement(query);
+						stmt.setInt(1, Integer.parseInt(program.getId()));
+						ResultSet rs = stmt.executeQuery();
+
+						while (rs.next()) {
+							int categoryId = rs.getInt("id");
+
+							String query_subjects = "SELECT i.id as id, i.title as title, i.confidential_internship as confidential_internship, p.email as email, p.name as name " +
+									"FROM internship i " +
+									"INNER JOIN internship_category ic ON i.id = ic.internship_id " +
+									"INNER JOIN categories c ON c.id = ic.category_id " +
+									"INNER JOIN person p on i.supervisor_id = p.id " +
+									"WHERE program_id = ? AND c.id = ? AND i.is_taken=false AND scientific_validated=true AND administr_validated=true;";
+							PreparedStatement stmt2 = con.prepareStatement(query_subjects);
+							stmt2.setInt(1, Integer.parseInt(program.getId()));
+							stmt2.setInt(2, categoryId);
+							ResultSet rs_subjects = stmt2.executeQuery();
+							List<Subject> subjectsOfCategory = new ArrayList<>();
+							while (rs_subjects.next()) {
+								Subject s = new Subject(rs_subjects.getString("title"), rs_subjects.getInt("id"), rs_subjects.getString("email"), rs_subjects.getString("name"), rs_subjects.getBoolean("confidential_internship"));
 								subjectsOfCategory.add(s);
 							}
-							subjectsPerCategory.add(new SubjectsPerCategory(programs.get(i).getId().toString(), categoryId, subjectsOfCategory));
-							
+							subjectsPerCategory.add(new SubjectsPerCategory(Integer.parseInt(program.getId()), categoryId, subjectsOfCategory));
+
 							Category c = new Category(rs.getString("desc"), categoryId);
-							programs.get(i).addCategory(c);
+							program.addCategory(c);
 						}
 					}
 				} catch(SQLException e) {

@@ -1,22 +1,16 @@
 package edu.polytechnique.inf553;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import javax.mail.internet.AddressException;
+import java.io.IOException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class SigninServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -32,13 +26,14 @@ public class SigninServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println(this.getClass().getName() + " doGet method called with path " + request.getRequestURI() + " and parameters " + request.getQueryString());
-		request.getRequestDispatcher("signin.jsp").include(request, response);
+		List<Program> programs = getAllPrograms();
+		request.setAttribute("programs", programs);
+		request.getRequestDispatcher("signin.jsp").forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println(this.getClass().getName() + " doPost method called with path " + request.getRequestURI());
 
-		
 		String firstName = request.getParameter("firstName");
 		String lastName = request.getParameter("lastName");
 		String email = request.getParameter("email").toLowerCase();
@@ -46,6 +41,10 @@ public class SigninServlet extends HttpServlet {
 		String pass = request.getParameter("pass");
 		String confirmPass = request.getParameter("confirmPass");
 		String role = request.getParameter("role");
+		int programStudent = -1;
+		if(request.getParameter("programStudent") != null && !Objects.equals(request.getParameter("programStudent"), "null")) {
+			 programStudent = Integer.parseInt(request.getParameter("programStudent"));
+		}
 
 		String concatName = lastName+", "+firstName;
 
@@ -62,11 +61,12 @@ public class SigninServlet extends HttpServlet {
 				
 				//add the user into 'person' table
 				String query = "insert into person(name, email, creation_date, valid, password)\n" + 
-						" values (?, ?, '"+java.time.LocalDate.now().toString()+"', false, crypt(?, gen_salt('bf'))) ;";
+						" values (?, ?, ?, false, crypt(?, gen_salt('bf'))) ;";
 				PreparedStatement ps = con.prepareStatement(query);
 				ps.setString(1, concatName);
 				ps.setString(2, email);
-				ps.setString(3, pass);
+				ps.setDate(3, Date.valueOf(java.time.LocalDate.now()));
+				ps.setString(4, pass);
 				ps.executeUpdate();
 				
 				//add a person_role relation into 'person_roles' table
@@ -79,6 +79,13 @@ public class SigninServlet extends HttpServlet {
 				ps2.setString(2, email);
 				ps2.executeUpdate();
 
+				if(role.equals("Student") && programStudent != -1) {
+					query2 = "INSERT INTO person_program (program_id, person_id) VALUES (" + programStudent + " AS program_id, SELECT p.id FROM person p WHERE p.email = ?)";
+					ps = con.prepareStatement(query2);
+					ps.setString(1, email);
+					ps.executeUpdate();
+				}
+
 			}
 			catch(SQLException e) {
 				e.printStackTrace();
@@ -87,9 +94,7 @@ public class SigninServlet extends HttpServlet {
 			}
 			request.setAttribute("email", email);
 			request.getRequestDispatcher("signin_complete.jsp").forward(request, response);
-		}
-		else
-		{
+		} else {
 			request.setAttribute("firstName", firstName);
 			request.setAttribute("lastName", lastName);
 			request.setAttribute("email", email);
@@ -131,7 +136,7 @@ public class SigninServlet extends HttpServlet {
 				emailIsValid = false;
 			}
 			if(emailIsValid) {
-				boolean emailTaken = false;
+				boolean emailTaken;
 				Connection con = null;
 				try {
 					String query = "SELECT COUNT(*) as count\n" + 
@@ -140,7 +145,7 @@ public class SigninServlet extends HttpServlet {
 					//creating connection with the database
 					con = DbUtils.getInstance().getConnection();
 					if (con == null) {
-						return "failed connection to fatabase!";
+						return "failed connection to database!";
 					}
 					PreparedStatement ps = con.prepareStatement(query);
 					ps.setString(1, email);
@@ -164,5 +169,33 @@ public class SigninServlet extends HttpServlet {
 				return "Please enter a valid email.";
 			}
 		}  
+	}
+
+	private List<Program> getAllPrograms() {
+		Connection con = null;
+		try {
+			con = DbUtils.getInstance().getConnection();
+			if (con == null) {
+				return null;
+			}
+
+			List<Program> programs = new ArrayList<>();
+			// get all program list
+			String query = "SELECT DISTINCT id, name, year FROM program ORDER BY name;";
+			PreparedStatement preparedStatement = con.prepareStatement(query);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while(resultSet.next()) {
+				Program program = new Program(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getString("year"));
+				programs.add(program);
+			}
+
+			return programs;
+
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			DbUtils.getInstance().releaseConnection(con);
+		}
 	}
 }

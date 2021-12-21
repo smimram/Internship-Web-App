@@ -1,0 +1,39 @@
+<project name="internship" basedir="." default="usage">
+  <property name="name"   value="${ant.project.name}" />
+  <property name="srcdir" value="servlets-workspace/InternshipsAtX/src"/>
+  <property name="blddir" value="_build"/>
+  <property name="webdir" value="servlets-workspace/InternshipsAtX/WebContent"/>
+ 
+  <path id="java.classpath">
+    <fileset dir="lib">
+      <include name="**/*.jar" />
+    </fileset>
+    <fileset dir="${webdir}/WEB-INF/lib">
+      <include name="**/*.jar" />
+    </fileset>
+  </path>
+ 
+  <target name="clean">
+     <delete dir="${blddir}"/>
+  </target>
+ 
+  <target name="init" depends="clean">
+     <mkdir dir="${blddir}"/>
+     <mkdir dir="${blddir}/classes"/>
+  </target>
+ 
+ <target name="build" depends="init">
+    <javac srcdir="${srcdir}" destdir="${blddir}/classes">
+      <classpath refid="java.classpath"/>
+    </javac>
+ </target>
+ 
+ <target name="war" depends="build">
+    <jar destfile="${blddir}/internship.war">
+      <fileset dir="${webdir}">
+        <include name="**"/>
+      </fileset>
+      <zipfileset dir="${blddir}/classes" prefix="WEB-INF/classes"/>
+    </jar>
+  </target>
+</project>

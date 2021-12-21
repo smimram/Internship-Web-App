@@ -1,9 +1,7 @@
 package edu.polytechnique.inf553;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +11,10 @@ import java.util.List;
  */
 public class DbUtils {
 
-	private static final String dbName = "internship_webapp";
-	private static final String dbHost = "localhost";
+	private static final String dbName = "internships";
+	private static final String dbHost = "host.docker.internal";
 	private static final String dbPort = "5432";
-	private static final String dbUser = "aleksamarusic";
+	private static final String dbUser = "internships";
 	private static final String dbPassword = "";
 	
 	private static final String dbUrl = "jdbc:postgresql://"+dbHost+":"+dbPort+"/"+dbName;

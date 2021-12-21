@@ -1,42 +1,14 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Login V8</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-<!--===============================================================================================-->	
-	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
-<!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
-<!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="css/util.css">
-	<link rel="stylesheet" type="text/css" href="css/main.css">
-<!--===============================================================================================-->
+	<title>Login</title>
+	<%@ include file="meta.jsp" %>
 </head>
 <body>
-
-	<nav class="navbar navbar-dark bg-dark">
-	  <div class="container-fluid justify-content-start">
-	    <a class="navbar-brand" href="/InternshipsAtX/home">
-	      <img src="images/logo.png" style="max-height: 35px;">
-	    </a>
-	    <a class="navbar-brand" href="/InternshipsAtX/home" style="font-family: sans-serif;">Internship Management</a>
-	  </div>
-	</nav>
+	<!-- navigation bar -->
+	<jsp:include page="header.jsp"></jsp:include>
 	
 	<div class="limiter">
 		<div class="container-login100 background_style">
@@ -78,16 +50,24 @@
 					</div>
 
 					<div class="wrap-input100 validate-input" data-validate = "Please choose your role">
-			
-						<select name="role" class="input100" >
-	        				<option value="" selected disabled hidden>--Please choose a role--</option>
-	        				<option value="Admin" selected>Admin</option>
-	        				<option value="Assistant">Assistant</option>
-	        				<option value="Professor">Professor</option>
-	        				<option value="Student">Student</option>
-	        			</select>
+						<select name="role" class="input100" id="selectRole" onchange="displayProgramsForStudents();">
+								<option value="" selected disabled hidden>--Please choose a role--</option>
+								<option value="Admin" selected>Admin</option>
+								<option value="Assistant">Assistant</option>
+								<option value="Professor">Professor</option>
+								<option value="Student">Student</option>
+							</select>
+						<span class="focus-input100"></span>
 					</div>
 
+					<div id ="programsForStudents" class="wrap-input100 validate-input" data-validate = "Please choose your program">
+						<select name="programStudent" class="input100">
+							<option value="null" selected>Select a program</option>
+							<c:forEach items="${programs}" var="program">
+								<option value="${program.id}">${program.name}</option>
+							</c:forEach>
+						</select>
+					</div>
 
 					<div class="wrap-input100 validate-input">
 						<span class="focus-input100"></span>
@@ -102,7 +82,6 @@
 					<div class="text-red flex-col-c p-t-100 p-b-40">
 						<p class="text-red" style="color:red;">${err_message}</p>
 					</div>
-					<h1 class="easter-egg" style="visibility:hidden; font-size:0;">Victor Radermecker was here</h1> <!-- An easter-egg ! -->
 				</form>
 				
 			</div>
@@ -113,3 +92,15 @@
 
 </body>
 </html>
+
+<script type="text/javascript">
+$("#programsForStudents").hide(); // by default, hide the program select. Show it only for students
+
+function displayProgramsForStudents() {
+	if($("#selectRole option:selected").text() == "Student") {
+		$("#programsForStudents").show();
+	} else {
+		$("#programsForStudents").hide();
+	}
+}
+</script>

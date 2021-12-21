@@ -30,8 +30,6 @@ public class DashboardViewServlet extends HttpServlet {
 		// session management
 		HttpSession session = request.getSession(false);
 		if(session!=null && session.getAttribute("user")!= null) {
-			Person user = (Person)session.getAttribute("user");
-			String role = user.getRole();
 			request.getRequestDispatcher("dashboard.jsp").forward(request, response);
 			
 		}else {
