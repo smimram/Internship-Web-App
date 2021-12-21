@@ -77,6 +77,17 @@ ul, li {
 }
 
 
+.ul-simple {
+  padding-left: 1em !important; 
+  list-style: disc !important;
+}
+
+.li-simple { 
+  padding-left: 1em !important; 
+  list-style-type: disc !important;
+}
+
+
 /*---------------------------------------------*/
 input {
 	outline: none;
@@ -151,10 +162,6 @@ iframe {
   color: #0b2e96;
   line-height: 1.4;
   text-transform: uppercase;
-}
-
-.easter-egg {
-	 
 }
 
 /*//////////////////////////////////////////////////////////////////
@@ -393,11 +400,6 @@ iframe {
   text-transform: uppercase;
 
 }
-
-
-}
-
-
 
 .login100-form-btn:hover {
   background-color: #1b3815;

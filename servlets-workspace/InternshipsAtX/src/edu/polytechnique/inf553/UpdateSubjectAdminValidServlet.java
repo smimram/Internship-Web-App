@@ -1,17 +1,15 @@
 package edu.polytechnique.inf553;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
  * Servlet implementation class UpdateSubjectAdminValidServlet
@@ -49,10 +47,10 @@ public class UpdateSubjectAdminValidServlet extends HttpServlet {
 					}
 					
 					// update user valid, set isolation level SERIALIZABLE
-					String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-							"UPDATE internship SET administr_validated = ? AND scientific_validated = FALSE\r\n" + 
-							"WHERE id = ?;\r\n" + 
-							"COMMIT TRANSACTION;";
+					String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE; " +
+							"UPDATE internship SET administr_validated = ? " +
+							"WHERE id = ?; " +
+							"COMMIT TRANSACTION; ";
 					PreparedStatement ps = con.prepareStatement(query);
 					ps.setBoolean(1, valid);
 					ps.setInt(2, subjectId);
