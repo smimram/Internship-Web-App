@@ -84,10 +84,7 @@ public class UpdatePersonDefenseServlet extends HttpServlet {
 				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			}
 			// update defense persons, set isolation level SERIALIZABLE
-			String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n"
-					+ "UPDATE defense SET referent_id = ? "
-					+ "where id = ?; "
-					+ "COMMIT TRANSACTION;";
+			String query = "UPDATE defense SET referent_id = ? where id = ?";
 			try (PreparedStatement ps = con.prepareStatement(query)) {
         if (referentId == -1) { ps.setNull(1, Types.INTEGER); }
         else { ps.setInt(1, referentId); }
@@ -108,10 +105,7 @@ public class UpdatePersonDefenseServlet extends HttpServlet {
 				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			}
 			// update defense persons, set isolation level SERIALIZABLE
-			String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n"
-					+ "UPDATE defense SET student_id = ? "
-					+ "where id = ?; "
-					+ "COMMIT TRANSACTION;";
+			String query = "UPDATE defense SET student_id = ? where id = ?";
 			try (PreparedStatement ps = con.prepareStatement(query)) {
         if (studentId == -1) { ps.setNull(1, Types.INTEGER); }
         else { ps.setInt(1, studentId); }
@@ -132,10 +126,7 @@ public class UpdatePersonDefenseServlet extends HttpServlet {
 				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			}
 			// update defense persons, set isolation level SERIALIZABLE
-			String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n"
-					+ "UPDATE defense SET jury2_id = ? "
-					+ "where id = ?; "
-					+ "COMMIT TRANSACTION;";
+			String query = "UPDATE defense SET jury2_id = ? where id = ?";
 			try (PreparedStatement ps = con.prepareStatement(query)) {
         if (jury2Id == -1) { ps.setNull(1, Types.INTEGER); }
         else { ps.setInt(1, jury2Id); }

@@ -57,10 +57,7 @@ public class UpdateDefenseServlet extends HttpServlet {
 					}
 					
 					// update user role, set isolation level SERIALIZABLE
-					String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-							"UPDATE defense SET date = ?, time = ? \r\n" +
-							"WHERE id = ?;\r\n" +
-							"COMMIT TRANSACTION;";
+					String query = "UPDATE defense SET date = ?, time = ? WHERE id = ?";
 					try (PreparedStatement ps = con.prepareStatement(query)) {
             if (defenseDate == null) {
               ps.setNull(1, Types.DATE);

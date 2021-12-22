@@ -43,10 +43,7 @@ public class UpdateUserRoleServlet extends HttpServlet {
 					}
 					
 					// update user role, set isolation level SERIALIZABLE
-					String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-							"UPDATE person_roles SET role_id = ?\r\n" + 
-							"WHERE person_id = ?;\r\n" + 
-							"COMMIT TRANSACTION;";
+					String query = "UPDATE person_roles SET role_id = ? WHERE person_id = ?";
 					try (PreparedStatement ps = con.prepareStatement(query)) {
             ps.setInt(1, rid);
             ps.setInt(2, pid);

@@ -46,19 +46,14 @@ public class AssignStudentSubjectServlet extends HttpServlet {
 					}
 										
 					// update user valid, set isolation level SERIALIZABLE
-					String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-							"INSERT INTO person_internship (internship_id, person_id) values (?, ?);\r\n"
-							+ "COMMIT TRANSACTION;";
+					String query = "INSERT INTO person_internship (internship_id, person_id) values (?, ?)";
 					try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
             preparedStatement.setInt(1, subjectId);
             preparedStatement.setInt(2, studentId);
             preparedStatement.executeUpdate();
           }
 					
-					query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-							"UPDATE internship SET is_taken = TRUE "
-							+ "WHERE id=?;\r\n"
-							+ "COMMIT TRANSACTION;";
+					query = "UPDATE internship SET is_taken = TRUE WHERE id=?";
 					try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
             preparedStatement.setInt(1, subjectId);
             preparedStatement.executeUpdate();

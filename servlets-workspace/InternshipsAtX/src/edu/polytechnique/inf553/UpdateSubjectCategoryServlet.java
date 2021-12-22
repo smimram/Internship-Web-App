@@ -52,16 +52,10 @@ public class UpdateSubjectCategoryServlet extends HttpServlet {
 					// update user program, set isolation level SERIALIZABLE
 					if (addCategory) {
 						// add program
-						query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-								"insert into internship_category(internship_id, category_id)\r\n" + 
-								"values (?,?);\r\n" + 
-								"COMMIT TRANSACTION;";
-					}else {
+						query = "insert into internship_category(internship_id, category_id) values (?,?)";
+					} else {
 						// delete program
-						query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-								"DELETE FROM internship_category\r\n" + 
-								"  WHERE internship_id = ? AND category_id = ?;\r\n" + 
-								"COMMIT TRANSACTION;";
+						query = "DELETE FROM internship_category WHERE internship_id = ? AND category_id = ?";
 					}
 					try (PreparedStatement ps = con.prepareStatement(query)) {
             ps.setInt(1, subjectId);

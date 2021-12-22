@@ -34,10 +34,7 @@ public class DeleteProgramServlet extends HttpServlet {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
-					String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-							"DELETE FROM program\r\n" + 
-							"  WHERE id = ?;\r\n" + 
-							"COMMIT TRANSACTION;";
+					String query = "DELETE FROM program WHERE id = ?";
 					try (PreparedStatement ps = con.prepareStatement(query)) {
             ps.setInt(1, id);
             ps.executeUpdate();

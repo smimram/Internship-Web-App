@@ -39,10 +39,7 @@ public class UpdateUserValidServlet extends HttpServlet {
 					}
 					
 					// update user valid, set isolation level SERIALIZABLE
-					String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-							"UPDATE person SET valid = ?\r\n" + 
-							"WHERE id = ?;\r\n" + 
-							"COMMIT TRANSACTION;";
+					String query = "UPDATE person SET valid = ? WHERE id = ?";
 					try (PreparedStatement ps = con.prepareStatement(query)) {
             ps.setBoolean(1, valid);
             ps.setInt(2, pid);

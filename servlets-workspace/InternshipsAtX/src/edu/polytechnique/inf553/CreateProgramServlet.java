@@ -39,10 +39,7 @@ public class CreateProgramServlet extends HttpServlet {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
-					String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-							"insert into program(name, year)\r\n" + 
-							"values (?,?);\r\n" + 
-							"COMMIT TRANSACTION;";
+					String query = "insert into program(name, year) values (?,?)";
 					try (PreparedStatement ps = con.prepareStatement(query)) {
             ps.setString(1, name);
             ps.setInt(2, year);

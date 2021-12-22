@@ -43,10 +43,7 @@ public class UpdateSubjectReportServlet extends HttpServlet {
 					}
 					
 					// update user valid, set isolation level SERIALIZABLE
-					String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-							"UPDATE internship SET report = ?\r\n" +
-							"WHERE id = ?;\r\n" + 
-							"COMMIT TRANSACTION;"; // TODO NELLY: add timestamp
+					String query = "UPDATE internship SET report = ? WHERE id = ?";
 					try (PreparedStatement ps = con.prepareStatement(query)) {
             InputStream inputStream = uploadFiche.getInputStream();
             ps.setBinaryStream(1, inputStream);

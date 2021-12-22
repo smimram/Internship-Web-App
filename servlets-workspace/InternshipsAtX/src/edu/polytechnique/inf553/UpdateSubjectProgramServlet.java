@@ -57,10 +57,7 @@ public class UpdateSubjectProgramServlet extends HttpServlet {
 					}
 					
 					// update user valid, set isolation level SERIALIZABLE
-					String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-							"UPDATE internship SET program_id = ?\r\n" + 
-							"WHERE id = ?;\r\n" + 
-							"COMMIT TRANSACTION;";
+					String query = "UPDATE internship SET program_id = ? WHERE id = ?";
 					try (PreparedStatement ps = con.prepareStatement(query)) {
             ps.setInt(1, programId);
             ps.setInt(2, subjectId);

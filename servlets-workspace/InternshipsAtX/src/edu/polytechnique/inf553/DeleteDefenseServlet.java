@@ -43,10 +43,7 @@ public class DeleteDefenseServlet extends HttpServlet {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
-					String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-							"DELETE FROM defense \r\n" +
-							"WHERE id = ?;\r\n" + 
-							"COMMIT TRANSACTION;";
+					String query = "DELETE FROM defense WHERE id = ?";
 					try (PreparedStatement ps = con.prepareStatement(query)) {
             ps.setInt(1, defenseId);
             ps.executeUpdate();

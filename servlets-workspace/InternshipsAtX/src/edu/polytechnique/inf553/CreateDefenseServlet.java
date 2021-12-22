@@ -62,10 +62,9 @@ public class CreateDefenseServlet extends HttpServlet {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
 
-					String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
+					String query =
 							"insert into defense(date, time, referent_id, jury2_id, student_id)\r\n" +
-							"values (?,?,?,?,?);\r\n" +
-							"COMMIT TRANSACTION;";
+							"values (?,?,?,?,?)";
 
 					try (PreparedStatement ps = con.prepareStatement(query)) {
             if(defenseDate == null) {

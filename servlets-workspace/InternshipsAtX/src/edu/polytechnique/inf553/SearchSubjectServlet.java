@@ -42,9 +42,7 @@ public class SearchSubjectServlet extends HttpServlet {
 					}
 					
 					// update user role, set isolation level SERIALIZABLE
-					String query = "SELECT PDATE person_roles SET role_id = ?\r\n" +
-							"WHERE person_id = ?;\r\n" + 
-							"COMMIT TRANSACTION;";
+					String query = "UPDATE person_roles SET role_id = ? WHERE person_id = ?";
 					try (PreparedStatement ps = con.prepareStatement(query)) {
             ps.setString(1, keywords);
             ps.executeUpdate();

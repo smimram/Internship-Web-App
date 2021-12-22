@@ -35,10 +35,9 @@ public class ErrorPageServlet extends HttpServlet {
 					response.sendError(HttpServletResponse.SC_FORBIDDEN);
 				}
 				// update user program, set isolation level SERIALIZABLE
-				String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-						"insert into error (date, time, method_raised, description, person_id)\r\n" + 
-						"values ((select current_date), (select current_timestamp), ?,?, ?);\r\n" + 
-						"COMMIT TRANSACTION;";
+				String query =
+						"insert into error (date, time, method_raised, description, person_id)\r\n" +
+						"values ((select current_date), (select current_timestamp), ?,?, ?)";
 				
 				try (PreparedStatement ps = con.prepareStatement(query)) {
           ps.setString(1, method);

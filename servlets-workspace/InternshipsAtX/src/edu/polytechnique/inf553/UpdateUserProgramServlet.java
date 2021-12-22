@@ -42,16 +42,10 @@ public class UpdateUserProgramServlet extends HttpServlet {
 					// update user program, set isolation level SERIALIZABLE
 					if (add) {
 						// add program
-						query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-								"insert into person_program(program_id, person_id)\r\n" + 
-								"values (?,?);\r\n" + 
-								"COMMIT TRANSACTION;";
-					}else {
+						query = "insert into person_program(program_id, person_id) values (?,?)";
+					} else {
 						// delete program
-						query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-								"DELETE FROM person_program\r\n" + 
-								"  WHERE program_id = ? AND person_id = ?;\r\n" + 
-								"COMMIT TRANSACTION;";
+						query = "DELETE FROM person_program WHERE program_id = ? AND person_id = ?";
 					}
 					try (PreparedStatement ps = con.prepareStatement(query)) {
             ps.setInt(1, programId);
