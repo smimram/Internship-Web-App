@@ -37,9 +37,7 @@ public class UpdateUserRoleServlet extends HttpServlet {
 			if (role.equals("Admin")) {
 				int rid = Integer.parseInt(request.getParameter("rid"));
 				int pid = Integer.parseInt(request.getParameter("pid"));
-				Connection con = null;
-				try {
-					con = DbUtils.getConnection();
+				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
@@ -49,16 +47,14 @@ public class UpdateUserRoleServlet extends HttpServlet {
 							"UPDATE person_roles SET role_id = ?\r\n" + 
 							"WHERE person_id = ?;\r\n" + 
 							"COMMIT TRANSACTION;";
-					PreparedStatement ps = con.prepareStatement(query);
-					ps.setInt(1, rid);
-					ps.setInt(2, pid);
-					ps.executeUpdate();
-
+					try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, rid);
+            ps.setInt(2, pid);
+            ps.executeUpdate();
+          }
 					
 				} catch(SQLException e) {
 					e.printStackTrace();
-				} finally {
-					DbUtils.releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );

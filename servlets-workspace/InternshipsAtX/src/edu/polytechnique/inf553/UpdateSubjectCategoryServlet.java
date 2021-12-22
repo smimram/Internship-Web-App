@@ -44,9 +44,7 @@ public class UpdateSubjectCategoryServlet extends HttpServlet {
 				int subjectId = Integer.parseInt(request.getParameter("subjectId"));
 				int categoryId = Integer.parseInt(request.getParameter("categoryId"));
 				boolean addCategory = Boolean.parseBoolean(request.getParameter("select"));
-				Connection con = null;
-				try {
-					con = DbUtils.getConnection();
+				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
@@ -65,18 +63,16 @@ public class UpdateSubjectCategoryServlet extends HttpServlet {
 								"  WHERE internship_id = ? AND category_id = ?;\r\n" + 
 								"COMMIT TRANSACTION;";
 					}
-					PreparedStatement ps = con.prepareStatement(query);
-					ps.setInt(1, subjectId);
-					ps.setInt(2, categoryId);
-					ps.executeUpdate();
+					try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, subjectId);
+            ps.setInt(2, categoryId);
+            ps.executeUpdate();
+          }
 
-					
 				} catch(SQLException e) {
 					e.printStackTrace();
 					// query errors
 					response.sendError(HttpServletResponse.SC_FORBIDDEN);
-				} finally {
-					DbUtils.releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );

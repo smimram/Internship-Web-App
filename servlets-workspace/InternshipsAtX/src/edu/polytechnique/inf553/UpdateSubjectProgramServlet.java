@@ -51,9 +51,7 @@ public class UpdateSubjectProgramServlet extends HttpServlet {
 					return;
 				}
 				
-				Connection con = null;
-				try {
-					con = DbUtils.getConnection();
+				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
@@ -63,16 +61,14 @@ public class UpdateSubjectProgramServlet extends HttpServlet {
 							"UPDATE internship SET program_id = ?\r\n" + 
 							"WHERE id = ?;\r\n" + 
 							"COMMIT TRANSACTION;";
-					PreparedStatement ps = con.prepareStatement(query);
-					ps.setInt(1, programId);
-					ps.setInt(2, subjectId);
-					ps.executeUpdate();
-
+					try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, programId);
+            ps.setInt(2, subjectId);
+            ps.executeUpdate();
+          }
 					
 				} catch(SQLException e) {
 					e.printStackTrace();
-				} finally {
-					DbUtils.releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );
@@ -95,9 +91,7 @@ public class UpdateSubjectProgramServlet extends HttpServlet {
 	}
 	
 	private Set<Integer> getCategoriesForSubject(int subjectId) {
-		Connection con = null;
-		try {
-			con = DbUtils.getConnection();
+		try (Connection con = DbUtils.getConnection()) {
 			if (con == null) {
 				return null;
 			}
@@ -108,27 +102,25 @@ public class UpdateSubjectProgramServlet extends HttpServlet {
 					"WHERE ic.internship_id =?\n" + 
 					"ORDER BY c.id;";
 			Set<Integer> categories = new HashSet<>();
-			PreparedStatement preparedStatement = con.prepareStatement(query);
-			preparedStatement.setInt(1, subjectId);
-			ResultSet resultSet = preparedStatement.executeQuery();
-			while(resultSet.next()) {
-				categories.add(resultSet.getInt("id"));
-			}
+			try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+        preparedStatement.setInt(1, subjectId);
+        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+          while(resultSet.next()) {
+            categories.add(resultSet.getInt("id"));
+          }
+        }
+      }
 
 			return categories;
 			
 		} catch(SQLException e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			DbUtils.releaseConnection(con);
 		}
 	}
 	
 	private Set<Integer> getCategoriesForProgram(int programId) {
-		Connection con = null;
-		try {
-			con = DbUtils.getConnection();
+		try (Connection con = DbUtils.getConnection()) {
 			if (con == null) {
 				return null;
 			}
@@ -138,20 +130,20 @@ public class UpdateSubjectProgramServlet extends HttpServlet {
 					"WHERE pc.program_id =?\n" + 
 					"ORDER BY c.id;";
 			Set<Integer> categories = new HashSet<>();
-			PreparedStatement preparedStatement = con.prepareStatement(query);
-			preparedStatement.setInt(1, programId);
-			ResultSet resultSet = preparedStatement.executeQuery();
-			while(resultSet.next()) {
-				categories.add(resultSet.getInt("id"));
-			}
+			try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+        preparedStatement.setInt(1, programId);
+        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+          while(resultSet.next()) {
+            categories.add(resultSet.getInt("id"));
+          }
+        }
+      }
 
 			return categories;
 			
 		} catch(SQLException e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			DbUtils.releaseConnection(con);
 		}
 	}
 

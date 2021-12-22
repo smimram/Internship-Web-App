@@ -39,9 +39,7 @@ public class UpdateSubjectSciValidServlet extends HttpServlet {
 			if (role.equals("Admin") || role.equals("Professor")) {
 				boolean valid = Boolean.parseBoolean(request.getParameter("valid"));
 				int subjectId = Integer.parseInt(request.getParameter("subjectId"));
-				Connection con = null;
-				try {
-					con = DbUtils.getConnection();
+				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
@@ -51,15 +49,14 @@ public class UpdateSubjectSciValidServlet extends HttpServlet {
 							"UPDATE internship SET scientific_validated = ?\r\n" + 
 							"WHERE id = ?;\r\n" + 
 							"COMMIT TRANSACTION;";
-					PreparedStatement ps = con.prepareStatement(query);
-					ps.setBoolean(1, valid);
-					ps.setInt(2, subjectId);
-					ps.executeUpdate();
+					try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setBoolean(1, valid);
+            ps.setInt(2, subjectId);
+            ps.executeUpdate();
+          }
 					
 				} catch(SQLException e) {
 					e.printStackTrace();
-				} finally {
-					DbUtils.releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );

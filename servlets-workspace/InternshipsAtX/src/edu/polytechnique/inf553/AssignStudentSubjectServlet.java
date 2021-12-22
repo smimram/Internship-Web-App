@@ -39,9 +39,8 @@ public class AssignStudentSubjectServlet extends HttpServlet {
 			if (role.equals("Admin") || role.equals("Professor") || role.equals("Assistant")) {
 				int studentId = Integer.parseInt(request.getParameter("studentId"));
 				int subjectId = Integer.parseInt(request.getParameter("subjectId"));
-				Connection con = null;
-				try {
-					con = DbUtils.getConnection();
+				
+				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
@@ -50,25 +49,23 @@ public class AssignStudentSubjectServlet extends HttpServlet {
 					String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
 							"INSERT INTO person_internship (internship_id, person_id) values (?, ?);\r\n"
 							+ "COMMIT TRANSACTION;";
-					PreparedStatement preparedStatement = con.prepareStatement(query);
-					preparedStatement.setInt(1, subjectId);
-					preparedStatement.setInt(2, studentId);
-					preparedStatement.executeUpdate();
+					try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+            preparedStatement.setInt(1, subjectId);
+            preparedStatement.setInt(2, studentId);
+            preparedStatement.executeUpdate();
+          }
 					
 					query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
 							"UPDATE internship SET is_taken = TRUE "
 							+ "WHERE id=?;\r\n"
 							+ "COMMIT TRANSACTION;";
-					preparedStatement = con.prepareStatement(query);
-					preparedStatement.setInt(1, subjectId);
-					preparedStatement.executeUpdate();
-
-					
+					try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+            preparedStatement.setInt(1, subjectId);
+            preparedStatement.executeUpdate();
+          }
 				} catch(SQLException e) {
 					e.printStackTrace();
-				} finally {
-					DbUtils.releaseConnection(con);
-				}
+        }
 				
 				response.setStatus( 200 );
 			}else {

@@ -33,9 +33,7 @@ public class UpdateUserValidServlet extends HttpServlet {
 			if (role.equals("Admin")) {
 				boolean valid = Boolean.parseBoolean(request.getParameter("valid"));
 				int pid = Integer.parseInt(request.getParameter("pid"));
-				Connection con = null;
-				try {
-					con = DbUtils.getConnection();
+				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
@@ -45,16 +43,14 @@ public class UpdateUserValidServlet extends HttpServlet {
 							"UPDATE person SET valid = ?\r\n" + 
 							"WHERE id = ?;\r\n" + 
 							"COMMIT TRANSACTION;";
-					PreparedStatement ps = con.prepareStatement(query);
-					ps.setBoolean(1, valid);
-					ps.setInt(2, pid);
-					ps.executeUpdate();
-
+					try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setBoolean(1, valid);
+            ps.setInt(2, pid);
+            ps.executeUpdate();
+          }
 					
 				} catch(SQLException e) {
 					e.printStackTrace();
-				} finally {
-					DbUtils.releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );

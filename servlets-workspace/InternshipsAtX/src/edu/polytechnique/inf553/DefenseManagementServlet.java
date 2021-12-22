@@ -88,9 +88,7 @@ public class DefenseManagementServlet extends HttpServlet {
 	}
 
 	private List<Defense> getDefenses(String orderByColumn, String orderBySort) {
-		Connection con = null;
-		try {
-			con = DbUtils.getConnection();
+		try (Connection con = DbUtils.getConnection()) {
 			if (con == null) {
 				return null;
 			}
@@ -114,28 +112,26 @@ public class DefenseManagementServlet extends HttpServlet {
 					+ "LEFT JOIN person_roles pr3 ON pr3.person_id = s.id "
 					+ "LEFT JOIN role_type rt3 ON rt3.id = pr3.role_id "
 					+ "ORDER BY d." + orderByColumn + " " + orderBySort + ";";
-			PreparedStatement preparedStatement = con.prepareStatement(query);
-			ResultSet resultSet = preparedStatement.executeQuery();
-			while (resultSet.next()) { // TODO NELLY: check roles
-				Person referent = new Person(resultSet.getString(5), resultSet.getInt(4), resultSet.getString(6), resultSet.getBoolean(7), resultSet.getString(8));
-				Person jury2 = new Person(resultSet.getString(10), resultSet.getInt(9), resultSet.getString(11), resultSet.getBoolean(12), resultSet.getString(13));
-				Person student = new Person(resultSet.getString(15), resultSet.getInt(14), resultSet.getString(16), resultSet.getBoolean(17), resultSet.getString(18));
-				Defense defense = new Defense(resultSet.getInt(1), resultSet.getDate(2), resultSet.getTime(3), referent, jury2, student);
-				defenses.add(defense);
-			}
+			try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+          while (resultSet.next()) { // TODO NELLY: check roles
+            Person referent = new Person(resultSet.getString(5), resultSet.getInt(4), resultSet.getString(6), resultSet.getBoolean(7), resultSet.getString(8));
+            Person jury2 = new Person(resultSet.getString(10), resultSet.getInt(9), resultSet.getString(11), resultSet.getBoolean(12), resultSet.getString(13));
+            Person student = new Person(resultSet.getString(15), resultSet.getInt(14), resultSet.getString(16), resultSet.getBoolean(17), resultSet.getString(18));
+            Defense defense = new Defense(resultSet.getInt(1), resultSet.getDate(2), resultSet.getTime(3), referent, jury2, student);
+            defenses.add(defense);
+          }
+        }
+      }
 			return defenses;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			DbUtils.releaseConnection(con);
 		}
 	}
 
 	private List<Person> getProfessors(String orderByColumn, String orderBySort) {
-		Connection con = null;
-		try {
-			con = DbUtils.getConnection();
+		try (Connection con = DbUtils.getConnection()) {
 			if (con == null) {
 				return null;
 			}
@@ -151,27 +147,26 @@ public class DefenseManagementServlet extends HttpServlet {
 					"LEFT JOIN role_type rt ON pr.role_id = rt.id " +
 					"WHERE rt.role = 'Professor' " +
 					"ORDER BY p." + orderByColumn + " " + orderBySort + ";";
-			PreparedStatement preparedStatement = con.prepareStatement(query);
-			ResultSet resultSet = preparedStatement.executeQuery();
-			while (resultSet.next()) { // TODO NELLY: check roles
-				Person professor = new Person(resultSet.getString(2), resultSet.getInt(1), resultSet.getString(3), resultSet.getBoolean(4), resultSet.getString(5));
-				professors.add(professor);
-			}
+
+			try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+          while (resultSet.next()) { // TODO NELLY: check roles
+            Person professor = new Person(resultSet.getString(2), resultSet.getInt(1), resultSet.getString(3), resultSet.getBoolean(4), resultSet.getString(5));
+            professors.add(professor);
+          }
+        }
+      }
 
 			return professors;
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			DbUtils.releaseConnection(con);
 		}
 	}
 
 	private List<Person> getStudents(String orderByColumn, String orderBySort) {
-		Connection con = null;
-		try {
-			con = DbUtils.getConnection();
+		try (Connection con = DbUtils.getConnection()) {
 			if (con == null) {
 				return null;
 			}
@@ -187,20 +182,20 @@ public class DefenseManagementServlet extends HttpServlet {
 					"LEFT JOIN role_type rt ON pr.role_id = rt.id " +
 					"WHERE rt.role = 'Student' AND p.id IN (SELECT pi.person_id FROM person_internship pi) AND p.id NOT IN (SELECT student_id FROM defense) " +
 					"ORDER BY p." + orderByColumn + " " + orderBySort + ";";
-			PreparedStatement preparedStatement = con.prepareStatement(query);
-			ResultSet resultSet = preparedStatement.executeQuery();
-			while (resultSet.next()) { // TODO NELLY: check roles
-				Person professor = new Person(resultSet.getString(2), resultSet.getInt(1), resultSet.getString(3), resultSet.getBoolean(4), resultSet.getString(5));
-				professors.add(professor);
-			}
+			try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+          while (resultSet.next()) { // TODO NELLY: check roles
+            Person professor = new Person(resultSet.getString(2), resultSet.getInt(1), resultSet.getString(3), resultSet.getBoolean(4), resultSet.getString(5));
+            professors.add(professor);
+          }
+        }
+      }
 
 			return professors;
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			DbUtils.releaseConnection(con);
 		}
 	}
 

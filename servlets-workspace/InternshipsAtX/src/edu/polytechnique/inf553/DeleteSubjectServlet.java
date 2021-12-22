@@ -48,9 +48,7 @@ public class DeleteSubjectServlet extends HttpServlet {
 					request.getRequestDispatcher("/ErrorPageServlet").forward(request, response);
 					//response.sendError(HttpServletResponse.SC_FORBIDDEN);
 				}
-				Connection con = null;
-				try {
-					con = DbUtils.getConnection();
+				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
@@ -58,17 +56,16 @@ public class DeleteSubjectServlet extends HttpServlet {
 							"DELETE FROM internship\r\n" + 
 							"WHERE id = ?;\r\n" + 
 							"COMMIT TRANSACTION;";
-					PreparedStatement ps = con.prepareStatement(query);
-					ps.setInt(1, subjectId);
-					ps.executeUpdate();
+					try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, subjectId);
+            ps.executeUpdate();
+          }
 
 					
 				} catch(SQLException e) {
 					e.printStackTrace();
 					// db error
 					response.sendError(HttpServletResponse.SC_FORBIDDEN);
-				} finally {
-					DbUtils.releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );
@@ -92,9 +89,7 @@ public class DeleteSubjectServlet extends HttpServlet {
 	
 	private boolean checkIsTaken(int subjectId) {
 		boolean taken = true;
-		Connection con = null;
-		try {
-			con = DbUtils.getConnection();
+		try (Connection con = DbUtils.getConnection()) {
 			if (con == null) {
 				return false;
 			}
@@ -103,18 +98,17 @@ public class DeleteSubjectServlet extends HttpServlet {
 			String query = "SELECT is_taken "
 					+ "FROM internship "
 					+ "WHERE id=?;";
-			PreparedStatement preparedStatement = con.prepareStatement(query);
-			preparedStatement.setInt(1, subjectId);
-			ResultSet resultSet = preparedStatement.executeQuery();
-			if(resultSet.next()) {
-				taken = resultSet.getBoolean("is_taken");
-			}
-
+			try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+        preparedStatement.setInt(1, subjectId);
+        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+          if(resultSet.next()) {
+            taken = resultSet.getBoolean("is_taken");
+          }
+        }
+      }
 			
 		} catch(SQLException e) {
 			e.printStackTrace();
-		} finally {
-			DbUtils.releaseConnection(con);
 		}
 		return taken;
 	}

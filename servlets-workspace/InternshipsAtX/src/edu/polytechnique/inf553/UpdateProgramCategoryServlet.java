@@ -39,9 +39,7 @@ public class UpdateProgramCategoryServlet extends HttpServlet {
 				String type = request.getParameter("type");
 				int pid = Integer.parseInt(request.getParameter("pid"));
 				int cid = Integer.parseInt(request.getParameter("cid"));
-				Connection con = null;
-				try {
-					con = DbUtils.getConnection();
+				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
@@ -60,18 +58,16 @@ public class UpdateProgramCategoryServlet extends HttpServlet {
 								"  WHERE program_id = ? AND cat_id = ?;\r\n" + 
 								"COMMIT TRANSACTION;";
 					}
-					PreparedStatement ps = con.prepareStatement(query);
-					ps.setInt(1, pid);
-					ps.setInt(2, cid);
-					ps.executeUpdate();
-
+					try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, pid);
+            ps.setInt(2, cid);
+            ps.executeUpdate();
+          }
 					
 				} catch(SQLException e) {
 					e.printStackTrace();
 					// query errors
 					response.sendError(HttpServletResponse.SC_FORBIDDEN);
-				} finally {
-					DbUtils.releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );

@@ -40,11 +40,11 @@ public class CreateCategoryServlet extends HttpServlet {
 		if(session!=null && session.getAttribute("user")!= null) {
 			Person user = (Person)session.getAttribute("user");
 			String role = user.getRole();
+
 			if (role.equals("Admin") || role.equals("Professor" )) {
 				String name = request.getParameter("name");
-				Connection con = null;
-				try {
-					con = DbUtils.getConnection();
+
+				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
@@ -52,17 +52,15 @@ public class CreateCategoryServlet extends HttpServlet {
 							"insert into categories(description)\r\n" + 
 							"values (?);\r\n" + 
 							"COMMIT TRANSACTION;";
-					PreparedStatement ps = con.prepareStatement(query);
-					ps.setString(1, name);
-					ps.executeUpdate();
-
+					try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setString(1, name);
+            ps.executeUpdate();
+          }
 					
 				} catch(SQLException e) {
 					e.printStackTrace();
 					// db error
 					response.sendError(HttpServletResponse.SC_FORBIDDEN);
-				} finally {
-					DbUtils.releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );

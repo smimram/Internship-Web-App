@@ -67,9 +67,7 @@ public class SubjectDeletionServlet extends HttpServlet {
 	}
 
 	private List<Subject> getSubjects() {
-		Connection con = null;
-		try {
-			con = DbUtils.getConnection();
+		try (Connection con = DbUtils.getConnection()) {
 			if (con == null) {
 				return null;
 			}
@@ -78,21 +76,26 @@ public class SubjectDeletionServlet extends HttpServlet {
 			// get all subject list
 			String query = "SELECT DISTINCT id, title, program_id, administr_validated, scientific_validated, confidential_internship "
 					+ "FROM internship;";
-			PreparedStatement preparedStatement = con.prepareStatement(query);
-			ResultSet resultSet = preparedStatement.executeQuery();
-			while(resultSet.next()) {
-				Subject subject = new Subject(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getInt("program_id"),
-						resultSet.getBoolean("administr_validated"), resultSet.getBoolean("scientific_validated"), resultSet.getBoolean("confidential_internship"));
-				subjects.add(subject);
-			}
+			try (
+           PreparedStatement preparedStatement = con.prepareStatement(query);
+           ResultSet resultSet = preparedStatement.executeQuery();
+      ) {
+        while(resultSet.next()) {
+          Subject subject = new Subject(resultSet.getInt("id"),
+                                        resultSet.getString("title"),
+                                        resultSet.getInt("program_id"),
+                                        resultSet.getBoolean("administr_validated"),
+                                        resultSet.getBoolean("scientific_validated"),
+                                        resultSet.getBoolean("confidential_internship"));
+          subjects.add(subject);
+        }
+      }
 
 			return subjects;
 			
 		} catch(SQLException e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			DbUtils.releaseConnection(con);
 		}
 	}
 	

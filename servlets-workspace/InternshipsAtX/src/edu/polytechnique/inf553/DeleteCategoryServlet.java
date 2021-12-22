@@ -42,9 +42,7 @@ public class DeleteCategoryServlet extends HttpServlet {
 			String role = user.getRole();
 			if (role.equals("Admin") || role.equals("Professor" )) {
 				int id = Integer.parseInt(request.getParameter("id"));
-				Connection con = null;
-				try {
-					con = DbUtils.getConnection();
+				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
@@ -52,17 +50,15 @@ public class DeleteCategoryServlet extends HttpServlet {
 							"DELETE FROM categories\r\n" + 
 							"  WHERE id = ?;\r\n" + 
 							"COMMIT TRANSACTION;";
-					PreparedStatement ps = con.prepareStatement(query);
-					ps.setInt(1, id);
-					ps.executeUpdate();
-					
+					try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+          }
 					
 				} catch(SQLException e) {
 					e.printStackTrace();
 					// db error
 					response.sendError(HttpServletResponse.SC_FORBIDDEN);
-				} finally {
-					DbUtils.releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );

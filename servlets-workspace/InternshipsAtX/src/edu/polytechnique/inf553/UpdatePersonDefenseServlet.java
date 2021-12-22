@@ -79,9 +79,7 @@ public class UpdatePersonDefenseServlet extends HttpServlet {
 	}
 
 	private void setReferent(int referentId, int defenseId, HttpServletResponse response) throws IOException {
-		Connection con = null;
-		try {
-			con = DbUtils.getConnection();
+		try (Connection con = DbUtils.getConnection()) {
 			if (con == null) {
 				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			}
@@ -90,25 +88,22 @@ public class UpdatePersonDefenseServlet extends HttpServlet {
 					+ "UPDATE defense SET referent_id = ? "
 					+ "where id = ?; "
 					+ "COMMIT TRANSACTION;";
-			PreparedStatement ps = con.prepareStatement(query);
-			if (referentId == -1) { ps.setNull(1, Types.INTEGER); }
-			else { ps.setInt(1, referentId); }
-			ps.setInt(2, defenseId);
-			ps.executeUpdate();
+			try (PreparedStatement ps = con.prepareStatement(query)) {
+        if (referentId == -1) { ps.setNull(1, Types.INTEGER); }
+        else { ps.setInt(1, referentId); }
+        ps.setInt(2, defenseId);
+        ps.executeUpdate();
+      }
 		} catch(SQLException | IOException e) {
 			e.printStackTrace();
 			// query errors
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		} finally {
-			DbUtils.releaseConnection(con);
 		}
 		response.setStatus( 200 );
 	}
 
 	private void setStudent(int studentId, int defenseId, HttpServletResponse response) throws IOException {
-		Connection con = null;
-		try {
-			con = DbUtils.getConnection();
+		try (Connection con = DbUtils.getConnection()) {
 			if (con == null) {
 				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			}
@@ -117,25 +112,22 @@ public class UpdatePersonDefenseServlet extends HttpServlet {
 					+ "UPDATE defense SET student_id = ? "
 					+ "where id = ?; "
 					+ "COMMIT TRANSACTION;";
-			PreparedStatement ps = con.prepareStatement(query);
-			if (studentId == -1) { ps.setNull(1, Types.INTEGER); }
-			else { ps.setInt(1, studentId); }
-			ps.setInt(2, defenseId);
-			ps.executeUpdate();
+			try (PreparedStatement ps = con.prepareStatement(query)) {
+        if (studentId == -1) { ps.setNull(1, Types.INTEGER); }
+        else { ps.setInt(1, studentId); }
+        ps.setInt(2, defenseId);
+        ps.executeUpdate();
+      }
 		} catch(SQLException | IOException e) {
 			e.printStackTrace();
 			// query errors
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		} finally {
-			DbUtils.releaseConnection(con);
 		}
 		response.setStatus( 200 );
 	}
 
 	private void setJury2(int jury2Id, int defenseId, HttpServletResponse response) throws IOException {
-		Connection con = null;
-		try {
-			con = DbUtils.getConnection();
+		try (Connection con = DbUtils.getConnection()) {
 			if (con == null) {
 				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			}
@@ -144,17 +136,16 @@ public class UpdatePersonDefenseServlet extends HttpServlet {
 					+ "UPDATE defense SET jury2_id = ? "
 					+ "where id = ?; "
 					+ "COMMIT TRANSACTION;";
-			PreparedStatement ps = con.prepareStatement(query);
-			if (jury2Id == -1) { ps.setNull(1, Types.INTEGER); }
-			else { ps.setInt(1, jury2Id); }
-			ps.setInt(2, defenseId);
-			ps.executeUpdate();
+			try (PreparedStatement ps = con.prepareStatement(query)) {
+        if (jury2Id == -1) { ps.setNull(1, Types.INTEGER); }
+        else { ps.setInt(1, jury2Id); }
+        ps.setInt(2, defenseId);
+        ps.executeUpdate();
+      }
 		} catch(SQLException | IOException e) {
 			e.printStackTrace();
 			// query errors
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		} finally {
-			DbUtils.releaseConnection(con);
 		}
 		response.setStatus( 200 );
 	}

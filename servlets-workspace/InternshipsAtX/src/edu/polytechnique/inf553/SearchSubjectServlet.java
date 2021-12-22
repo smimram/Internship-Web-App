@@ -36,9 +36,7 @@ public class SearchSubjectServlet extends HttpServlet {
 			String role = user.getRole();
 			if (role.equals("Admin")) {
 				String keywords = request.getParameter("keywords");
-				Connection con = null;
-				try {
-					con = DbUtils.getConnection();
+				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
@@ -47,15 +45,12 @@ public class SearchSubjectServlet extends HttpServlet {
 					String query = "SELECT PDATE person_roles SET role_id = ?\r\n" +
 							"WHERE person_id = ?;\r\n" + 
 							"COMMIT TRANSACTION;";
-					PreparedStatement ps = con.prepareStatement(query);
-					ps.setString(1, keywords);
-					ps.executeUpdate();
-
-					
+					try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setString(1, keywords);
+            ps.executeUpdate();
+          }
 				} catch(SQLException e) {
 					e.printStackTrace();
-				} finally {
-					DbUtils.releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );

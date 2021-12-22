@@ -69,9 +69,7 @@ public class SubjectAttributionServlet extends HttpServlet {
 	}
 	
 	private List<Subject> getSubjects() {
-		Connection con = null;
-		try {
-			con = DbUtils.getConnection();
+		try (Connection con = DbUtils.getConnection()) {
 			if (con == null) {
 				return null;
 			}
@@ -81,44 +79,53 @@ public class SubjectAttributionServlet extends HttpServlet {
 			String query = "SELECT DISTINCT id, title, program_id, administr_validated, scientific_validated, confidential_internship, timestamp_fiche, timestamp_report, timestamp_slides "
 					+ "FROM internship "
 					+ "WHERE is_taken IS FALSE AND administr_validated IS TRUE AND scientific_validated IS TRUE;";
-			PreparedStatement preparedStatement = con.prepareStatement(query);
-			ResultSet resultSet = preparedStatement.executeQuery();
-			while(resultSet.next()) {
-				Subject subject = new Subject(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getInt("program_id"),
-						resultSet.getBoolean("administr_validated"), resultSet.getBoolean("scientific_validated"), resultSet.getBoolean("confidential_internship"));
-				subjects.add(subject);
-			}
+			try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+          while(resultSet.next()) {
+            Subject subject = new Subject(resultSet.getInt("id"),
+                                          resultSet.getString("title"),
+                                          resultSet.getInt("program_id"),
+                                          resultSet.getBoolean("administr_validated"),
+                                          resultSet.getBoolean("scientific_validated"),
+                                          resultSet.getBoolean("confidential_internship"));
+            subjects.add(subject);
+          }
+        }
+      }
 
 			return subjects;
 			
 		} catch(SQLException e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			DbUtils.releaseConnection(con);
 		}
 	}
 	
 	private List<Person> getStudents() {
-		Connection con = null;
 		Person user = null;
-		try {
+		try (Connection con = DbUtils.getConnection()) {
+			if (con == null) {
+				return null;
+			}
 			
 			List<Person> students = new ArrayList<>();
 			String query = "select name, role, person_id, valid, email "
 					+ "from person p inner join person_roles pr on pr.person_id = p.id inner join role_type rt on rt.id = pr.role_id "
 					+ "where rt.role = 'Student' AND valid IS TRUE;";
-			//creating connection with the database
-			con = DbUtils.getConnection();
-			if (con == null) {
-				return null;
-			}
-			ResultSet resultSet = con.prepareStatement(query).executeQuery();
-			
-			while (resultSet.next()) {
-				user = new Person(resultSet.getString("name"), resultSet.getInt("person_id"), resultSet.getString("role"), resultSet.getBoolean("valid"), resultSet.getString("email"));
-				students.add(user);
-			}
+
+      try (
+           PreparedStatement stmt = con.prepareStatement(query);
+           ResultSet resultSet = stmt.executeQuery();
+           ) {			
+        while (resultSet.next()) {
+          user = new Person(resultSet.getString("name"),
+                            resultSet.getInt("person_id"),
+                            resultSet.getString("role"),
+                            resultSet.getBoolean("valid"),
+                            resultSet.getString("email"));
+          students.add(user);
+        }
+      }
 
 			return students;
 
@@ -126,8 +133,6 @@ public class SubjectAttributionServlet extends HttpServlet {
 		catch(SQLException e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			DbUtils.releaseConnection(con);
 		}
 	}
 

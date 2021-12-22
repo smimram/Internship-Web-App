@@ -17,16 +17,6 @@ import java.sql.SQLException;
 @WebServlet("/DeleteProgramServlet")
 public class DeleteProgramServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-
-    public DeleteProgramServlet() {
-        super();
-		try {
-			Class.forName("org.postgresql.Driver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-    }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -40,9 +30,7 @@ public class DeleteProgramServlet extends HttpServlet {
 			String role = user.getRole();
 			if (role.equals("Admin") || role.equals("Professor" )) {
 				int id = Integer.parseInt(request.getParameter("id"));
-				Connection con = null;
-				try {
-					con = DbUtils.getConnection();
+				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
@@ -50,17 +38,15 @@ public class DeleteProgramServlet extends HttpServlet {
 							"DELETE FROM program\r\n" + 
 							"  WHERE id = ?;\r\n" + 
 							"COMMIT TRANSACTION;";
-					PreparedStatement ps = con.prepareStatement(query);
-					ps.setInt(1, id);
-					ps.executeUpdate();
-
+					try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+          }
 					
 				} catch(SQLException e) {
 					e.printStackTrace();
 					// db error
 					response.sendError(HttpServletResponse.SC_FORBIDDEN);
-				} finally {
-					DbUtils.releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );

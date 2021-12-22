@@ -18,14 +18,6 @@ import javax.servlet.http.HttpSession;
 @WebServlet("/ErrorPageServlet")
 public class ErrorPageServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public ErrorPageServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -38,11 +30,8 @@ public class ErrorPageServlet extends HttpServlet {
 			String method = (String)session.getAttribute("method");
 			String decription = (String)session.getAttribute("description");
 			int user = Integer.parseInt((String)session.getAttribute("userId"));
-			Connection con = null;
-			try {
-				con = DbUtils.getConnection();
+			try (Connection con = DbUtils.getConnection()) {
 				if (con == null) {
-					
 					response.sendError(HttpServletResponse.SC_FORBIDDEN);
 				}
 				// update user program, set isolation level SERIALIZABLE
@@ -51,19 +40,17 @@ public class ErrorPageServlet extends HttpServlet {
 						"values ((select current_date), (select current_timestamp), ?,?, ?);\r\n" + 
 						"COMMIT TRANSACTION;";
 				
-				PreparedStatement ps = con.prepareStatement(query);
-				ps.setString(1, method);
-				ps.setString(2, decription);
-				ps.setInt(3, user);
-				ps.executeUpdate();
-
+				try (PreparedStatement ps = con.prepareStatement(query)) {
+          ps.setString(1, method);
+          ps.setString(2, decription);
+          ps.setInt(3, user);
+          ps.executeUpdate();
+        }
 				
 			} catch(SQLException e) {
 				e.printStackTrace();
 				// query errors
 				response.sendError(HttpServletResponse.SC_FORBIDDEN);
-			} finally {
-				DbUtils.releaseConnection(con);
 			}
 			response.setStatus( 200 );
 		} else {

@@ -45,28 +45,27 @@ public class UploadSlidesServlet extends HttpServlet {
 		int userId = Integer.parseInt(request.getParameter("userId"));
 		Part file = request.getPart("slides");
 
-		Connection con = null;
-		try {
-			con = DbUtils.getConnection();
+		try (Connection con = DbUtils.getConnection()) {
 			if (con == null) {
 				response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			}
 
 			// update the slides
 			String query = "UPDATE internship SET slides = ?, timestamp_slides = ? WHERE id = ?;";
-			PreparedStatement ps = con.prepareStatement(query);
-			InputStream inputStream = file.getInputStream();
-			if (inputStream != null) {
-				ps.setBinaryStream(1, inputStream);
-				ps.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
-				ps.setInt(3, subjectId);
-				int row = ps.executeUpdate();
-				if (row <= 0) {
-					System.out.println("ERROR: File was not uploaded and saved into database");
-				}
-			} else {
-				System.out.println("input stream is null");
-			}
+			try (PreparedStatement ps = con.prepareStatement(query)) {
+        InputStream inputStream = file.getInputStream();
+        if (inputStream != null) {
+          ps.setBinaryStream(1, inputStream);
+          ps.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
+          ps.setInt(3, subjectId);
+          int row = ps.executeUpdate();
+          if (row <= 0) {
+            System.out.println("ERROR: File was not uploaded and saved into database");
+          }
+        } else {
+          System.out.println("input stream is null");
+        }
+      }
 
 			// get the internship to display it in the student view
 			request.setAttribute("userSubject", CommonInterface.getSubjectOfUSer(userId, con));
@@ -76,8 +75,6 @@ public class UploadSlidesServlet extends HttpServlet {
 			request.setAttribute("subjectsPerCategory", CommonInterface.getSubjectsPerCategory(programs, con));
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			DbUtils.releaseConnection(con);
 		}
 		request.getRequestDispatcher("student_view.jsp").forward(request, response);
 	}

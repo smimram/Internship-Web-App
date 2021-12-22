@@ -51,10 +51,7 @@ public class SigninServlet extends HttpServlet {
 		String errorMessage = checkEntries(firstName, lastName, email, confirmEmail, pass, confirmPass, role);
 		if(errorMessage.equals("None"))
 		{
-			Connection con = null;
-			try {
-				//creating connection with the database
-				con = DbUtils.getConnection();
+			try (Connection con = DbUtils.getConnection()) {
 				if (con == null) {
 					response.sendError(HttpServletResponse.SC_FORBIDDEN);
 				}
@@ -62,35 +59,36 @@ public class SigninServlet extends HttpServlet {
 				//add the user into 'person' table
 				String query = "insert into person(name, email, creation_date, valid, password)\n" + 
 						" values (?, ?, ?, false, crypt(?, gen_salt('bf'))) ;";
-				PreparedStatement ps = con.prepareStatement(query);
-				ps.setString(1, concatName);
-				ps.setString(2, email);
-				ps.setDate(3, Date.valueOf(java.time.LocalDate.now()));
-				ps.setString(4, pass);
-				ps.executeUpdate();
+				try (PreparedStatement ps = con.prepareStatement(query)) {
+          ps.setString(1, concatName);
+          ps.setString(2, email);
+          ps.setDate(3, Date.valueOf(java.time.LocalDate.now()));
+          ps.setString(4, pass);
+          ps.executeUpdate();
+        }
 				
 				//add a person_role relation into 'person_roles' table
 				String query2 = "insert into person_roles(role_id ,person_id)\n" + 
 						"SELECT rt.id, p.id\n" + 
 						"FROM role_type rt, person p\n" + 
 						"WHERE rt.role = ? AND p.email = ?";
-				PreparedStatement ps2 = con.prepareStatement(query2);
-				ps2.setString(1, role);
-				ps2.setString(2, email);
-				ps2.executeUpdate();
+				try (PreparedStatement ps2 = con.prepareStatement(query2)) {
+          ps2.setString(1, role);
+          ps2.setString(2, email);
+          ps2.executeUpdate();
+        }
 
 				if(role.equals("Student") && programStudent != -1) {
 					query2 = "INSERT INTO person_program (program_id, person_id) VALUES (" + programStudent + " AS program_id, SELECT p.id FROM person p WHERE p.email = ?)";
-					ps = con.prepareStatement(query2);
-					ps.setString(1, email);
-					ps.executeUpdate();
+					try (PreparedStatement ps = con.prepareStatement(query2)) {
+            ps.setString(1, email);
+            ps.executeUpdate();
+          }
 				}
 
 			}
 			catch(SQLException e) {
 				e.printStackTrace();
-			} finally {
-				DbUtils.releaseConnection(con);
 			}
 			request.setAttribute("email", email);
 			request.getRequestDispatcher("signin_complete.jsp").forward(request, response);
@@ -137,28 +135,24 @@ public class SigninServlet extends HttpServlet {
 			}
 			if(emailIsValid) {
 				boolean emailTaken;
-				Connection con = null;
-				try {
-					String query = "SELECT COUNT(*) as count\n" + 
-							"FROM person \n" + 
-							"WHERE email = ? ;";
-					//creating connection with the database
-					con = DbUtils.getConnection();
+				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						return "failed connection to database!";
 					}
-					PreparedStatement ps = con.prepareStatement(query);
-					ps.setString(1, email);
-					ResultSet rs = ps.executeQuery();
-					rs.next();
-					emailTaken = rs.getInt("count")>0;
-
+					String query = "SELECT COUNT(*) as count\n" + 
+							"FROM person \n" + 
+							"WHERE email = ? ;";
+					try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+              rs.next();
+              emailTaken = rs.getInt("count")>0;
+            }
+          }
 				}
 				catch(SQLException e) {
 					e.printStackTrace();
 					emailTaken = true;
-				} finally {
-					DbUtils.releaseConnection(con);
 				}
 				if(emailTaken) {
 					return "The email is already used.";
@@ -172,9 +166,7 @@ public class SigninServlet extends HttpServlet {
 	}
 
 	private List<Program> getAllPrograms() {
-		Connection con = null;
-		try {
-			con = DbUtils.getConnection();
+		try (Connection con = DbUtils.getConnection()) {
 			if (con == null) {
 				return null;
 			}
@@ -182,20 +174,20 @@ public class SigninServlet extends HttpServlet {
 			List<Program> programs = new ArrayList<>();
 			// get all program list
 			String query = "SELECT DISTINCT id, name, year FROM program ORDER BY name;";
-			PreparedStatement preparedStatement = con.prepareStatement(query);
-			ResultSet resultSet = preparedStatement.executeQuery();
-			while(resultSet.next()) {
-				Program program = new Program(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getString("year"));
-				programs.add(program);
-			}
+			try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+          while(resultSet.next()) {
+            Program program = new Program(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getString("year"));
+            programs.add(program);
+          }
+        }
+      }
 
 			return programs;
 
 		} catch(SQLException e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			DbUtils.releaseConnection(con);
 		}
 	}
 }

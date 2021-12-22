@@ -34,9 +34,8 @@ public class CreateProgramServlet extends HttpServlet {
 			if (role.equals("Admin") || role.equals("Professor" )) {
 				String name = request.getParameter("name");
 				int year = Integer.parseInt(request.getParameter("year"));
-				Connection con = null;
-				try {
-					con = DbUtils.getConnection();
+
+				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
@@ -44,18 +43,15 @@ public class CreateProgramServlet extends HttpServlet {
 							"insert into program(name, year)\r\n" + 
 							"values (?,?);\r\n" + 
 							"COMMIT TRANSACTION;";
-					PreparedStatement ps = con.prepareStatement(query);
-					ps.setString(1, name);
-					ps.setInt(2, year);
-					ps.executeUpdate();
-
-					
+					try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setString(1, name);
+            ps.setInt(2, year);
+            ps.executeUpdate();
+          }					
 				} catch(SQLException e) {
 					e.printStackTrace();
 					// db error
 					response.sendError(HttpServletResponse.SC_FORBIDDEN);
-				} finally {
-					DbUtils.releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );

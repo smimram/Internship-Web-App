@@ -51,9 +51,7 @@ public class UpdateDefenseServlet extends HttpServlet {
 					defenseTime = LocalTime.parse(request.getParameter("defenseTime"), formatter);
 				}
 
-				Connection con = null;
-				try {
-					con = DbUtils.getConnection();
+				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
@@ -63,23 +61,22 @@ public class UpdateDefenseServlet extends HttpServlet {
 							"UPDATE defense SET date = ?, time = ? \r\n" +
 							"WHERE id = ?;\r\n" +
 							"COMMIT TRANSACTION;";
-					PreparedStatement ps = con.prepareStatement(query);
-					if (defenseDate == null) {
-						ps.setNull(1, Types.DATE);
-					} else {
-						ps.setDate(1, Date.valueOf(defenseDate));
-					}
-					if(defenseTime == null) {
-						ps.setNull(2, Types.TIME);
-					} else {
-						ps.setTime(2, Time.valueOf(defenseTime));
-					}
-					ps.setInt(3, defenseId);
-					ps.executeUpdate();
+					try (PreparedStatement ps = con.prepareStatement(query)) {
+            if (defenseDate == null) {
+              ps.setNull(1, Types.DATE);
+            } else {
+              ps.setDate(1, Date.valueOf(defenseDate));
+            }
+            if(defenseTime == null) {
+              ps.setNull(2, Types.TIME);
+            } else {
+              ps.setTime(2, Time.valueOf(defenseTime));
+            }
+            ps.setInt(3, defenseId);
+            ps.executeUpdate();
+          }
 				} catch(SQLException e) {
 					e.printStackTrace();
-				} finally {
-					DbUtils.releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );
