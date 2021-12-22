@@ -72,7 +72,7 @@ public class LoginServlet extends HttpServlet {
 		try {
 			String query = "select * from person where email=? and password=crypt(?, password);";
 			//creating connection with the database
-			con = DbUtils.getInstance().getConnection();
+			con = DbUtils.getConnection();
 			if (con == null) {
 				return "Failed connection to database!";
 			}
@@ -93,7 +93,7 @@ public class LoginServlet extends HttpServlet {
 		catch(SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DbUtils.getInstance().releaseConnection(con);
+			DbUtils.releaseConnection(con);
 		}
 		return err_message;      
 	}
@@ -108,7 +108,7 @@ public class LoginServlet extends HttpServlet {
 					"inner join role_type rt on rt.id = pr.role_id " +
 					"where email = ?;";
 			//creating connection with the database
-			con = DbUtils.getInstance().getConnection();
+			con = DbUtils.getConnection();
 			if (con == null) {
 				return null;
 			}
@@ -124,7 +124,7 @@ public class LoginServlet extends HttpServlet {
 		catch(SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DbUtils.getInstance().releaseConnection(con);
+			DbUtils.releaseConnection(con);
 		}
 		return user;  
 	}

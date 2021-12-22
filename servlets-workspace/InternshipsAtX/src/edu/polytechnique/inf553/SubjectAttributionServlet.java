@@ -71,7 +71,7 @@ public class SubjectAttributionServlet extends HttpServlet {
 	private List<Subject> getSubjects() {
 		Connection con = null;
 		try {
-			con = DbUtils.getInstance().getConnection();
+			con = DbUtils.getConnection();
 			if (con == null) {
 				return null;
 			}
@@ -95,7 +95,7 @@ public class SubjectAttributionServlet extends HttpServlet {
 			e.printStackTrace();
 			return null;
 		} finally {
-			DbUtils.getInstance().releaseConnection(con);
+			DbUtils.releaseConnection(con);
 		}
 	}
 	
@@ -109,7 +109,7 @@ public class SubjectAttributionServlet extends HttpServlet {
 					+ "from person p inner join person_roles pr on pr.person_id = p.id inner join role_type rt on rt.id = pr.role_id "
 					+ "where rt.role = 'Student' AND valid IS TRUE;";
 			//creating connection with the database
-			con = DbUtils.getInstance().getConnection();
+			con = DbUtils.getConnection();
 			if (con == null) {
 				return null;
 			}
@@ -127,7 +127,7 @@ public class SubjectAttributionServlet extends HttpServlet {
 			e.printStackTrace();
 			return null;
 		} finally {
-			DbUtils.getInstance().releaseConnection(con);
+			DbUtils.releaseConnection(con);
 		}
 	}
 

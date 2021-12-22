@@ -83,7 +83,7 @@ public class SubjectManagementServlet extends HttpServlet {
 	private List<Subject> getSubjects(String orderByColumn, String orderBySort) {
 		Connection con = null;
 		try {
-			con = DbUtils.getInstance().getConnection();
+			con = DbUtils.getConnection();
 			if (con == null) {
 				return null;
 			}
@@ -115,14 +115,14 @@ public class SubjectManagementServlet extends HttpServlet {
 			e.printStackTrace();
 			return null;
 		} finally {
-			DbUtils.getInstance().releaseConnection(con);
+			DbUtils.releaseConnection(con);
 		}
 	}
 	
 	private List<Category> getAllCategories() {
 		Connection con = null;
 		try {
-			con = DbUtils.getInstance().getConnection();
+			con = DbUtils.getConnection();
 			if (con == null) {
 				return null;
 			}
@@ -143,14 +143,14 @@ public class SubjectManagementServlet extends HttpServlet {
 			e.printStackTrace();
 			return null;
 		} finally {
-			DbUtils.getInstance().releaseConnection(con);
+			DbUtils.releaseConnection(con);
 		}
 	}
 	
 	private List<Program> getAllPrograms() {
 		Connection con = null;
 		try {
-			con = DbUtils.getInstance().getConnection();
+			con = DbUtils.getConnection();
 			if (con == null) {
 				return null;
 			}
@@ -171,14 +171,14 @@ public class SubjectManagementServlet extends HttpServlet {
 			e.printStackTrace();
 			return null;
 		} finally {
-			DbUtils.getInstance().releaseConnection(con);
+			DbUtils.releaseConnection(con);
 		}
 	}
 	
 	private void getCategoriesForSubjects(List<Subject> subjects) {
 		Connection con = null;
 		try {
-			con = DbUtils.getInstance().getConnection();
+			con = DbUtils.getConnection();
 			if (con == null) {
 				return;
 			}
@@ -204,14 +204,14 @@ public class SubjectManagementServlet extends HttpServlet {
 		} catch(SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DbUtils.getInstance().releaseConnection(con);
+			DbUtils.releaseConnection(con);
 		}
 	}
 
 	private void getAffiliatedStudentsForSubjects(List<Subject> subjects) {
 		Connection con = null;
 		try {
-			con = DbUtils.getInstance().getConnection();
+			con = DbUtils.getConnection();
 			if (con == null) {
 				return;
 			}
@@ -236,7 +236,7 @@ public class SubjectManagementServlet extends HttpServlet {
 		} catch(SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DbUtils.getInstance().releaseConnection(con);
+			DbUtils.releaseConnection(con);
 		}
 	}
 	
@@ -250,7 +250,7 @@ public class SubjectManagementServlet extends HttpServlet {
 					+ "from person p inner join person_roles pr on pr.person_id = p.id inner join role_type rt on rt.id = pr.role_id "
 					+ "where rt.role = 'Student' AND valid IS TRUE;";
 			//creating connection with the database
-			con = DbUtils.getInstance().getConnection();
+			con = DbUtils.getConnection();
 			if (con == null) {
 				return null;
 			}
@@ -268,7 +268,7 @@ public class SubjectManagementServlet extends HttpServlet {
 			e.printStackTrace();
 			return null;
 		} finally {
-			DbUtils.getInstance().releaseConnection(con);
+			DbUtils.releaseConnection(con);
 		}
 	}
 
@@ -284,7 +284,7 @@ public class SubjectManagementServlet extends HttpServlet {
 					+ "where rt.role = 'Student' AND p.valid IS TRUE AND p.id NOT IN (SELECT pi.person_id FROM person_internship pi) " +
 					"ORDER BY  name;";
 			//creating connection with the database
-			con = DbUtils.getInstance().getConnection();
+			con = DbUtils.getConnection();
 			if (con == null) {
 				return null;
 			}
@@ -301,7 +301,7 @@ public class SubjectManagementServlet extends HttpServlet {
 			e.printStackTrace();
 			return null;
 		} finally {
-			DbUtils.getInstance().releaseConnection(con);
+			DbUtils.releaseConnection(con);
 		}
 	}
 }

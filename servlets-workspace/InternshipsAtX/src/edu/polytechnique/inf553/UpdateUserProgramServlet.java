@@ -36,7 +36,7 @@ public class UpdateUserProgramServlet extends HttpServlet {
 				int programId = Integer.parseInt(request.getParameter("programid"));
 				Connection con = null;
 				try {
-					con = DbUtils.getInstance().getConnection();
+					con = DbUtils.getConnection();
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
@@ -66,7 +66,7 @@ public class UpdateUserProgramServlet extends HttpServlet {
 					// query errors
 					response.sendError(HttpServletResponse.SC_FORBIDDEN);
 				} finally {
-					DbUtils.getInstance().releaseConnection(con);
+					DbUtils.releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );

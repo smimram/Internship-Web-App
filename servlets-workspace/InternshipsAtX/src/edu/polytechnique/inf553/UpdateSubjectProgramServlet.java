@@ -53,7 +53,7 @@ public class UpdateSubjectProgramServlet extends HttpServlet {
 				
 				Connection con = null;
 				try {
-					con = DbUtils.getInstance().getConnection();
+					con = DbUtils.getConnection();
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
@@ -72,7 +72,7 @@ public class UpdateSubjectProgramServlet extends HttpServlet {
 				} catch(SQLException e) {
 					e.printStackTrace();
 				} finally {
-					DbUtils.getInstance().releaseConnection(con);
+					DbUtils.releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );
@@ -97,7 +97,7 @@ public class UpdateSubjectProgramServlet extends HttpServlet {
 	private Set<Integer> getCategoriesForSubject(int subjectId) {
 		Connection con = null;
 		try {
-			con = DbUtils.getInstance().getConnection();
+			con = DbUtils.getConnection();
 			if (con == null) {
 				return null;
 			}
@@ -121,14 +121,14 @@ public class UpdateSubjectProgramServlet extends HttpServlet {
 			e.printStackTrace();
 			return null;
 		} finally {
-			DbUtils.getInstance().releaseConnection(con);
+			DbUtils.releaseConnection(con);
 		}
 	}
 	
 	private Set<Integer> getCategoriesForProgram(int programId) {
 		Connection con = null;
 		try {
-			con = DbUtils.getInstance().getConnection();
+			con = DbUtils.getConnection();
 			if (con == null) {
 				return null;
 			}
@@ -151,7 +151,7 @@ public class UpdateSubjectProgramServlet extends HttpServlet {
 			e.printStackTrace();
 			return null;
 		} finally {
-			DbUtils.getInstance().releaseConnection(con);
+			DbUtils.releaseConnection(con);
 		}
 	}
 

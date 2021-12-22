@@ -35,7 +35,7 @@ public class UpdateUserValidServlet extends HttpServlet {
 				int pid = Integer.parseInt(request.getParameter("pid"));
 				Connection con = null;
 				try {
-					con = DbUtils.getInstance().getConnection();
+					con = DbUtils.getConnection();
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
@@ -54,7 +54,7 @@ public class UpdateUserValidServlet extends HttpServlet {
 				} catch(SQLException e) {
 					e.printStackTrace();
 				} finally {
-					DbUtils.getInstance().releaseConnection(con);
+					DbUtils.releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );

@@ -69,7 +69,7 @@ public class SubjectDeletionServlet extends HttpServlet {
 	private List<Subject> getSubjects() {
 		Connection con = null;
 		try {
-			con = DbUtils.getInstance().getConnection();
+			con = DbUtils.getConnection();
 			if (con == null) {
 				return null;
 			}
@@ -92,7 +92,7 @@ public class SubjectDeletionServlet extends HttpServlet {
 			e.printStackTrace();
 			return null;
 		} finally {
-			DbUtils.getInstance().releaseConnection(con);
+			DbUtils.releaseConnection(con);
 		}
 	}
 	

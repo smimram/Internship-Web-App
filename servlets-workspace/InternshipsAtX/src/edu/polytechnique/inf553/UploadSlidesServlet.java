@@ -47,7 +47,7 @@ public class UploadSlidesServlet extends HttpServlet {
 
 		Connection con = null;
 		try {
-			con = DbUtils.getInstance().getConnection();
+			con = DbUtils.getConnection();
 			if (con == null) {
 				response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			}
@@ -77,7 +77,7 @@ public class UploadSlidesServlet extends HttpServlet {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DbUtils.getInstance().releaseConnection(con);
+			DbUtils.releaseConnection(con);
 		}
 		request.getRequestDispatcher("student_view.jsp").forward(request, response);
 	}

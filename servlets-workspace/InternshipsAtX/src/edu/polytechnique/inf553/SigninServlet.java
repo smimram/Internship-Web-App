@@ -54,7 +54,7 @@ public class SigninServlet extends HttpServlet {
 			Connection con = null;
 			try {
 				//creating connection with the database
-				con = DbUtils.getInstance().getConnection();
+				con = DbUtils.getConnection();
 				if (con == null) {
 					response.sendError(HttpServletResponse.SC_FORBIDDEN);
 				}
@@ -90,7 +90,7 @@ public class SigninServlet extends HttpServlet {
 			catch(SQLException e) {
 				e.printStackTrace();
 			} finally {
-				DbUtils.getInstance().releaseConnection(con);
+				DbUtils.releaseConnection(con);
 			}
 			request.setAttribute("email", email);
 			request.getRequestDispatcher("signin_complete.jsp").forward(request, response);
@@ -143,7 +143,7 @@ public class SigninServlet extends HttpServlet {
 							"FROM person \n" + 
 							"WHERE email = ? ;";
 					//creating connection with the database
-					con = DbUtils.getInstance().getConnection();
+					con = DbUtils.getConnection();
 					if (con == null) {
 						return "failed connection to database!";
 					}
@@ -158,7 +158,7 @@ public class SigninServlet extends HttpServlet {
 					e.printStackTrace();
 					emailTaken = true;
 				} finally {
-					DbUtils.getInstance().releaseConnection(con);
+					DbUtils.releaseConnection(con);
 				}
 				if(emailTaken) {
 					return "The email is already used.";
@@ -174,7 +174,7 @@ public class SigninServlet extends HttpServlet {
 	private List<Program> getAllPrograms() {
 		Connection con = null;
 		try {
-			con = DbUtils.getInstance().getConnection();
+			con = DbUtils.getConnection();
 			if (con == null) {
 				return null;
 			}
@@ -195,7 +195,7 @@ public class SigninServlet extends HttpServlet {
 			e.printStackTrace();
 			return null;
 		} finally {
-			DbUtils.getInstance().releaseConnection(con);
+			DbUtils.releaseConnection(con);
 		}
 	}
 }

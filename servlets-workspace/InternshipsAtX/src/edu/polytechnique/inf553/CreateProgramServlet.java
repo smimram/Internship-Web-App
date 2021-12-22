@@ -36,7 +36,7 @@ public class CreateProgramServlet extends HttpServlet {
 				int year = Integer.parseInt(request.getParameter("year"));
 				Connection con = null;
 				try {
-					con = DbUtils.getInstance().getConnection();
+					con = DbUtils.getConnection();
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
@@ -55,7 +55,7 @@ public class CreateProgramServlet extends HttpServlet {
 					// db error
 					response.sendError(HttpServletResponse.SC_FORBIDDEN);
 				} finally {
-					DbUtils.getInstance().releaseConnection(con);
+					DbUtils.releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );

@@ -68,7 +68,7 @@ public class UploadTopicServlet extends HttpServlet {
 			try {
 				int supervisor_id;
 				
-				con = DbUtils.getInstance().getConnection();
+				con = DbUtils.getConnection();
 				if (con == null) {
 					response.sendError(HttpServletResponse.SC_FORBIDDEN);
 				}
@@ -146,7 +146,7 @@ public class UploadTopicServlet extends HttpServlet {
 			catch(SQLException e) {
 				e.printStackTrace();
 			} finally {
-				DbUtils.getInstance().releaseConnection(con);
+				DbUtils.releaseConnection(con);
 			}
 			request.setAttribute("topicTitle", topicTitle);
 			request.getRequestDispatcher("upload_complete.jsp").forward(request, response);
@@ -167,7 +167,7 @@ public class UploadTopicServlet extends HttpServlet {
 		List<Program> programs = new ArrayList<>();
 		Connection con = null;
 		try {
-			con = DbUtils.getInstance().getConnection();
+			con = DbUtils.getConnection();
 			if (con == null) {
 				return null;
 			}
@@ -197,7 +197,7 @@ public class UploadTopicServlet extends HttpServlet {
 		} catch(SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DbUtils.getInstance().releaseConnection(con);
+			DbUtils.releaseConnection(con);
 		}
 		return programs;
 	}
@@ -243,7 +243,7 @@ public class UploadTopicServlet extends HttpServlet {
 		try {
 			String query = "select * from person where email=?;";
 			//creating connection with the database
-			con = DbUtils.getInstance().getConnection();
+			con = DbUtils.getConnection();
 			if (con == null) {
 				return false;
 			}
@@ -256,7 +256,7 @@ public class UploadTopicServlet extends HttpServlet {
 		catch(SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DbUtils.getInstance().releaseConnection(con);
+			DbUtils.releaseConnection(con);
 		}
 		return st;      
 	}
@@ -267,7 +267,7 @@ public class UploadTopicServlet extends HttpServlet {
 		try {
 			String query = "select * from internship where title=?;";
 			//creating connection with the database
-			con = DbUtils.getInstance().getConnection();
+			con = DbUtils.getConnection();
 			if (con == null) {
 				return false;
 			}
@@ -279,7 +279,7 @@ public class UploadTopicServlet extends HttpServlet {
 		} catch(SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DbUtils.getInstance().releaseConnection(con);
+			DbUtils.releaseConnection(con);
 		}
 		return st;
 	}

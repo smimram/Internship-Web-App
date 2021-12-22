@@ -37,7 +37,7 @@ public class DownloadTopicServlet extends HttpServlet {
 		String returnFileName = "file_not_found.jsp";
 		Connection con = null;
 		try {
-			con = DbUtils.getInstance().getConnection();
+			con = DbUtils.getConnection();
 			if (con == null) {
 				response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			}
@@ -70,7 +70,7 @@ public class DownloadTopicServlet extends HttpServlet {
 		} catch(SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DbUtils.getInstance().releaseConnection(con);
+			DbUtils.releaseConnection(con);
 		}
 
 		 request.getRequestDispatcher(returnFileName).forward(request, response);

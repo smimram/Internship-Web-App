@@ -81,7 +81,7 @@ public class UpdatePersonDefenseServlet extends HttpServlet {
 	private void setReferent(int referentId, int defenseId, HttpServletResponse response) throws IOException {
 		Connection con = null;
 		try {
-			con = DbUtils.getInstance().getConnection();
+			con = DbUtils.getConnection();
 			if (con == null) {
 				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			}
@@ -100,7 +100,7 @@ public class UpdatePersonDefenseServlet extends HttpServlet {
 			// query errors
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		} finally {
-			DbUtils.getInstance().releaseConnection(con);
+			DbUtils.releaseConnection(con);
 		}
 		response.setStatus( 200 );
 	}
@@ -108,7 +108,7 @@ public class UpdatePersonDefenseServlet extends HttpServlet {
 	private void setStudent(int studentId, int defenseId, HttpServletResponse response) throws IOException {
 		Connection con = null;
 		try {
-			con = DbUtils.getInstance().getConnection();
+			con = DbUtils.getConnection();
 			if (con == null) {
 				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			}
@@ -127,7 +127,7 @@ public class UpdatePersonDefenseServlet extends HttpServlet {
 			// query errors
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		} finally {
-			DbUtils.getInstance().releaseConnection(con);
+			DbUtils.releaseConnection(con);
 		}
 		response.setStatus( 200 );
 	}
@@ -135,7 +135,7 @@ public class UpdatePersonDefenseServlet extends HttpServlet {
 	private void setJury2(int jury2Id, int defenseId, HttpServletResponse response) throws IOException {
 		Connection con = null;
 		try {
-			con = DbUtils.getInstance().getConnection();
+			con = DbUtils.getConnection();
 			if (con == null) {
 				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			}
@@ -154,7 +154,7 @@ public class UpdatePersonDefenseServlet extends HttpServlet {
 			// query errors
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		} finally {
-			DbUtils.getInstance().releaseConnection(con);
+			DbUtils.releaseConnection(con);
 		}
 		response.setStatus( 200 );
 	}
