@@ -39,35 +39,27 @@ public class UnassignStudentSubjectServlet extends HttpServlet {
 			if (role.equals("Admin") || role.equals("Professor")) {
 				int studentId = Integer.parseInt(request.getParameter("studentId"));
 				int subjectId = Integer.parseInt(request.getParameter("subjectId"));
-				Connection con = null;
-				try {
-					con = DbUtils.getInstance().getConnection();
+				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
 										
 					// update user valid, set isolation level SERIALIZABLE
-					String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-							"DELETE FROM person_internship WHERE internship_id=? AND person_id=?;\r\n"
-							+ "COMMIT TRANSACTION;";
-					PreparedStatement preparedStatement = con.prepareStatement(query);
-					preparedStatement.setInt(1, subjectId);
-					preparedStatement.setInt(2, studentId);
-					preparedStatement.executeUpdate();
+					String query ="DELETE FROM person_internship WHERE internship_id=? AND person_id=?";
+					try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+            preparedStatement.setInt(1, subjectId);
+            preparedStatement.setInt(2, studentId);
+            preparedStatement.executeUpdate();
+          }
 					
-					query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-							"UPDATE internship SET is_taken = FALSE "
-							+ "WHERE id=?;\r\n"
-							+ "COMMIT TRANSACTION;";
-					preparedStatement = con.prepareStatement(query);
-					preparedStatement.setInt(1, subjectId);
-					preparedStatement.executeUpdate();
-
+					query = "UPDATE internship SET is_taken = FALSE WHERE id=?";
+					try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+            preparedStatement.setInt(1, subjectId);
+            preparedStatement.executeUpdate();
+          }
 					
 				} catch(SQLException e) {
 					e.printStackTrace();
-				} finally {
-					DbUtils.getInstance().releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );

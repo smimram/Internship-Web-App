@@ -57,52 +57,49 @@ public class CreateDefenseServlet extends HttpServlet {
 					jury2Id = Integer.parseInt(request.getParameter("jury2Id"));
 				}
 
-				Connection con = null;
-				try {
-					con = DbUtils.getInstance().getConnection();
+				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
-					String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-							"insert into defense(date, time, referent_id, jury2_id, student_id)\r\n" +
-							"values (?,?,?,?,?);\r\n" +
-							"COMMIT TRANSACTION;";
-					PreparedStatement ps = con.prepareStatement(query);
-					if(defenseDate == null) {
-						ps.setNull(1, Types.DATE);
-					} else {
-						ps.setDate(1, Date.valueOf(defenseDate));
-					}
-					if(defenseTime == null) {
-						ps.setNull(2,Types.TIME);
-					} else {
-						ps.setTime(2, Time.valueOf(defenseTime));
-					}
-					if(referentId == -1) {
-						ps.setNull(3, Types.INTEGER);
-					} else {
-						ps.setInt(3, referentId);
-					}
-					if(jury2Id == -1) {
-						ps.setNull(4, Types.INTEGER);
-					} else {
-						ps.setInt(4, jury2Id);
-					}
-					if(studentId == -1) {
-						ps.setNull(5, Types.INTEGER);
-					} else {
-						ps.setInt(5, studentId);
-					}
-					ps.executeUpdate();
 
-					
+					String query =
+							"insert into defense(date, time, referent_id, jury2_id, student_id)\r\n" +
+							"values (?,?,?,?,?)";
+
+					try (PreparedStatement ps = con.prepareStatement(query)) {
+            if(defenseDate == null) {
+              ps.setNull(1, Types.DATE);
+            } else {
+              ps.setDate(1, Date.valueOf(defenseDate));
+            }
+            if(defenseTime == null) {
+              ps.setNull(2,Types.TIME);
+            } else {
+              ps.setTime(2, Time.valueOf(defenseTime));
+            }
+            if(referentId == -1) {
+              ps.setNull(3, Types.INTEGER);
+            } else {
+              ps.setInt(3, referentId);
+            }
+            if(jury2Id == -1) {
+              ps.setNull(4, Types.INTEGER);
+            } else {
+              ps.setInt(4, jury2Id);
+            }
+            if(studentId == -1) {
+              ps.setNull(5, Types.INTEGER);
+            } else {
+              ps.setInt(5, studentId);
+            }
+            ps.executeUpdate();
+          }
+
 				} catch(SQLException e) {
 					e.printStackTrace();
 					// db error
 					response.sendError(HttpServletResponse.SC_FORBIDDEN);
-				} finally {
-					DbUtils.getInstance().releaseConnection(con);
-				}
+        }
 				
 				response.setStatus( 200 );
 			}else {

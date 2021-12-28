@@ -36,9 +36,7 @@ public class StudentManagementServlet extends HttpServlet {
 				List<Program> programs = new ArrayList<>();
 				
 				//======================== DATA LOADING PART ========================
-				Connection con = null;
-				try {
-					con = DbUtils.getInstance().getConnection();
+				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
@@ -47,12 +45,15 @@ public class StudentManagementServlet extends HttpServlet {
 					String query = "SELECT * " +
 							"FROM program " +
 							"ORDER BY year, name";
-					PreparedStatement ps0 = con.prepareStatement(query);
-					ResultSet rs0 = ps0.executeQuery();
-					while(rs0.next()) {
-						Program p = new Program(rs0.getInt(1), rs0.getString(2), rs0.getString(3));
-						programs.add(p);
-					}
+					try (
+               PreparedStatement ps0 = con.prepareStatement(query);
+               ResultSet rs0 = ps0.executeQuery();
+          ) {
+            while(rs0.next()) {
+              Program p = new Program(rs0.getInt(1), rs0.getString(2), rs0.getString(3));
+              programs.add(p);
+            }
+          }
 
 					// get students for each program
 					for(Program p : programs) {
@@ -63,18 +64,18 @@ public class StudentManagementServlet extends HttpServlet {
 								"INNER JOIN person_program pp ON pp.person_id = p.id " +
 								"WHERE pp.program_id = ?"+
 								"ORDER BY p.name";
-						ps0 = con.prepareStatement(query);
-						ps0.setInt(1, Integer.parseInt(p.getId()));
-						rs0 = ps0.executeQuery();
-						while(rs0.next()) {
-							Person student = new Person(rs0.getString(1), rs0.getInt(2), rs0.getString(3), rs0.getBoolean(4), rs0.getString(5));
-							p.addStudent(student);
-						}
+						try (PreparedStatement ps0 = con.prepareStatement(query)) {
+              ps0.setInt(1, Integer.parseInt(p.getId()));
+              try (ResultSet rs0 = ps0.executeQuery()) {
+                while(rs0.next()) {
+                  Person student = new Person(rs0.getString(1), rs0.getInt(2), rs0.getString(3), rs0.getBoolean(4), rs0.getString(5));
+                  p.addStudent(student);
+                }
+              }
+            }
 					}
 				} catch(SQLException e) {
 					e.printStackTrace();
-				} finally {
-					DbUtils.getInstance().releaseConnection(con);
 				}
 				
 				request.setAttribute("programs", programs);

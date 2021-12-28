@@ -64,11 +64,9 @@ public class UploadTopicServlet extends HttpServlet {
 			int program_id = Integer.parseInt(program_id_string);
 			int category_id = Integer.parseInt(category_id_string);
 			boolean confidentialSubject = Objects.equals(confidentiality, "on"); // the checkbox is checked
-			Connection con = null;
-			try {
+			try (Connection con = DbUtils.getConnection()) {
 				int supervisor_id;
 				
-				con = DbUtils.getInstance().getConnection();
 				if (con == null) {
 					response.sendError(HttpServletResponse.SC_FORBIDDEN);
 				}
@@ -78,75 +76,79 @@ public class UploadTopicServlet extends HttpServlet {
 					String concatName = lastName+", "+firstName;
 					String query1 = "insert into person(name, email, creation_date, valid, password)" + 
 							" values (?, ?, ?, true, crypt(?, gen_salt('bf'))) ;";
-					PreparedStatement ps1 = con.prepareStatement(query1);
-					ps1.setString(1, concatName);
-					ps1.setString(2, email);
-					ps1.setDate(3, Date.valueOf(java.time.LocalDate.now()));
-					ps1.setString(4, defaultPass);
-					ps1.executeUpdate();
-					
-					
+
+					try (PreparedStatement ps1 = con.prepareStatement(query1)) {
+            ps1.setString(1, concatName);
+            ps1.setString(2, email);
+            ps1.setDate(3, Date.valueOf(java.time.LocalDate.now()));
+            ps1.setString(4, defaultPass);
+            ps1.executeUpdate();
+          }
+
 					String query2 = "select id from person where email =? ;";
-					PreparedStatement ps2 = con.prepareStatement(query2);
-					ps2.setString(1, email);
-					ResultSet rs2 = ps2.executeQuery();
-					rs2.next();
-					supervisor_id = rs2.getInt("id");
-					
+					try (PreparedStatement ps2 = con.prepareStatement(query2)) {
+            ps2.setString(1, email);
+            try (ResultSet rs2 = ps2.executeQuery()) {
+              rs2.next();
+              supervisor_id = rs2.getInt("id");
+            }
+          }
 					
 					String query3 = "insert into person_roles(role_id, person_id) values (4, ?);"; //'proponent' id=4
-					PreparedStatement ps3 = con.prepareStatement(query3);
-					ps3.setInt(1, supervisor_id);
-					ps3.executeUpdate();
+					try (PreparedStatement ps3 = con.prepareStatement(query3)) {
+            ps3.setInt(1, supervisor_id);
+            ps3.executeUpdate();
+          }
 				}
 				
 				String query4 = "select id from person where email =? ;";
-				PreparedStatement ps4 =  con.prepareStatement(query4);
-				ps4.setString(1, email);
-				ResultSet rs4 = ps4.executeQuery();
-				rs4.next();
-				supervisor_id = rs4.getInt("id");
-				
+				try (PreparedStatement ps4 =  con.prepareStatement(query4)) {
+          ps4.setString(1, email);
+          try (ResultSet rs4 = ps4.executeQuery()) {
+            rs4.next();
+            supervisor_id = rs4.getInt("id");
+          }
+        }
 				
 				String query5 = "insert into internship(title, creation_date, content, supervisor_id, scientific_validated, administr_validated, is_taken, program_id, is_confidential)" +
 						" values (?, ?, ?, ?, false, false, false, ?, ?) ;";
 				
-				PreparedStatement ps5 = con.prepareStatement(query5);
 				InputStream inputStream = uploadFile.getInputStream();
-		        if (inputStream != null) {
-		        	ps5.setString(1, topicTitle);
-					ps5.setDate(2, Date.valueOf(java.time.LocalDate.now()));
-	                ps5.setBinaryStream(3, inputStream);
-	                ps5.setInt(4, supervisor_id);
-	                ps5.setInt(5, program_id);
-					ps5.setBoolean(6, confidentialSubject);
-	                int row = ps5.executeUpdate();
-	                if (row <= 0) {
-	                    System.out.println("ERROR: File was not uploaded and saved into database");
-	                }
 
+        if (inputStream != null) {
+          try (PreparedStatement ps5 = con.prepareStatement(query5)) {
+            ps5.setString(1, topicTitle);
+            ps5.setDate(2, Date.valueOf(java.time.LocalDate.now()));
+            ps5.setBinaryStream(3, inputStream);
+            ps5.setInt(4, supervisor_id);
+            ps5.setInt(5, program_id);
+            ps5.setBoolean(6, confidentialSubject);
+            int row = ps5.executeUpdate();
+            if (row <= 0) {
+              System.out.println("ERROR: File was not uploaded and saved into database");
+            }
+          }
 					
 					String query6 = "select id from internship where title =? ;";
-					PreparedStatement ps6 = con.prepareStatement(query6);
-					ps6.setString(1, topicTitle);
-					ResultSet rs6 = ps6.executeQuery();
-					rs6.next();
-					int internship_id = rs6.getInt("id");
-					
-					
-					String query7 = "insert into internship_category(internship_id, category_id)" + 
-							" values (?, ?) ;";
-					PreparedStatement ps7 = con.prepareStatement(query7);
-					ps7.setInt(1, internship_id);
-					ps7.setInt(2, category_id);
-					ps7.executeUpdate();
-	            }
+					try (PreparedStatement ps6 = con.prepareStatement(query6)) {
+            ps6.setString(1, topicTitle);
+            try (ResultSet rs6 = ps6.executeQuery()) {
+              rs6.next();
+              int internship_id = rs6.getInt("id");
 
+              String query7 = "insert into internship_category(internship_id, category_id)" + 
+                " values (?, ?) ;";
+              try (PreparedStatement ps7 = con.prepareStatement(query7)) {
+                ps7.setInt(1, internship_id);
+                ps7.setInt(2, category_id);
+                ps7.executeUpdate();
+              }
+            }
+          }
+        }
 			}
 			catch(SQLException e) {
 				e.printStackTrace();
-			} finally {
-				DbUtils.getInstance().releaseConnection(con);
 			}
 			request.setAttribute("topicTitle", topicTitle);
 			request.getRequestDispatcher("upload_complete.jsp").forward(request, response);
@@ -165,39 +167,40 @@ public class UploadTopicServlet extends HttpServlet {
 	
 	private List<Program> loadData() {
 		List<Program> programs = new ArrayList<>();
-		Connection con = null;
-		try {
-			con = DbUtils.getInstance().getConnection();
+		try (Connection con = DbUtils.getConnection()) {
 			if (con == null) {
 				return null;
 			}
 			
 			String query1 = "SELECT DISTINCT id, name, year FROM program;";
-			PreparedStatement ps1 = con.prepareStatement(query1);
-			ResultSet rs1 = ps1.executeQuery();
-			while(rs1.next()) {
-				Program p = new Program(rs1.getInt("id"), rs1.getString("name"), rs1.getString("year"));
-				programs.add(p);
-			}
+			try (
+           PreparedStatement ps1 = con.prepareStatement(query1);
+           ResultSet rs1 = ps1.executeQuery();
+      ) {
+        while(rs1.next()) {
+          Program p = new Program(rs1.getInt("id"), rs1.getString("name"), rs1.getString("year"));
+          programs.add(p);
+        }
+      }
 
 			for (Program program : programs) {
 				String query = "SELECT DISTINCT c.description AS desc, c.id as id \n" +
 						"FROM categories c\n" +
 						"INNER JOIN program_category pc ON pc.cat_id = c.id\n" +
 						"WHERE pc.program_id = ? ;";
-				PreparedStatement stmt = con.prepareStatement(query);
-				stmt.setInt(1, Integer.parseInt(program.getId()));
-				ResultSet rs = stmt.executeQuery();
-				while (rs.next()) {
-					Category c = new Category(rs.getString("desc"), rs.getInt("id"));
-					program.addCategory(c);
-				}
+				try (PreparedStatement stmt = con.prepareStatement(query)) {
+          stmt.setInt(1, Integer.parseInt(program.getId()));
+          try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+              Category c = new Category(rs.getString("desc"), rs.getInt("id"));
+              program.addCategory(c);
+            }
+          }
+        }
 			}
 
 		} catch(SQLException e) {
 			e.printStackTrace();
-		} finally {
-			DbUtils.getInstance().releaseConnection(con);
 		}
 		return programs;
 	}
@@ -239,47 +242,44 @@ public class UploadTopicServlet extends HttpServlet {
 	
 	private boolean checkEmail(String email) {
 		boolean st = false;
-		Connection con = null;
-		try {
-			String query = "select * from person where email=?;";
-			//creating connection with the database
-			con = DbUtils.getInstance().getConnection();
+		try (Connection con = DbUtils.getConnection()) {
 			if (con == null) {
 				return false;
 			}
-			PreparedStatement ps = con.prepareStatement(query);
-			ps.setString(1, email);
-			ResultSet rs = ps.executeQuery();
-			st = rs.next();
 
+			String query = "select * from person where email=?;";
+
+			try (PreparedStatement ps = con.prepareStatement(query)) {
+        ps.setString(1, email);
+        try (ResultSet rs = ps.executeQuery()) {
+          st = rs.next();
+        }
+      }
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
-		} finally {
-			DbUtils.getInstance().releaseConnection(con);
 		}
 		return st;      
 	}
 	
 	private boolean checkTitle(String topicTitle) {
 		boolean st = false;
-		Connection con = null;
-		try {
-			String query = "select * from internship where title=?;";
-			//creating connection with the database
-			con = DbUtils.getInstance().getConnection();
+		try (Connection con = DbUtils.getConnection()) {
 			if (con == null) {
 				return false;
 			}
-			PreparedStatement ps = con.prepareStatement(query);
-			ps.setString(1, topicTitle);
-			ResultSet rs = ps.executeQuery();
-			st = rs.next();
 
+			String query = "select * from internship where title=?;";
+
+			try (PreparedStatement ps = con.prepareStatement(query)) {
+        ps.setString(1, topicTitle);
+        try (ResultSet rs = ps.executeQuery()) {
+          st = rs.next();
+        }
+      }
+          
 		} catch(SQLException e) {
 			e.printStackTrace();
-		} finally {
-			DbUtils.getInstance().releaseConnection(con);
 		}
 		return st;
 	}

@@ -37,28 +37,22 @@ public class UpdateSubjectReportServlet extends HttpServlet {
 			if (role.equals("Admin") || role.equals("Professor")) {
 				Part uploadFiche = request.getPart("uploadReport");
 				int subjectId = Integer.parseInt(request.getParameter("subjectId"));
-				Connection con = null;
-				try {
-					con = DbUtils.getInstance().getConnection();
+				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
 					
 					// update user valid, set isolation level SERIALIZABLE
-					String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-							"UPDATE internship SET report = ?\r\n" +
-							"WHERE id = ?;\r\n" + 
-							"COMMIT TRANSACTION;"; // TODO NELLY: add timestamp
-					PreparedStatement ps = con.prepareStatement(query);
-					InputStream inputStream = uploadFiche.getInputStream();
-					ps.setBinaryStream(1, inputStream);
-					ps.setInt(2, subjectId);
-					ps.executeUpdate();
+					String query = "UPDATE internship SET report = ? WHERE id = ?";
+					try (PreparedStatement ps = con.prepareStatement(query)) {
+            InputStream inputStream = uploadFiche.getInputStream();
+            ps.setBinaryStream(1, inputStream);
+            ps.setInt(2, subjectId);
+            ps.executeUpdate();
+          }
 					
 				} catch(SQLException e) {
 					e.printStackTrace();
-				} finally {
-					DbUtils.getInstance().releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );

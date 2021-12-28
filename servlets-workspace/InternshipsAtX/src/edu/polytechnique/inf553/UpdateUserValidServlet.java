@@ -33,28 +33,21 @@ public class UpdateUserValidServlet extends HttpServlet {
 			if (role.equals("Admin")) {
 				boolean valid = Boolean.parseBoolean(request.getParameter("valid"));
 				int pid = Integer.parseInt(request.getParameter("pid"));
-				Connection con = null;
-				try {
-					con = DbUtils.getInstance().getConnection();
+				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
 					
 					// update user valid, set isolation level SERIALIZABLE
-					String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-							"UPDATE person SET valid = ?\r\n" + 
-							"WHERE id = ?;\r\n" + 
-							"COMMIT TRANSACTION;";
-					PreparedStatement ps = con.prepareStatement(query);
-					ps.setBoolean(1, valid);
-					ps.setInt(2, pid);
-					ps.executeUpdate();
-
+					String query = "UPDATE person SET valid = ? WHERE id = ?";
+					try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setBoolean(1, valid);
+            ps.setInt(2, pid);
+            ps.executeUpdate();
+          }
 					
 				} catch(SQLException e) {
 					e.printStackTrace();
-				} finally {
-					DbUtils.getInstance().releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );

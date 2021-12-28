@@ -44,9 +44,7 @@ public class UpdateSubjectCategoryServlet extends HttpServlet {
 				int subjectId = Integer.parseInt(request.getParameter("subjectId"));
 				int categoryId = Integer.parseInt(request.getParameter("categoryId"));
 				boolean addCategory = Boolean.parseBoolean(request.getParameter("select"));
-				Connection con = null;
-				try {
-					con = DbUtils.getInstance().getConnection();
+				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
@@ -54,29 +52,21 @@ public class UpdateSubjectCategoryServlet extends HttpServlet {
 					// update user program, set isolation level SERIALIZABLE
 					if (addCategory) {
 						// add program
-						query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-								"insert into internship_category(internship_id, category_id)\r\n" + 
-								"values (?,?);\r\n" + 
-								"COMMIT TRANSACTION;";
-					}else {
+						query = "insert into internship_category(internship_id, category_id) values (?,?)";
+					} else {
 						// delete program
-						query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-								"DELETE FROM internship_category\r\n" + 
-								"  WHERE internship_id = ? AND category_id = ?;\r\n" + 
-								"COMMIT TRANSACTION;";
+						query = "DELETE FROM internship_category WHERE internship_id = ? AND category_id = ?";
 					}
-					PreparedStatement ps = con.prepareStatement(query);
-					ps.setInt(1, subjectId);
-					ps.setInt(2, categoryId);
-					ps.executeUpdate();
+					try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, subjectId);
+            ps.setInt(2, categoryId);
+            ps.executeUpdate();
+          }
 
-					
 				} catch(SQLException e) {
 					e.printStackTrace();
 					// query errors
 					response.sendError(HttpServletResponse.SC_FORBIDDEN);
-				} finally {
-					DbUtils.getInstance().releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );

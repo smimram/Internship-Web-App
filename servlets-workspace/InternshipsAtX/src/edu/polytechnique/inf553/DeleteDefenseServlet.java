@@ -38,27 +38,21 @@ public class DeleteDefenseServlet extends HttpServlet {
 			String role = user.getRole();
 			if (role.equals("Admin") || role.equals("Assistant") || role.equals("Professor")) {
 				int defenseId = Integer.parseInt(request.getParameter("defenseId"));
-				Connection con = null;
-				try {
-					con = DbUtils.getInstance().getConnection();
+
+				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
-					String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-							"DELETE FROM defense \r\n" +
-							"WHERE id = ?;\r\n" + 
-							"COMMIT TRANSACTION;";
-					PreparedStatement ps = con.prepareStatement(query);
-					ps.setInt(1, defenseId);
-					ps.executeUpdate();
-
+					String query = "DELETE FROM defense WHERE id = ?";
+					try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, defenseId);
+            ps.executeUpdate();
+          }
 					
 				} catch(SQLException e) {
 					e.printStackTrace();
 					// db error
 					response.sendError(HttpServletResponse.SC_FORBIDDEN);
-				} finally {
-					DbUtils.getInstance().releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );

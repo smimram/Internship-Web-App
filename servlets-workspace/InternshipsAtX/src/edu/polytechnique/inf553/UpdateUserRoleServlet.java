@@ -37,28 +37,21 @@ public class UpdateUserRoleServlet extends HttpServlet {
 			if (role.equals("Admin")) {
 				int rid = Integer.parseInt(request.getParameter("rid"));
 				int pid = Integer.parseInt(request.getParameter("pid"));
-				Connection con = null;
-				try {
-					con = DbUtils.getInstance().getConnection();
+				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
 					
 					// update user role, set isolation level SERIALIZABLE
-					String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-							"UPDATE person_roles SET role_id = ?\r\n" + 
-							"WHERE person_id = ?;\r\n" + 
-							"COMMIT TRANSACTION;";
-					PreparedStatement ps = con.prepareStatement(query);
-					ps.setInt(1, rid);
-					ps.setInt(2, pid);
-					ps.executeUpdate();
-
+					String query = "UPDATE person_roles SET role_id = ? WHERE person_id = ?";
+					try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, rid);
+            ps.setInt(2, pid);
+            ps.executeUpdate();
+          }
 					
 				} catch(SQLException e) {
 					e.printStackTrace();
-				} finally {
-					DbUtils.getInstance().releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );

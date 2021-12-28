@@ -35,9 +35,7 @@ public class DownloadReportServlet extends HttpServlet {
 		int internshipId = Integer.parseInt(request.getParameter("internshipId"));
 		String returnFileName = "file_not_found.jsp";
 		
-		Connection con = null;
-		try {
-			con = DbUtils.getInstance().getConnection();
+		try (Connection con = DbUtils.getConnection()) {
 			if (con == null) {
 				response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			}
@@ -45,34 +43,34 @@ public class DownloadReportServlet extends HttpServlet {
 			String query = "SELECT report, title " +
 						   "FROM internship " +
 						   "WHERE internship.id = ? AND report IS NOT NULL;";
-			PreparedStatement ps = con.prepareStatement(query);
-			ps.setInt(1, internshipId);
-			ResultSet rs = ps.executeQuery();
-			if(rs.next()) {
-				returnFileName = "download_complete_report.jsp";
-				InputStream inputStream = rs.getBinaryStream("report");
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                byte[] buffer = new byte[BUFFER_SIZE];
-                int bytesRead = -1;
+			try (PreparedStatement ps = con.prepareStatement(query)) {
+        ps.setInt(1, internshipId);
+        try (ResultSet rs = ps.executeQuery()) {
+          if(rs.next()) {
+            returnFileName = "download_complete_report.jsp";
+            InputStream inputStream = rs.getBinaryStream("report");
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            byte[] buffer = new byte[BUFFER_SIZE];
+            int bytesRead = -1;
                  
-                while ((bytesRead = inputStream.read(buffer)) != -1) {
-                    outputStream.write(buffer, 0, bytesRead);                  
-                }
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+              outputStream.write(buffer, 0, bytesRead);                  
+            }
                  
-                byte[] contentBytes = outputStream.toByteArray();
-                String encodedContent =  Base64.getEncoder().encodeToString(contentBytes);
+            byte[] contentBytes = outputStream.toByteArray();
+            String encodedContent =  Base64.getEncoder().encodeToString(contentBytes);
                 
-                inputStream.close();
-                outputStream.close();
+            inputStream.close();
+            outputStream.close();
 
-                request.setAttribute("internshipId", internshipId);
-                request.setAttribute("subjectTitle", rs.getString("title"));
-                request.setAttribute("encodedContent", encodedContent);
+            request.setAttribute("internshipId", internshipId);
+            request.setAttribute("subjectTitle", rs.getString("title"));
+            request.setAttribute("encodedContent", encodedContent);
+          }
+        }
 			}
 		} catch(SQLException e) {
 			e.printStackTrace();
-		} finally {
-			DbUtils.getInstance().releaseConnection(con);
 		}
 
 		request.getRequestDispatcher(returnFileName).forward(request, response);

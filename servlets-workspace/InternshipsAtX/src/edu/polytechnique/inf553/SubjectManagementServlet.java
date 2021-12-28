@@ -81,9 +81,7 @@ public class SubjectManagementServlet extends HttpServlet {
 	}
 	
 	private List<Subject> getSubjects(String orderByColumn, String orderBySort) {
-		Connection con = null;
-		try {
-			con = DbUtils.getInstance().getConnection();
+		try (Connection con = DbUtils.getConnection()) {
 			if (con == null) {
 				return null;
 			}
@@ -98,31 +96,33 @@ public class SubjectManagementServlet extends HttpServlet {
 			String query = "SELECT DISTINCT id, title, program_id, administr_validated, scientific_validated, confidential_internship, timestamp_fiche, timestamp_report, timestamp_slides "
 					+ "FROM internship "
 					+ "ORDER BY " + orderByColumn + " " + orderBySort + ";";
-			PreparedStatement preparedStatement = con.prepareStatement(query);
-			ResultSet resultSet = preparedStatement.executeQuery();
-			while(resultSet.next()) {
-				Subject subject = new Subject(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getInt("program_id"),
-						resultSet.getBoolean("administr_validated"), resultSet.getBoolean("scientific_validated"), resultSet.getBoolean("confidential_internship"));
-				subject.setDateFiche(resultSet.getTimestamp("timestamp_fiche"));
-				subject.setDateReport(resultSet.getTimestamp("timestamp_report"));
-				subject.setDateSlides(resultSet.getTimestamp("timestamp_slides"));
-				subjects.add(subject);
-			}
+			try (
+           PreparedStatement preparedStatement = con.prepareStatement(query);
+           ResultSet resultSet = preparedStatement.executeQuery();
+      ) {
+        while(resultSet.next()) {
+          Subject subject = new Subject(resultSet.getInt("id"),
+                                        resultSet.getString("title"),
+                                        resultSet.getInt("program_id"),
+                                        resultSet.getBoolean("administr_validated"),
+                                        resultSet.getBoolean("scientific_validated"),
+                                        resultSet.getBoolean("confidential_internship"));
+          subject.setDateFiche(resultSet.getTimestamp("timestamp_fiche"));
+          subject.setDateReport(resultSet.getTimestamp("timestamp_report"));
+          subject.setDateSlides(resultSet.getTimestamp("timestamp_slides"));
+          subjects.add(subject);
+        }
+      }
+      return subjects;
 
-			return subjects;
-			
-		} catch(SQLException e) {
-			e.printStackTrace();
-			return null;
-		} finally {
-			DbUtils.getInstance().releaseConnection(con);
-		}
-	}
+    } catch(SQLException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
 	
 	private List<Category> getAllCategories() {
-		Connection con = null;
-		try {
-			con = DbUtils.getInstance().getConnection();
+		try (Connection con = DbUtils.getConnection()) {
 			if (con == null) {
 				return null;
 			}
@@ -130,27 +130,26 @@ public class SubjectManagementServlet extends HttpServlet {
 			List<Category> categories = new ArrayList<>();
 			//get all the categories
 			String query = "SELECT * FROM categories ORDER BY description";
-			PreparedStatement preparedStatement = con.prepareStatement(query);
-			ResultSet resultSet = preparedStatement.executeQuery();
-			while(resultSet.next()) {
-				Category category = new Category(resultSet.getString("description"), resultSet.getInt("id"));
-				categories.add(category);
-			}
+			try (
+           PreparedStatement preparedStatement = con.prepareStatement(query);
+           ResultSet resultSet = preparedStatement.executeQuery();
+      ) {
+        while(resultSet.next()) {
+          Category category = new Category(resultSet.getString("description"), resultSet.getInt("id"));
+          categories.add(category);
+        }
+      }
 
 			return categories;
 			
 		} catch(SQLException e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			DbUtils.getInstance().releaseConnection(con);
 		}
 	}
 	
 	private List<Program> getAllPrograms() {
-		Connection con = null;
-		try {
-			con = DbUtils.getInstance().getConnection();
+		try (Connection con = DbUtils.getConnection()) {
 			if (con == null) {
 				return null;
 			}
@@ -158,27 +157,26 @@ public class SubjectManagementServlet extends HttpServlet {
 			List<Program> programs = new ArrayList<>();
 			// get all program list
 			String query = "SELECT DISTINCT id, name, year FROM program ORDER BY name;";
-			PreparedStatement preparedStatement = con.prepareStatement(query);
-			ResultSet resultSet = preparedStatement.executeQuery();
-			while(resultSet.next()) {
-				Program program = new Program(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getString("year"));
-				programs.add(program);
-			}
+			try (
+           PreparedStatement preparedStatement = con.prepareStatement(query);
+           ResultSet resultSet = preparedStatement.executeQuery();
+      ) {
+        while(resultSet.next()) {
+          Program program = new Program(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getString("year"));
+          programs.add(program);
+        }
+      }
 
 			return programs;
 			
 		} catch(SQLException e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			DbUtils.getInstance().releaseConnection(con);
 		}
 	}
 	
 	private void getCategoriesForSubjects(List<Subject> subjects) {
-		Connection con = null;
-		try {
-			con = DbUtils.getInstance().getConnection();
+		try (Connection con = DbUtils.getConnection()) {
 			if (con == null) {
 				return;
 			}
@@ -190,28 +188,25 @@ public class SubjectManagementServlet extends HttpServlet {
 						"INNER JOIN internship_category ic ON ic.category_id = c.id\n" +
 						"WHERE ic.internship_id = ? \n" +
 						"ORDER BY c.description;";
-				PreparedStatement stmt = con.prepareStatement(query);
-				stmt.setInt(1, Integer.parseInt(subject.getId()));
-				ResultSet resultSet = stmt.executeQuery();
-
-				while (resultSet.next()) {
-					Category category = new Category(resultSet.getString("desc"), resultSet.getInt("id"));
-					subject.addCategory(category);
-				}
+				try (PreparedStatement stmt = con.prepareStatement(query)) {
+          stmt.setInt(1, Integer.parseInt(subject.getId()));
+          try (ResultSet resultSet = stmt.executeQuery()) {
+            while (resultSet.next()) {
+              Category category = new Category(resultSet.getString("desc"), resultSet.getInt("id"));
+              subject.addCategory(category);
+            }
+          }
+        }
 			}
 
 			
 		} catch(SQLException e) {
 			e.printStackTrace();
-		} finally {
-			DbUtils.getInstance().releaseConnection(con);
 		}
 	}
 
 	private void getAffiliatedStudentsForSubjects(List<Subject> subjects) {
-		Connection con = null;
-		try {
-			con = DbUtils.getInstance().getConnection();
+		try (Connection con = DbUtils.getConnection()) {
 			if (con == null) {
 				return;
 			}
@@ -224,42 +219,49 @@ public class SubjectManagementServlet extends HttpServlet {
 						"LEFT JOIN person_roles pr ON pr.person_id = p.id " +
 						"LEFT JOIN role_type r ON pr.role_id = r.id " +
 						"WHERE pi.internship_id = ? ;";
-				PreparedStatement stmt = con.prepareStatement(query);
-				stmt.setInt(1, Integer.parseInt(subject.getId()));
-				ResultSet resultSet = stmt.executeQuery();
-
-				while (resultSet.next()) {
-					Person person = new Person(resultSet.getString("pName"), resultSet.getInt("pid"), resultSet.getString("role"), resultSet.getBoolean("pValid"), resultSet.getString("email"));
-					subject.setAffiliatedStudent(person);
-				}
+				try (PreparedStatement stmt = con.prepareStatement(query)) {
+          stmt.setInt(1, Integer.parseInt(subject.getId()));
+          try (ResultSet resultSet = stmt.executeQuery()) {
+            while (resultSet.next()) {
+              Person person = new Person(resultSet.getString("pName"),
+                                         resultSet.getInt("pid"),
+                                         resultSet.getString("role"),
+                                         resultSet.getBoolean("pValid"),
+                                         resultSet.getString("email"));
+              subject.setAffiliatedStudent(person);
+            }
+          }
+        }
 			}
 		} catch(SQLException e) {
 			e.printStackTrace();
-		} finally {
-			DbUtils.getInstance().releaseConnection(con);
 		}
 	}
 	
 	private List<Person> getStudents() {
-		Connection con = null;
 		Person user;
-		try {
-			
+		try (Connection con = DbUtils.getConnection()) {
+			if (con == null) {
+				return null;
+			}
 			List<Person> students = new ArrayList<>();
 			String query = "select name, role, person_id, valid, email "
 					+ "from person p inner join person_roles pr on pr.person_id = p.id inner join role_type rt on rt.id = pr.role_id "
 					+ "where rt.role = 'Student' AND valid IS TRUE;";
-			//creating connection with the database
-			con = DbUtils.getInstance().getConnection();
-			if (con == null) {
-				return null;
-			}
-			ResultSet resultSet = con.prepareStatement(query).executeQuery();
-			
-			while (resultSet.next()) {
-				user = new Person(resultSet.getString("name"), resultSet.getInt("person_id"), resultSet.getString("role"), resultSet.getBoolean("valid"), resultSet.getString("email"));
-				students.add(user);
-			}
+
+      try (
+           PreparedStatement stmt = con.prepareStatement(query);
+           ResultSet resultSet = stmt.executeQuery();
+      ) {
+        while (resultSet.next()) {
+          user = new Person(resultSet.getString("name"),
+                            resultSet.getInt("person_id"),
+                            resultSet.getString("role"),
+                            resultSet.getBoolean("valid"),
+                            resultSet.getString("email"));
+          students.add(user);
+        }
+      }
 
 			return students;
 
@@ -267,14 +269,14 @@ public class SubjectManagementServlet extends HttpServlet {
 		catch(SQLException e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			DbUtils.getInstance().releaseConnection(con);
 		}
 	}
 
 	private List<Person> getStudentsWithoutInternship() {
-		Connection con = null;
-		try {
+		try (Connection con = DbUtils.getConnection()) {
+			if (con == null) {
+				return null;
+      }
 
 			List<Person> students = new ArrayList<>();
 			String query = "select p.name AS name, p.id AS person_id, rt.role AS role, p.valid AS valid, p.email AS email "
@@ -283,25 +285,26 @@ public class SubjectManagementServlet extends HttpServlet {
 					+ "inner join role_type rt on rt.id = pr.role_id "
 					+ "where rt.role = 'Student' AND p.valid IS TRUE AND p.id NOT IN (SELECT pi.person_id FROM person_internship pi) " +
 					"ORDER BY  name;";
-			//creating connection with the database
-			con = DbUtils.getInstance().getConnection();
-			if (con == null) {
-				return null;
-			}
-			ResultSet resultSet = con.prepareStatement(query).executeQuery();
 
-			while (resultSet.next()) {
-				Person user = new Person(resultSet.getString("name"), resultSet.getInt("person_id"), resultSet.getString("role"), resultSet.getBoolean("valid"), resultSet.getString("email"));
-				students.add(user);
-			}
+      try (
+           PreparedStatement stmt = con.prepareStatement(query);
+           ResultSet resultSet = stmt.executeQuery();
+      ) {
+        while (resultSet.next()) {
+          Person user = new Person(resultSet.getString("name"),
+                                   resultSet.getInt("person_id"),
+                                   resultSet.getString("role"),
+                                   resultSet.getBoolean("valid"),
+                                   resultSet.getString("email"));
+          students.add(user);
+        }
+      }
 
 			return students;
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			DbUtils.getInstance().releaseConnection(con);
 		}
 	}
 }

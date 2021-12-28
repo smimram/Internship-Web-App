@@ -34,9 +34,7 @@ public class UpdateUserProgramServlet extends HttpServlet {
 				boolean add = Boolean.parseBoolean(request.getParameter("select"));
 				int pid = Integer.parseInt(request.getParameter("pid"));
 				int programId = Integer.parseInt(request.getParameter("programid"));
-				Connection con = null;
-				try {
-					con = DbUtils.getInstance().getConnection();
+				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
@@ -44,29 +42,21 @@ public class UpdateUserProgramServlet extends HttpServlet {
 					// update user program, set isolation level SERIALIZABLE
 					if (add) {
 						// add program
-						query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-								"insert into person_program(program_id, person_id)\r\n" + 
-								"values (?,?);\r\n" + 
-								"COMMIT TRANSACTION;";
-					}else {
+						query = "insert into person_program(program_id, person_id) values (?,?)";
+					} else {
 						// delete program
-						query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" + 
-								"DELETE FROM person_program\r\n" + 
-								"  WHERE program_id = ? AND person_id = ?;\r\n" + 
-								"COMMIT TRANSACTION;";
+						query = "DELETE FROM person_program WHERE program_id = ? AND person_id = ?";
 					}
-					PreparedStatement ps = con.prepareStatement(query);
-					ps.setInt(1, programId);
-					ps.setInt(2, pid);
-					ps.executeUpdate();
-
+					try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, programId);
+            ps.setInt(2, pid);
+            ps.executeUpdate();
+          }
 					
 				} catch(SQLException e) {
 					e.printStackTrace();
 					// query errors
 					response.sendError(HttpServletResponse.SC_FORBIDDEN);
-				} finally {
-					DbUtils.getInstance().releaseConnection(con);
 				}
 				
 				response.setStatus( 200 );
