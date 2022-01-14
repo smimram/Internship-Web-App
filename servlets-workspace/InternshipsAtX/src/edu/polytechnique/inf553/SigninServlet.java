@@ -78,12 +78,27 @@ public class SigninServlet extends HttpServlet {
           ps2.executeUpdate();
         }
 
-				if(role.equals("Student") && programStudent != -1) {
-					query2 = "INSERT INTO person_program (program_id, person_id) VALUES (" + programStudent + " AS program_id, SELECT p.id FROM person p WHERE p.email = ?)";
-					try (PreparedStatement ps = con.prepareStatement(query2)) {
-            ps.setString(1, email);
-            ps.executeUpdate();
-          }
+				if (role.equals("Student")) {
+					if (programStudent != -1) {
+						query = "SELECT p.id FROM person p WHERE p.email = ?;";
+						ps = con.prepareStatement(query);
+						ps.setString(1, email);
+						ResultSet rs = ps.executeQuery();
+						rs.next();
+						int idPerson = rs.getInt(1);
+
+						query2 = "INSERT INTO person_program (program_id, person_id) VALUES (" + programStudent + " , " + idPerson + ")";
+						ps = con.prepareStatement(query2);
+						ps.executeUpdate();
+					} else {
+						request.setAttribute("firstName", firstName);
+						request.setAttribute("lastName", lastName);
+						request.setAttribute("email", email);
+						request.setAttribute("confirmEmail", confirmEmail);
+						request.setAttribute("role", role);
+						request.setAttribute("err_message", "You have to choose a program.");
+						request.getRequestDispatcher("signin.jsp").forward(request, response);
+					}
 				}
 
 			}
