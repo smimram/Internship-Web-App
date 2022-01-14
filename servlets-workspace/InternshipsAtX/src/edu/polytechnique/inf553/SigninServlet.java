@@ -81,7 +81,7 @@ public class SigninServlet extends HttpServlet {
 				if (role.equals("Student")) {
 					if (programStudent != -1) {
 						query = "SELECT p.id FROM person p WHERE p.email = ?;";
-						ps = con.prepareStatement(query);
+						PreparedStatement ps = con.prepareStatement(query);
 						ps.setString(1, email);
 						ResultSet rs = ps.executeQuery();
 						rs.next();
