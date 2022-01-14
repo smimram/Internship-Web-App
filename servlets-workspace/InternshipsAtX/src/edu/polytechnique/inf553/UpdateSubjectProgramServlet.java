@@ -46,34 +46,63 @@ public class UpdateSubjectProgramServlet extends HttpServlet {
 				Set<Integer> subjectCategories = getCategoriesForSubject(subjectId);
 				Set<Integer> programCategories = getCategoriesForProgram(programId);
 				subjectCategories.retainAll(programCategories);
-				if (subjectCategories.size() == 0) {
-					response.setStatus( HttpServletResponse.SC_CONFLICT );
-					return;
-				}
-				
-				try (Connection con = DbUtils.getConnection()) {
-					if (con == null) {
-						response.sendError(HttpServletResponse.SC_FORBIDDEN);
+				if (subjectCategories.isEmpty()) {
++//                                     response.setStatus( HttpServletResponse.SC_CONFLICT );
++//                                     return;
++                                       try {
++                                               con = DbUtils.getInstance().getConnection();
++                                               if (con == null) {
++                                                       response.sendError(HttpServletResponse.SC_FORBIDDEN);
++                                               }
++
++                                               // TODO: update from here ---
++                                               // update user valid, set isolation level SERIALIZABLE
++                                               String query = "UPDATE internship SET program_id = ? WHERE id = ?;";
++                                               PreparedStatement ps = con.prepareStatement(query);
++                                               ps.setInt(1, programId);
++                                               ps.setInt(2, subjectId);
++                                               ps.executeUpdate();
++
++                                               query = "DELETE FROM internship_category WHERE internship_id = ?;";
++                                               ps = con.prepareStatement(query);
++                                               ps.setInt(1, subjectId);
++                                               ps.executeUpdate();
++                                               // --- to here + big if
++                                       } catch(SQLException e) {
++                                               e.printStackTrace();
++                                       } finally {
++                                               DbUtils.getInstance().releaseConnection(con);
 					}
 					
-					// update user valid, set isolation level SERIALIZABLE
-					String query = "UPDATE internship SET program_id = ? WHERE id = ?";
-					try (PreparedStatement ps = con.prepareStatement(query)) {
-            ps.setInt(1, programId);
-            ps.setInt(2, subjectId);
-            ps.executeUpdate();
-          }
-					
-				} catch(SQLException e) {
-					e.printStackTrace();
+				} else {
++                                       try {
++                                               con = DbUtils.getInstance().getConnection();
++                                               if (con == null) {
++                                                       response.sendError(HttpServletResponse.SC_FORBIDDEN);
++                                               }
++
++                                               // update user valid, set isolation level SERIALIZABLE
++                                               String query = "START TRANSACTION ISOLATION LEVEL SERIALIZABLE;\r\n" +
++                                                               "UPDATE internship SET program_id = ?\r\n" +
++                                                               "WHERE id = ?;\r\n" +
++                                                               "COMMIT TRANSACTION;";
++                                               PreparedStatement ps = con.prepareStatement(query);
++                                               ps.setInt(1, programId);
++                                               ps.setInt(2, subjectId);
++                                               ps.executeUpdate();
+					} catch(SQLException e) {
++                                               e.printStackTrace();
++                                       } finally {
++                                               DbUtils.getInstance().releaseConnection(con);
++                                       }
 				}
 				
 				response.setStatus( 200 );
-			}else {
+			} else {
 				// the user is not admin, redirect to the error page
 				response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			}
-		}else {
+		} else {
 			// the user is not logged in, redirect to the error page
 			response.setStatus( HttpServletResponse.SC_FORBIDDEN );
 		}
