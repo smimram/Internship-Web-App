@@ -46,7 +46,7 @@ public class UpdateSubjectProgramServlet extends HttpServlet {
 				
 				// update the program
 				try {
-					con = DbUtils.getInstance().getConnection();
+					con = DbUtils.getConnection();
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
@@ -60,7 +60,7 @@ public class UpdateSubjectProgramServlet extends HttpServlet {
 				} catch(SQLException e) {
 					e.printStackTrace();
 				} finally {
-					DbUtils.getInstance().releaseConnection(con);
+					DbUtils.releaseConnection(con);
 				}
 				
 				// if there are no categories in common between the program and the subject, reset the subject category
@@ -70,7 +70,7 @@ public class UpdateSubjectProgramServlet extends HttpServlet {
 				subjectCategories.retainAll(programCategories);
 				if (subjectCategories.isEmpty()) {
 					try {
-						con = DbUtils.getInstance().getConnection();
+						con = DbUtils.getConnection();
 						if (con == null) {
 							response.sendError(HttpServletResponse.SC_FORBIDDEN);
 						}
@@ -82,7 +82,7 @@ public class UpdateSubjectProgramServlet extends HttpServlet {
 					} catch(SQLException e) {
 						e.printStackTrace();
 					} finally {
-						DbUtils.getInstance().releaseConnection(con);
+						DbUtils.releaseConnection(con);
 					}
 				}
 				
