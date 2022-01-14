@@ -40,6 +40,7 @@ public class UpdateSubjectProgramServlet extends HttpServlet {
 			Person user = (Person)session.getAttribute("user");
 			String role = user.getRole();
 			if (role.equals("Admin") || role.equals("Professor")) {
+				Connection con = null;
 				int subjectId = Integer.parseInt(request.getParameter("subjectId"));
 				int programId = Integer.parseInt(request.getParameter("programId"));
 				
