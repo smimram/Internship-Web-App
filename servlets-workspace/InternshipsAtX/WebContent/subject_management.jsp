@@ -133,14 +133,18 @@ input:checked + .slider:before {
 									<div class="col col-2" data-label="Categories">
 										<!-- update the categories of a subject -->
 										<select class="mul-select" id="mul-select-category-${subject.id}" ${(user.role != "Assistant") ? '' : 'disabled'}  name="subjects[]" multiple="multiple" data-pid= "${subject.id}">
-											<c:forEach items="${categories}" var="category">
-												<option value="${category.id}">${category.name}</option>
-											</c:forEach>
+											<c:forEach items="${categoriesForPrograms}" var="entry">
++                                                                                               <c:if test="${entry.key == subject.programId}">
++                                                                                                       <c:forEach items="${categoriesForPrograms[entry.key]}" var="cat">
++                                                                                                               <option value="${cat.id}">${cat.name}</option>
++                                                                                                       </c:forEach>
++                                                                                               </c:if>
+                                                                                        </c:forEach>
 										</select>
 									</div>
 									<div class="col col-1" data-label="Program">
 										<!-- update the program of a subject -->
-										<select class="custom-select" name="role" ${(user.role != "Assistant") ? '' : 'disabled'}  onchange="updateSubjectProgram(${subject.id}, this);">
+										<select id="select-program-${subject.id}" class="custom-select" name="role" ${(user.role != "Assistant") ? '' : 'disabled'}  onchange="updateSubjectProgram(${subject.id}, this);">
 											<c:forEach items="${programs}" var="program">
 												<option value="${program.id}" ${subject.programId == program.id ? 'selected' : '' }>${program.name} - ${program.year}</option>
 											</c:forEach>
@@ -353,7 +357,7 @@ input:checked + .slider:before {
 				location.reload();
 			},
 			error: function(res){
-				alert("Failed to update subject program. Program and subject must have at least one common category!");
+				alert("Failed to update subject program.");
 				location.reload();
 			}
 		});
