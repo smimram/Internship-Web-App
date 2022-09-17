@@ -134,12 +134,12 @@ input:checked + .slider:before {
 										<!-- update the categories of a subject -->
 										<select class="mul-select" id="mul-select-category-${subject.id}" ${(user.role != "Assistant") ? '' : 'disabled'}  name="subjects[]" multiple="multiple" data-pid= "${subject.id}">
 											<c:forEach items="${categoriesForPrograms}" var="entry">
-+                                                                                               <c:if test="${entry.key == subject.programId}">
-+                                                                                                       <c:forEach items="${categoriesForPrograms[entry.key]}" var="cat">
-+                                                                                                               <option value="${cat.id}">${cat.name}</option>
-+                                                                                                       </c:forEach>
-+                                                                                               </c:if>
-                                                                                        </c:forEach>
+												<c:if test="${entry.key == subject.programId}">
+													<c:forEach items="${categoriesForPrograms[entry.key]}" var="cat">
+														<option value="${cat.id}">${cat.name}</option>
+													</c:forEach>
+												</c:if>
+											</c:forEach>
 										</select>
 									</div>
 									<div class="col col-1" data-label="Program">
@@ -195,7 +195,7 @@ input:checked + .slider:before {
 										<button type="button" class="btn btn-primary btn-sm" title="${(subject.dateFiche != null) ? subject.dateFiche : 'No file'}"><a href="/download-fiche?internshipId=${subject.id}" target="_blank" style="color: white">Download fiche de stage</a></button>
 										<button type="button" class="btn btn-primary btn-sm" title="${(subject.dateReport != null) ? subject.dateReport : 'No file'}"><a href="/download-report?internshipId=${subject.id}" target="_blank" style="color: white">Download report</a></button>
 										<button type="button" class="btn btn-primary btn-sm" title="${(subject.dateSlides != null) ? subject.dateSlides : 'No file'}"><a href="/download-slides?internshipId=${subject.id}" target="_blank" style="color: white">Download slides</a></button>
-										<button type="button" class="btn btn-danger btn-sm" onclick="deleteSubject(${subject.id}, '${subject.title}');"><i class="fas fa-trash"></li></button>
+										<button type="button" class="btn btn-danger btn-sm" onclick="deleteSubject(${subject.id}, '${subject.title}');"><i class="fas fa-trash"></i></button>
 									</div>
 								</li>
 							</c:forEach>
