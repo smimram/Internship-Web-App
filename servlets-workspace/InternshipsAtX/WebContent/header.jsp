@@ -9,7 +9,7 @@
         ${ (user.role == "Admin") ? '<li><a class="dropdown-item" href="./user-management">User management</a></li>' : '' }
         ${ (user.role == "Admin" || user.role == "Professor" || user.role == "Assistant") ? '<li><a class="dropdown-item" href="./student-management">Student management</a></li>' : '' }
         ${ (user.role == "Admin" || user.role == "Professor") ? '<li><a class="dropdown-item" href="./program-management">Program management</a></li>' : '' }
-        ${ (user.role == "Admin" || user.role == "Professor" || user.role == "Assistant") ? '<li><a class="dropdown-item" href="./subject-management">Subject management</a></li>' : '' }
+        ${ (user.role == "Admin" || user.role == "Professor" || user.role == "Assistant") ? '<li><a class="dropdown-item" href="./topic-management">Topic management</a></li>' : '' }
         ${ (user.role == "Admin" || user.role == "Professor" || user.role == "Assistant") ? '<li><a class="dropdown-item" href="./defense-management">Defense management</a></li>' : '' }
         ${ (user.role == "Student") ? '<li><a class="dropdown-item" href="./student-view">My internship</a></li>' : '' }
         <li><a class="dropdown-item" href="./LogoutServlet">Log out</a></li>

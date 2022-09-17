@@ -15,16 +15,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Servlet implementation class UpdateSubjectProgramServlet
+ * Servlet implementation class UpdateTopicProgramServlet
  */
-@WebServlet("/UpdateSubjectProgramServlet")
-public class UpdateSubjectProgramServlet extends HttpServlet {
+@WebServlet("/UpdateTopicProgramServlet")
+public class UpdateTopicProgramServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public UpdateSubjectProgramServlet() {
+    public UpdateTopicProgramServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -41,7 +41,7 @@ public class UpdateSubjectProgramServlet extends HttpServlet {
 			String role = user.getRole();
 			if (role.equals("Admin") || role.equals("Professor")) {
 				Connection con = null;
-				int subjectId = Integer.parseInt(request.getParameter("subjectId"));
+				int topicId = Integer.parseInt(request.getParameter("topicId"));
 				int programId = Integer.parseInt(request.getParameter("programId"));
 				
 				// update the program
@@ -55,7 +55,7 @@ public class UpdateSubjectProgramServlet extends HttpServlet {
 					String query = "UPDATE internship SET program_id = ? WHERE id = ?;";
 					PreparedStatement ps = con.prepareStatement(query);
 					ps.setInt(1, programId);
-					ps.setInt(2, subjectId);
+					ps.setInt(2, topicId);
 					ps.executeUpdate();
 				} catch(SQLException e) {
 					e.printStackTrace();
@@ -63,12 +63,12 @@ public class UpdateSubjectProgramServlet extends HttpServlet {
 					DbUtils.releaseConnection(con);
 				}
 				
-				// if there are no categories in common between the program and the subject, reset the subject category
+				// if there are no categories in common between the program and the topic, reset the topic category
 				
-				Set<Integer> subjectCategories = getCategoriesForSubject(subjectId);
+				Set<Integer> topicCategories = getCategoriesForTopic(topicId);
 				Set<Integer> programCategories = getCategoriesForProgram(programId);
-				subjectCategories.retainAll(programCategories);
-				if (subjectCategories.isEmpty()) {
+				topicCategories.retainAll(programCategories);
+				if (topicCategories.isEmpty()) {
 					try {
 						con = DbUtils.getConnection();
 						if (con == null) {
@@ -77,7 +77,7 @@ public class UpdateSubjectProgramServlet extends HttpServlet {
 
 						String query = "DELETE FROM internship_category WHERE internship_id = ?;";
 						PreparedStatement ps = con.prepareStatement(query);
-						ps.setInt(1, subjectId);
+						ps.setInt(1, topicId);
 						ps.executeUpdate();
 					} catch(SQLException e) {
 						e.printStackTrace();
@@ -105,7 +105,7 @@ public class UpdateSubjectProgramServlet extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	private Set<Integer> getCategoriesForSubject(int subjectId) {
+	private Set<Integer> getCategoriesForTopic(int topicId) {
 		try (Connection con = DbUtils.getConnection()) {
 			if (con == null) {
 				return null;
@@ -118,7 +118,7 @@ public class UpdateSubjectProgramServlet extends HttpServlet {
 					"ORDER BY c.id;";
 			Set<Integer> categories = new HashSet<>();
 			try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
-        preparedStatement.setInt(1, subjectId);
+        preparedStatement.setInt(1, topicId);
         try (ResultSet resultSet = preparedStatement.executeQuery()) {
           while(resultSet.next()) {
             categories.add(resultSet.getInt("id"));

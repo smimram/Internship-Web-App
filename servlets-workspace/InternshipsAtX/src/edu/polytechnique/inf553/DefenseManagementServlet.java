@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Servlet implementation class SubjectManagementServlet
+ * Servlet implementation class TopicManagementServlet
  */
 @WebServlet("/DefenseManagementServlet")
 public class DefenseManagementServlet extends HttpServlet {

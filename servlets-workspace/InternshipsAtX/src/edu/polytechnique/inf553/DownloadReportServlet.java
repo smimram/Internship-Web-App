@@ -64,7 +64,7 @@ public class DownloadReportServlet extends HttpServlet {
             outputStream.close();
 
             request.setAttribute("internshipId", internshipId);
-            request.setAttribute("subjectTitle", rs.getString("title"));
+            request.setAttribute("topicTitle", rs.getString("title"));
             request.setAttribute("encodedContent", encodedContent);
           }
         }

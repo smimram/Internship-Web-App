@@ -63,7 +63,7 @@ public class UploadTopicServlet extends HttpServlet {
 			//Conversion from String to Integer, exception impossible by construction of values in html files for each category and each program
 			int program_id = Integer.parseInt(program_id_string);
 			int category_id = Integer.parseInt(category_id_string);
-			boolean confidentialSubject = Objects.equals(confidentiality, "on"); // the checkbox is checked
+			boolean confidentialTopic = Objects.equals(confidentiality, "on"); // the checkbox is checked
 			try (Connection con = DbUtils.getConnection()) {
 				int supervisor_id;
 				
@@ -122,7 +122,7 @@ public class UploadTopicServlet extends HttpServlet {
 						ps5.setBinaryStream(3, inputStream);
 						ps5.setInt(4, supervisor_id);
 						ps5.setInt(5, program_id);
-						ps5.setBoolean(6, confidentialSubject);
+						ps5.setBoolean(6, confidentialTopic);
 						int row = ps5.executeUpdate();
 						if (row <= 0) {
 							System.out.println("ERROR: File was not uploaded and saved into database");

@@ -50,8 +50,8 @@
     <servlet-class>edu.polytechnique.inf553.ProgramManagementServlet</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>SubjectManagementPage</servlet-name>
-    <servlet-class>edu.polytechnique.inf553.SubjectManagementServlet</servlet-class>
+    <servlet-name>TopicManagementPage</servlet-name>
+    <servlet-class>edu.polytechnique.inf553.TopicManagementServlet</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>DefenseManagementPage</servlet-name>
@@ -126,8 +126,8 @@
     <url-pattern>/program-management</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>SubjectManagementPage</servlet-name>
-    <url-pattern>/subject-management</url-pattern>
+    <servlet-name>TopicManagementPage</servlet-name>
+    <url-pattern>/topic-management</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>StudentViewPage</servlet-name>
@@ -139,7 +139,7 @@
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>DownloadTopicPage</servlet-name>
-    <url-pattern>/download-subject</url-pattern>
+    <url-pattern>/download-topic</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>DownloadFichePage</servlet-name>

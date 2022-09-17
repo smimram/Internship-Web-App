@@ -2,26 +2,24 @@ package edu.polytechnique.inf553;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Servlet implementation class AssignStudentSubjectServlet
+ * Servlet implementation class UpdateTopicSciValidServlet
  */
-@WebServlet("/AssignStudentSubjectServlet")
-public class AssignStudentSubjectServlet extends HttpServlet {
+@WebServlet("/UpdateTopicReportServlet")
+public class UpdateTopicReportServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AssignStudentSubjectServlet() {
+    public UpdateTopicReportServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -36,31 +34,26 @@ public class AssignStudentSubjectServlet extends HttpServlet {
 		if(session!=null && session.getAttribute("user")!= null) {
 			Person user = (Person)session.getAttribute("user");
 			String role = user.getRole();
-			if (role.equals("Admin") || role.equals("Professor") || role.equals("Assistant")) {
-				int studentId = Integer.parseInt(request.getParameter("studentId"));
-				int subjectId = Integer.parseInt(request.getParameter("subjectId"));
-				
+			if (role.equals("Admin") || role.equals("Professor")) {
+				Part uploadFiche = request.getPart("uploadReport");
+				int topicId = Integer.parseInt(request.getParameter("topicId"));
 				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
-										
+					
 					// update user valid, set isolation level SERIALIZABLE
-					String query = "INSERT INTO person_internship (internship_id, person_id) values (?, ?)";
-					try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
-            preparedStatement.setInt(1, subjectId);
-            preparedStatement.setInt(2, studentId);
-            preparedStatement.executeUpdate();
+					String query = "UPDATE internship SET report = ? WHERE id = ?";
+					try (PreparedStatement ps = con.prepareStatement(query)) {
+            InputStream inputStream = uploadFiche.getInputStream();
+            ps.setBinaryStream(1, inputStream);
+            ps.setInt(2, topicId);
+            ps.executeUpdate();
           }
 					
-					query = "UPDATE internship SET is_taken = TRUE WHERE id=?";
-					try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
-            preparedStatement.setInt(1, subjectId);
-            preparedStatement.executeUpdate();
-          }
 				} catch(SQLException e) {
 					e.printStackTrace();
-        }
+				}
 				
 				response.setStatus( 200 );
 			}else {

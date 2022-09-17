@@ -133,7 +133,7 @@ input:checked + .slider:before {
 										  <%-- <option value="false" ${person.valid ? '' : 'selected'}>Invalid</option> --%>
 										<%-- </select> --%>
 										<label class="switch">
-											<input type="checkbox" id="select-valid-${person.id}" onchange="updateUserValid(${person.id}, this);"" ${person.valid ? 'checked' : ''}> <!-- ${(subject.adminValid && user.role != "Assistant") ? '' : 'disabled'}  -->
+											<input type="checkbox" id="select-valid-${person.id}" onchange="updateUserValid(${person.id}, this);"" ${person.valid ? 'checked' : ''}> <!-- ${(topic.adminValid && user.role != "Assistant") ? '' : 'disabled'}  -->
 											<span class="slider round"></span>
 										</label>
 									</div>

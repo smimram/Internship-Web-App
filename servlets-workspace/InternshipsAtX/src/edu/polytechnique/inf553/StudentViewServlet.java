@@ -39,7 +39,7 @@ public class StudentViewServlet extends HttpServlet {
 			if (role.equals("Student")) {
 				
 				List<Program> programs = new ArrayList<>();
-				List<SubjectsPerCategory> subjectsPerCategory = new ArrayList<>();
+				List<TopicsPerCategory> topicsPerCategory = new ArrayList<>();
 				int userId = user.getId();
 				
 				//======================== DATA LOADING PART ========================
@@ -58,12 +58,12 @@ public class StudentViewServlet extends HttpServlet {
             ps0.setInt(1, userId);
             try (ResultSet rs0 = ps0.executeQuery()) {
               while(rs0.next()) {
-                Subject userSubject = new Subject(rs0.getString("title"),
+                Topic userTopic = new Topic(rs0.getString("title"),
                                                   rs0.getInt("id"),
                                                   rs0.getString("email"),
                                                   rs0.getString("name"),
                                                   rs0.getBoolean("confidential_internship"));
-                request.setAttribute("userSubject", userSubject);
+                request.setAttribute("userTopic", userTopic);
               }
             }
           }
@@ -93,26 +93,26 @@ public class StudentViewServlet extends HttpServlet {
                 while (rs.next()) {
                   int categoryId = rs.getInt("id");
 
-                  String query_subjects = "SELECT i.id as id, i.title as title, i.confidential_internship as confidential_internship, p.email as email, p.name as name " +
+                  String query_topics = "SELECT i.id as id, i.title as title, i.confidential_internship as confidential_internship, p.email as email, p.name as name " +
                     "FROM internship i " +
                     "INNER JOIN internship_category ic ON i.id = ic.internship_id " +
                     "INNER JOIN categories c ON c.id = ic.category_id " +
                     "INNER JOIN person p on i.supervisor_id = p.id " +
                     "WHERE program_id = ? AND c.id = ? AND i.is_taken=false AND scientific_validated=true AND administr_validated=true;";
-                  try (PreparedStatement stmt2 = con.prepareStatement(query_subjects)) {
+                  try (PreparedStatement stmt2 = con.prepareStatement(query_topics)) {
                     stmt2.setInt(1, Integer.parseInt(program.getId()));
                     stmt2.setInt(2, categoryId);
-                    try (ResultSet rs_subjects = stmt2.executeQuery()) {
-                      List<Subject> subjectsOfCategory = new ArrayList<>();
-                      while (rs_subjects.next()) {
-                        Subject s = new Subject(rs_subjects.getString("title"),
-                                                rs_subjects.getInt("id"),
-                                                rs_subjects.getString("email"),
-                                                rs_subjects.getString("name"),
-                                                rs_subjects.getBoolean("confidential_internship"));
-                        subjectsOfCategory.add(s);
+                    try (ResultSet rs_topics = stmt2.executeQuery()) {
+                      List<Topic> topicsOfCategory = new ArrayList<>();
+                      while (rs_topics.next()) {
+                        Topic s = new Topic(rs_topics.getString("title"),
+                                                rs_topics.getInt("id"),
+                                                rs_topics.getString("email"),
+                                                rs_topics.getString("name"),
+                                                rs_topics.getBoolean("confidential_internship"));
+                        topicsOfCategory.add(s);
                       }
-                      subjectsPerCategory.add(new SubjectsPerCategory(Integer.parseInt(program.getId()), categoryId, subjectsOfCategory));
+                      topicsPerCategory.add(new TopicsPerCategory(Integer.parseInt(program.getId()), categoryId, topicsOfCategory));
                     }
                   }
                   Category c = new Category(rs.getString("desc"), categoryId);
@@ -128,7 +128,7 @@ public class StudentViewServlet extends HttpServlet {
 
 				
 				request.setAttribute("programs", programs);
-				request.setAttribute("subjectsPerCategory", subjectsPerCategory);
+				request.setAttribute("topicsPerCategory", topicsPerCategory);
 				request.getRequestDispatcher("student_view.jsp").forward(request, response);
 				
 			}else {

@@ -56,8 +56,8 @@
 		  			</select>
 					</div>
 
-					<div class="wrap-input100 validate-input m-b-16" data-validate="Check this if the subject is confidential">
-						<label for="confidentiality">Confidential subject: </label>
+					<div class="wrap-input100 validate-input m-b-16" data-validate="Check this if the topic is confidential">
+						<label for="confidentiality">Confidential topic: </label>
 						<label class="switch">
 							<input type="checkbox" id="confidentiality" name="confidentiality">
 							<span class="slider round"></span>

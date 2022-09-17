@@ -12,21 +12,23 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Servlet implementation class UpdateUserInfo
+ * Servlet implementation class UpdateTopicSciValidServlet
  */
-@WebServlet("/SearchSubjectServlet")
-public class SearchSubjectServlet extends HttpServlet {
+@WebServlet("/UpdateTopicSciValidServlet")
+public class UpdateTopicSciValidServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
-    public SearchSubjectServlet() {
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public UpdateTopicSciValidServlet() {
         super();
-		try {
-			Class.forName("org.postgresql.Driver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+        // TODO Auto-generated constructor stub
     }
 
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println(this.getClass().getName() + " doGet method called with path " + request.getRequestURI() + " and parameters " + request.getQueryString());
 		// session management
@@ -34,19 +36,22 @@ public class SearchSubjectServlet extends HttpServlet {
 		if(session!=null && session.getAttribute("user")!= null) {
 			Person user = (Person)session.getAttribute("user");
 			String role = user.getRole();
-			if (role.equals("Admin")) {
-				String keywords = request.getParameter("keywords");
+			if (role.equals("Admin") || role.equals("Professor")) {
+				boolean valid = Boolean.parseBoolean(request.getParameter("valid"));
+				int topicId = Integer.parseInt(request.getParameter("topicId"));
 				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
 					
-					// update user role, set isolation level SERIALIZABLE
-					String query = "UPDATE person_roles SET role_id = ? WHERE person_id = ?";
+					// update user valid, set isolation level SERIALIZABLE
+					String query = "UPDATE internship SET scientific_validated = ? WHERE id = ?";
 					try (PreparedStatement ps = con.prepareStatement(query)) {
-            ps.setString(1, keywords);
+            ps.setBoolean(1, valid);
+            ps.setInt(2, topicId);
             ps.executeUpdate();
           }
+					
 				} catch(SQLException e) {
 					e.printStackTrace();
 				}
@@ -62,7 +67,11 @@ public class SearchSubjectServlet extends HttpServlet {
 		}
 	}
 
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

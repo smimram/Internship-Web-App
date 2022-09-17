@@ -16,16 +16,16 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Servlet implementation class SubjectManagementServlet
+ * Servlet implementation class TopicManagementServlet
  */
-@WebServlet("/SubjectManagementServlet")
-public class SubjectManagementServlet extends HttpServlet {
+@WebServlet("/TopicManagementServlet")
+public class TopicManagementServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SubjectManagementServlet() {
+    public TopicManagementServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -46,9 +46,9 @@ public class SubjectManagementServlet extends HttpServlet {
 				String orderByColumn = request.getParameter("orderByColumn");
 				String orderBySort = request.getParameter("orderBySort");
 				System.out.println("orderByColumn=" + orderByColumn + " ; orderBySort=" + orderBySort);
-				List<Subject> subjects = getSubjects(orderByColumn, orderBySort);
-				getCategoriesForSubjects(subjects);
-				getAffiliatedStudentsForSubjects(subjects);
+				List<Topic> topics = getTopics(orderByColumn, orderBySort);
+				getCategoriesForTopics(topics);
+				getAffiliatedStudentsForTopics(topics);
 				List<Program> programs = getAllPrograms();
 				HashMap<String, ArrayList<Category>> categoriesForPrograms = getAllCategories(programs);
 				List<Person> students = getStudents();
@@ -58,9 +58,9 @@ public class SubjectManagementServlet extends HttpServlet {
 				request.setAttribute("studentsNoInternship", studentsWithoutInternship);
 				request.setAttribute("programs", programs);
 				request.setAttribute("categoriesForPrograms", categoriesForPrograms);
-				request.setAttribute("subjects", subjects);
-				System.out.println(subjects);
-				request.getRequestDispatcher("subject_management.jsp").forward(request, response);
+				request.setAttribute("topics", topics);
+				System.out.println(topics);
+				request.getRequestDispatcher("topic_management.jsp").forward(request, response);
 			}else {
 				// the user is not admin or professor, redirect to the error page
 				session.setAttribute("errorMessage", "Please check your user role.");
@@ -81,15 +81,15 @@ public class SubjectManagementServlet extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	private List<Subject> getSubjects(String orderByColumn, String orderBySort) {
+	private List<Topic> getTopics(String orderByColumn, String orderBySort) {
 		try (Connection con = DbUtils.getConnection()) {
 			if (con == null) {
 				return null;
 			}
 			
-			List<Subject> subjects = new ArrayList<>();
-			// get all subject list
-			System.out.println("getSubjects");
+			List<Topic> topics = new ArrayList<>();
+			// get all topic list
+			System.out.println("getTopics");
 			if(orderByColumn == null) orderByColumn="id"; // if no parameter is provided
 			if(orderBySort == null) orderBySort="ASC";
 			if(orderByColumn.startsWith("'") && orderByColumn.endsWith("'")) orderByColumn = orderByColumn.substring(1, orderByColumn.length()-1); // if the value is encapsulated into '', e.g. 'id'
@@ -102,19 +102,19 @@ public class SubjectManagementServlet extends HttpServlet {
            ResultSet resultSet = preparedStatement.executeQuery();
       ) {
         while(resultSet.next()) {
-          Subject subject = new Subject(resultSet.getInt("id"),
+          Topic topic = new Topic(resultSet.getInt("id"),
                                         resultSet.getString("title"),
                                         resultSet.getInt("program_id"),
                                         resultSet.getBoolean("administr_validated"),
                                         resultSet.getBoolean("scientific_validated"),
                                         resultSet.getBoolean("confidential_internship"));
-          subject.setDateFiche(resultSet.getTimestamp("timestamp_fiche"));
-          subject.setDateReport(resultSet.getTimestamp("timestamp_report"));
-          subject.setDateSlides(resultSet.getTimestamp("timestamp_slides"));
-          subjects.add(subject);
+          topic.setDateFiche(resultSet.getTimestamp("timestamp_fiche"));
+          topic.setDateReport(resultSet.getTimestamp("timestamp_report"));
+          topic.setDateSlides(resultSet.getTimestamp("timestamp_slides"));
+          topics.add(topic);
         }
       }
-      return subjects;
+      return topics;
 
     } catch(SQLException e) {
       e.printStackTrace();
@@ -179,25 +179,25 @@ public class SubjectManagementServlet extends HttpServlet {
 		}
 	}
 	
-	private void getCategoriesForSubjects(List<Subject> subjects) {
+	private void getCategoriesForTopics(List<Topic> topics) {
 		try (Connection con = DbUtils.getConnection()) {
 			if (con == null) {
 				return;
 			}
 			
-			// get associated categories for each subject
-			for (Subject subject : subjects) {
+			// get associated categories for each topic
+			for (Topic topic : topics) {
 				String query = "SELECT DISTINCT c.description AS desc, c.id as id \n" +
 						"FROM categories c\n" +
 						"INNER JOIN internship_category ic ON ic.category_id = c.id\n" +
 						"WHERE ic.internship_id = ? \n" +
 						"ORDER BY c.description;";
 				try (PreparedStatement stmt = con.prepareStatement(query)) {
-          stmt.setInt(1, Integer.parseInt(subject.getId()));
+          stmt.setInt(1, Integer.parseInt(topic.getId()));
           try (ResultSet resultSet = stmt.executeQuery()) {
             while (resultSet.next()) {
               Category category = new Category(resultSet.getString("desc"), resultSet.getInt("id"));
-              subject.addCategory(category);
+              topic.addCategory(category);
             }
           }
         }
@@ -209,14 +209,14 @@ public class SubjectManagementServlet extends HttpServlet {
 		}
 	}
 
-	private void getAffiliatedStudentsForSubjects(List<Subject> subjects) {
+	private void getAffiliatedStudentsForTopics(List<Topic> topics) {
 		try (Connection con = DbUtils.getConnection()) {
 			if (con == null) {
 				return;
 			}
 
-			// get associated categories for each subject
-			for (Subject subject : subjects) {
+			// get associated categories for each topic
+			for (Topic topic : topics) {
 				String query = "SELECT p.id AS pid, p.name AS pName, r.role AS role, p.valid AS pValid, p.email AS email " +
 						"FROM person p " +
 						"INNER JOIN person_internship pi ON pi.person_id = p.id " +
@@ -224,7 +224,7 @@ public class SubjectManagementServlet extends HttpServlet {
 						"LEFT JOIN role_type r ON pr.role_id = r.id " +
 						"WHERE pi.internship_id = ? ;";
 				try (PreparedStatement stmt = con.prepareStatement(query)) {
-          stmt.setInt(1, Integer.parseInt(subject.getId()));
+          stmt.setInt(1, Integer.parseInt(topic.getId()));
           try (ResultSet resultSet = stmt.executeQuery()) {
             while (resultSet.next()) {
               Person person = new Person(resultSet.getString("pName"),
@@ -232,7 +232,7 @@ public class SubjectManagementServlet extends HttpServlet {
                                          resultSet.getString("role"),
                                          resultSet.getBoolean("pValid"),
                                          resultSet.getString("email"));
-              subject.setAffiliatedStudent(person);
+              topic.setAffiliatedStudent(person);
             }
           }
         }

@@ -2,24 +2,26 @@ package edu.polytechnique.inf553;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Servlet implementation class UpdateSubjectSciValidServlet
+ * Servlet implementation class UpdateTopicAdminValidServlet
  */
-@WebServlet("/UpdateSubjectReportServlet")
-public class UpdateSubjectReportServlet extends HttpServlet {
+@WebServlet("/UpdateTopicAdminValidServlet")
+public class UpdateTopicAdminValidServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+       
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public UpdateSubjectReportServlet() {
+    public UpdateTopicAdminValidServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -34,20 +36,19 @@ public class UpdateSubjectReportServlet extends HttpServlet {
 		if(session!=null && session.getAttribute("user")!= null) {
 			Person user = (Person)session.getAttribute("user");
 			String role = user.getRole();
-			if (role.equals("Admin") || role.equals("Professor")) {
-				Part uploadFiche = request.getPart("uploadReport");
-				int subjectId = Integer.parseInt(request.getParameter("subjectId"));
+			if (role.equals("Admin") || role.equals("Assistant") || role.equals("Professor")) {
+				Boolean valid = Boolean.parseBoolean(request.getParameter("valid"));
+				int topicId = Integer.parseInt(request.getParameter("topicId"));
 				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
 					
 					// update user valid, set isolation level SERIALIZABLE
-					String query = "UPDATE internship SET report = ? WHERE id = ?";
+					String query = "UPDATE internship SET administr_validated = ? WHERE id = ?";
 					try (PreparedStatement ps = con.prepareStatement(query)) {
-            InputStream inputStream = uploadFiche.getInputStream();
-            ps.setBinaryStream(1, inputStream);
-            ps.setInt(2, subjectId);
+            ps.setBoolean(1, valid);
+            ps.setInt(2, topicId);
             ps.executeUpdate();
           }
 					

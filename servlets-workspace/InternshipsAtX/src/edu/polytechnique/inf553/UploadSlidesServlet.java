@@ -41,7 +41,7 @@ public class UploadSlidesServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("doPost called with parameter " + request.getQueryString());
 
-		int subjectId = Integer.parseInt(request.getParameter("subjectId"));
+		int topicId = Integer.parseInt(request.getParameter("topicId"));
 		int userId = Integer.parseInt(request.getParameter("userId"));
 		Part file = request.getPart("slides");
 
@@ -57,7 +57,7 @@ public class UploadSlidesServlet extends HttpServlet {
         if (inputStream != null) {
           ps.setBinaryStream(1, inputStream);
           ps.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
-          ps.setInt(3, subjectId);
+          ps.setInt(3, topicId);
           int row = ps.executeUpdate();
           if (row <= 0) {
             System.out.println("ERROR: File was not uploaded and saved into database");
@@ -68,11 +68,11 @@ public class UploadSlidesServlet extends HttpServlet {
       }
 
 			// get the internship to display it in the student view
-			request.setAttribute("userSubject", CommonInterface.getSubjectOfUSer(userId, con));
+			request.setAttribute("userTopic", CommonInterface.getTopicOfUSer(userId, con));
 			// also set the list of programs of the user as well as the categories of each program
 			List<Program> programs = CommonInterface.getProgramsOfUser(userId, con);
 			request.setAttribute("programs", programs);
-			request.setAttribute("subjectsPerCategory", CommonInterface.getSubjectsPerCategory(programs, con));
+			request.setAttribute("topicsPerCategory", CommonInterface.getTopicsPerCategory(programs, con));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

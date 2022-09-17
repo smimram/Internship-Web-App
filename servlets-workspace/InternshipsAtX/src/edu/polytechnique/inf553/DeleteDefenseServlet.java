@@ -12,7 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Servlet implementation class DeleteSubjectServlet
+ * Servlet implementation class DeleteTopicServlet
  */
 @WebServlet("/DeleteDefenseServlet")
 public class DeleteDefenseServlet extends HttpServlet {

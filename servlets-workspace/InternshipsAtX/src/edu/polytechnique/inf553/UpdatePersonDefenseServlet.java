@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 /**
- * Servlet implementation class UpdateSubjectCategoryServlet
+ * Servlet implementation class UpdateTopicCategoryServlet
  */
 @WebServlet("/UpdatePersonDefenseServlet")
 public class UpdatePersonDefenseServlet extends HttpServlet {

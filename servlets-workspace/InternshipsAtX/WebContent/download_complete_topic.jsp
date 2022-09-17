@@ -19,13 +19,13 @@
 
 					<form class="login100-form validate-form p-l-55 p-r-55 p-t-178">
 						<span class="login100-form-title">
-							<h1>Download subject of internship "${subjectTitle}"</h1>
+							<h1>Download topic of internship "${topicTitle}"</h1>
 						</span>
 					</form>
 					
 					<form>
 						<span class="subtitle" style="color:black;"> <h4> <br> <br> Did not work ? <br> 
-						<a class="subtitle" style="color:black;" href="/download-subject?internshipId=${internshipId}">Try again here</a>
+						<a class="subtitle" style="color:black;" href="/download-topic?internshipId=${internshipId}">Try again here</a>
 						 </h4> <br> <br> </span>
 					</form>
 					
@@ -36,10 +36,10 @@
 
 		<script>
 		window.onload = function() {
-			base64toPDF("${encodedContent}", "${subjectTitle}");
+			base64toPDF("${encodedContent}", "${topicTitle}");
 		}
 		
-		function base64toPDF(data, subjectTitle) {
+		function base64toPDF(data, topicTitle) {
 		    var bufferArray = base64ToArrayBuffer(data);
 		    var blobStore = new Blob([bufferArray], { type: "application/pdf" });
 		    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
@@ -50,7 +50,7 @@
 		    var link = document.createElement('a');
 		    document.body.appendChild(link);
 		    link.href = data;
-		    link.download = subjectTitle.concat(".pdf");
+		    link.download = topicTitle.concat(".pdf");
 		    link.click();
 		    window.URL.revokeObjectURL(data);
 		    link.remove();

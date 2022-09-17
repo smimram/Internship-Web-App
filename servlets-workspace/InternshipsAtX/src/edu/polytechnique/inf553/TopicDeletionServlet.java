@@ -15,16 +15,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Servlet implementation class SubjectDeletionServlet
+ * Servlet implementation class TopicDeletionServlet
  */
-@WebServlet("/SubjectDeletionServlet")
-public class SubjectDeletionServlet extends HttpServlet {
+@WebServlet("/TopicDeletionServlet")
+public class TopicDeletionServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SubjectDeletionServlet() {
+    public TopicDeletionServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -41,11 +41,11 @@ public class SubjectDeletionServlet extends HttpServlet {
 			if (role.equals("Admin") || role.equals("Assistant") || role.equals("Professor")) {
 				
 				//======================== DATA LOADING PART ========================
-				List<Subject> subjects = getSubjects();
+				List<Topic> topics = getTopics();
 				
 				request.setAttribute("role", user.getRole());
-				request.setAttribute("subjects", subjects);
-				request.getRequestDispatcher("subject_deletion.jsp").forward(request, response);
+				request.setAttribute("topics", topics);
+				request.getRequestDispatcher("topic_deletion.jsp").forward(request, response);
 			}else {
 				// the user is not admin, assistant or professor, redirect to the error page
 				session.setAttribute("errorMessage", "Please check your user role.");
@@ -66,14 +66,14 @@ public class SubjectDeletionServlet extends HttpServlet {
 		doGet(request, response);
 	}
 
-	private List<Subject> getSubjects() {
+	private List<Topic> getTopics() {
 		try (Connection con = DbUtils.getConnection()) {
 			if (con == null) {
 				return null;
 			}
 			
-			List<Subject> subjects = new ArrayList<>();
-			// get all subject list
+			List<Topic> topics = new ArrayList<>();
+			// get all topic list
 			String query = "SELECT DISTINCT id, title, program_id, administr_validated, scientific_validated, confidential_internship "
 					+ "FROM internship;";
 			try (
@@ -81,17 +81,17 @@ public class SubjectDeletionServlet extends HttpServlet {
            ResultSet resultSet = preparedStatement.executeQuery();
       ) {
         while(resultSet.next()) {
-          Subject subject = new Subject(resultSet.getInt("id"),
+          Topic topic = new Topic(resultSet.getInt("id"),
                                         resultSet.getString("title"),
                                         resultSet.getInt("program_id"),
                                         resultSet.getBoolean("administr_validated"),
                                         resultSet.getBoolean("scientific_validated"),
                                         resultSet.getBoolean("confidential_internship"));
-          subjects.add(subject);
+          topics.add(topic);
         }
       }
 
-			return subjects;
+			return topics;
 			
 		} catch(SQLException e) {
 			e.printStackTrace();

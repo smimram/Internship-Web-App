@@ -9,24 +9,25 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Servlet implementation class DeleteSubjectServlet
+ * Servlet implementation class UpdateTopicCategoryServlet
  */
-@WebServlet("/DeleteSubjectServlet")
-public class DeleteSubjectServlet extends HttpServlet {
+@WebServlet("/UpdateTopicCategoryServlet")
+public class UpdateTopicCategoryServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public DeleteSubjectServlet() {
+    public UpdateTopicCategoryServlet() {
         super();
-        // TODO Auto-generated constructor stub
+        try {
+			Class.forName("org.postgresql.Driver");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
     }
 
 	/**
@@ -39,29 +40,32 @@ public class DeleteSubjectServlet extends HttpServlet {
 		if(session!=null && session.getAttribute("user")!= null) {
 			Person user = (Person)session.getAttribute("user");
 			String role = user.getRole();
-			if (role.equals("Admin") || role.equals("Assistant") || role.equals("Professor")) {
-				int subjectId = Integer.parseInt(request.getParameter("subjectId"));
-				if (checkIsTaken(subjectId)) {
-					session.setAttribute("description", "Cannot delete subject if it is already assigned to a student!");
-					session.setAttribute("method", "doGet method of DeleteSubjectServlet");
-					session.setAttribute("userId", String.valueOf(user.getId()));
-					request.getRequestDispatcher("/ErrorPageServlet").forward(request, response);
-					//response.sendError(HttpServletResponse.SC_FORBIDDEN);
-				}
+			if (role.equals("Admin") || role.equals("Professor")  ) {
+				int topicId = Integer.parseInt(request.getParameter("topicId"));
+				int categoryId = Integer.parseInt(request.getParameter("categoryId"));
+				boolean addCategory = Boolean.parseBoolean(request.getParameter("select"));
 				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
-					String query = "DELETE FROM internship WHERE id = ?";
+					String query = null;
+					// update user program, set isolation level SERIALIZABLE
+					if (addCategory) {
+						// add program
+						query = "insert into internship_category(internship_id, category_id) values (?,?)";
+					} else {
+						// delete program
+						query = "DELETE FROM internship_category WHERE internship_id = ? AND category_id = ?";
+					}
 					try (PreparedStatement ps = con.prepareStatement(query)) {
-            ps.setInt(1, subjectId);
+            ps.setInt(1, topicId);
+            ps.setInt(2, categoryId);
             ps.executeUpdate();
           }
 
-					
 				} catch(SQLException e) {
 					e.printStackTrace();
-					// db error
+					// query errors
 					response.sendError(HttpServletResponse.SC_FORBIDDEN);
 				}
 				
@@ -82,32 +86,6 @@ public class DeleteSubjectServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
-	}
-	
-	private boolean checkIsTaken(int subjectId) {
-		boolean taken = true;
-		try (Connection con = DbUtils.getConnection()) {
-			if (con == null) {
-				return false;
-			}
-			
-			// get all subject list
-			String query = "SELECT is_taken "
-					+ "FROM internship "
-					+ "WHERE id=?;";
-			try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
-        preparedStatement.setInt(1, subjectId);
-        try (ResultSet resultSet = preparedStatement.executeQuery()) {
-          if(resultSet.next()) {
-            taken = resultSet.getBoolean("is_taken");
-          }
-        }
-      }
-			
-		} catch(SQLException e) {
-			e.printStackTrace();
-		}
-		return taken;
 	}
 
 }

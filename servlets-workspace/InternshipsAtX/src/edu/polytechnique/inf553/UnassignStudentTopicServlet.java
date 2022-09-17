@@ -12,16 +12,16 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Servlet implementation class UpdateSubjectSciValidServlet
+ * Servlet implementation class UnassignStudentTopicServlet
  */
-@WebServlet("/UpdateSubjectSciValidServlet")
-public class UpdateSubjectSciValidServlet extends HttpServlet {
+@WebServlet("/UnassignStudentTopicServlet")
+public class UnassignStudentTopicServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public UpdateSubjectSciValidServlet() {
+    public UnassignStudentTopicServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -37,19 +37,25 @@ public class UpdateSubjectSciValidServlet extends HttpServlet {
 			Person user = (Person)session.getAttribute("user");
 			String role = user.getRole();
 			if (role.equals("Admin") || role.equals("Professor")) {
-				boolean valid = Boolean.parseBoolean(request.getParameter("valid"));
-				int subjectId = Integer.parseInt(request.getParameter("subjectId"));
+				int studentId = Integer.parseInt(request.getParameter("studentId"));
+				int topicId = Integer.parseInt(request.getParameter("topicId"));
 				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
-					
+										
 					// update user valid, set isolation level SERIALIZABLE
-					String query = "UPDATE internship SET scientific_validated = ? WHERE id = ?";
-					try (PreparedStatement ps = con.prepareStatement(query)) {
-            ps.setBoolean(1, valid);
-            ps.setInt(2, subjectId);
-            ps.executeUpdate();
+					String query ="DELETE FROM person_internship WHERE internship_id=? AND person_id=?";
+					try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+            preparedStatement.setInt(1, topicId);
+            preparedStatement.setInt(2, studentId);
+            preparedStatement.executeUpdate();
+          }
+					
+					query = "UPDATE internship SET is_taken = FALSE WHERE id=?";
+					try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+            preparedStatement.setInt(1, topicId);
+            preparedStatement.executeUpdate();
           }
 					
 				} catch(SQLException e) {

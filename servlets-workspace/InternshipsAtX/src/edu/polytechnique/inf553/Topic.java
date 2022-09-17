@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Subject {
+public class Topic {
 
 	private int id;
 	private String title;
@@ -20,7 +20,7 @@ public class Subject {
 	private Timestamp dateReport;
 	private Timestamp dateSlides;
 
-	public Subject(String title, int id, String supervisorEmail, String supervisorName, int programId, boolean adminValid, boolean sciValid, boolean isConfidentialInternship) {
+	public Topic(String title, int id, String supervisorEmail, String supervisorName, int programId, boolean adminValid, boolean sciValid, boolean isConfidentialInternship) {
 		this.title = title;
 		this.id = id;
 		this.supervisorEmail = supervisorEmail;
@@ -33,7 +33,7 @@ public class Subject {
 		this.isConfidentialInternship = isConfidentialInternship;
 	}
 	
-	public Subject(int id, String title, int programId, boolean adminValid, boolean sciValid, boolean isConfidentialInternship) {
+	public Topic(int id, String title, int programId, boolean adminValid, boolean sciValid, boolean isConfidentialInternship) {
 		this.title = title;
 		this.id = id;
 		this.adminValid = adminValid;
@@ -44,7 +44,7 @@ public class Subject {
 		this.isConfidentialInternship = isConfidentialInternship;
 	}
 	
-	public Subject(String title, int id, String supervisorEmail, String supervisorName, boolean isConfidentialInternship) {
+	public Topic(String title, int id, String supervisorEmail, String supervisorName, boolean isConfidentialInternship) {
 		this.title = title;
 		this.id = id;
 		this.supervisorEmail = supervisorEmail;
@@ -112,6 +112,6 @@ public class Subject {
 
 	@Override
 	public String toString() {
-		return "Subject{" + "id=" + id + ", title='" + title + '\'' + ", dateFiche=" + dateFiche + ", dateReport=" + dateReport + ", dateSlides=" + dateSlides + '}';
+		return "Topic{" + "id=" + id + ", title='" + title + '\'' + ", dateFiche=" + dateFiche + ", dateReport=" + dateReport + ", dateSlides=" + dateSlides + '}';
 	}
 }

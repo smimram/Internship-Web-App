@@ -12,27 +12,21 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Servlet implementation class UpdateSubjectCategoryServlet
+ * Servlet implementation class UpdateUserInfo
  */
-@WebServlet("/UpdateSubjectCategoryServlet")
-public class UpdateSubjectCategoryServlet extends HttpServlet {
+@WebServlet("/SearchTopicServlet")
+public class SearchTopicServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public UpdateSubjectCategoryServlet() {
+
+    public SearchTopicServlet() {
         super();
-        try {
+		try {
 			Class.forName("org.postgresql.Driver");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println(this.getClass().getName() + " doGet method called with path " + request.getRequestURI() + " and parameters " + request.getQueryString());
 		// session management
@@ -40,33 +34,21 @@ public class UpdateSubjectCategoryServlet extends HttpServlet {
 		if(session!=null && session.getAttribute("user")!= null) {
 			Person user = (Person)session.getAttribute("user");
 			String role = user.getRole();
-			if (role.equals("Admin") || role.equals("Professor")  ) {
-				int subjectId = Integer.parseInt(request.getParameter("subjectId"));
-				int categoryId = Integer.parseInt(request.getParameter("categoryId"));
-				boolean addCategory = Boolean.parseBoolean(request.getParameter("select"));
+			if (role.equals("Admin")) {
+				String keywords = request.getParameter("keywords");
 				try (Connection con = DbUtils.getConnection()) {
 					if (con == null) {
 						response.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
-					String query = null;
-					// update user program, set isolation level SERIALIZABLE
-					if (addCategory) {
-						// add program
-						query = "insert into internship_category(internship_id, category_id) values (?,?)";
-					} else {
-						// delete program
-						query = "DELETE FROM internship_category WHERE internship_id = ? AND category_id = ?";
-					}
+					
+					// update user role, set isolation level SERIALIZABLE
+					String query = "UPDATE person_roles SET role_id = ? WHERE person_id = ?";
 					try (PreparedStatement ps = con.prepareStatement(query)) {
-            ps.setInt(1, subjectId);
-            ps.setInt(2, categoryId);
+            ps.setString(1, keywords);
             ps.executeUpdate();
           }
-
 				} catch(SQLException e) {
 					e.printStackTrace();
-					// query errors
-					response.sendError(HttpServletResponse.SC_FORBIDDEN);
 				}
 				
 				response.setStatus( 200 );
@@ -80,11 +62,7 @@ public class UpdateSubjectCategoryServlet extends HttpServlet {
 		}
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

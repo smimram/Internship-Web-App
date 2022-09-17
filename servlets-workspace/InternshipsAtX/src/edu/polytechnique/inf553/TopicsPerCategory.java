@@ -2,14 +2,14 @@ package edu.polytechnique.inf553;
 
 import java.util.List;
 
-public class SubjectsPerCategory {
+public class TopicsPerCategory {
 	
 	private int programId;
 	private int categoryId;
-	private List<Subject> subjects;
+	private List<Topic> topics;
 	
-	public SubjectsPerCategory(int programId, int categoryId, List<Subject> subjects) {
-		this.subjects = subjects;
+	public TopicsPerCategory(int programId, int categoryId, List<Topic> topics) {
+		this.topics = topics;
 		this.categoryId = categoryId;
 		this.programId = programId;
 	}
@@ -18,8 +18,8 @@ public class SubjectsPerCategory {
 		return String.valueOf(categoryId);
 	}
 	
-	public List<Subject> getSubjects() {
-		return subjects;
+	public List<Topic> getTopics() {
+		return topics;
 	}
 	
 	public String getProgramId() {
