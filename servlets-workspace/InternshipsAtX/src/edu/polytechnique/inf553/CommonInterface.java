@@ -58,24 +58,24 @@ public class CommonInterface {
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {
                         int categoryId = rs.getInt("id");
-                        String query_topics = "SELECT i.id as id, i.title as title, i.confidential_internship as confidential_internship, p.email as email, p.name as name " +
+                        String queryTopics = "SELECT i.id as id, i.title as title, i.confidential_internship as confidential_internship, p.email as email, p.name as name " +
                                 "FROM internship i " +
                                 "INNER JOIN internship_category ic ON i.id = ic.internship_id " +
                                 "INNER JOIN categories c ON c.id = ic.category_id " +
                                 "INNER JOIN person p on i.supervisor_id = p.id " +
                                 "WHERE program_id = ? AND c.id = ? AND i.is_taken=false AND scientific_validated=true AND administr_validated=true;";
 
-                        try (PreparedStatement stmt2 = con.prepareStatement(query_topics)) {
+                        try (PreparedStatement stmt2 = con.prepareStatement(queryTopics)) {
                             stmt2.setInt(1, Integer.parseInt(program.getId()));
                             stmt2.setInt(2, categoryId);
-                            try (ResultSet rs_topics = stmt2.executeQuery()) {
+                            try (ResultSet rsTopics = stmt2.executeQuery()) {
                                 List<Topic> topicsOfCategory = new ArrayList<>();
-                                while (rs_topics.next()) {
-                                    Topic s = new Topic(rs_topics.getString("title"),
-                                            rs_topics.getInt("id"),
-                                            rs_topics.getString("email"),
-                                            rs_topics.getString("name"),
-                                            rs_topics.getBoolean("confidential_internship"));
+                                while (rsTopics.next()) {
+                                    Topic s = new Topic(rsTopics.getString("title"),
+                                            rsTopics.getInt("id"),
+                                            rsTopics.getString("email"),
+                                            rsTopics.getString("name"),
+                                            rsTopics.getBoolean("confidential_internship"));
                                     topicsOfCategory.add(s);
                                 }
                                 topicsPerCategory.add(new TopicsPerCategory(Integer.parseInt(program.getId()), categoryId, topicsOfCategory));

@@ -52,20 +52,20 @@ public class UploadTopicServlet extends HttpServlet {
         String lastName = request.getParameter("lastName");
         String email = request.getParameter("email").toLowerCase();
         String topicTitle = request.getParameter("topicTitle");
-        String program_id_string = request.getParameter("programs");
-        String category_id_string = request.getParameter("categories");
+        String programIdString = request.getParameter("programs");
+        String categoryIdString = request.getParameter("categories");
         String confidentiality = request.getParameter("confidentiality");
         Part uploadFile = request.getPart("uploadFile");
 
-        String errorMessage = checkEntries(firstName, lastName, email, topicTitle, program_id_string, category_id_string, uploadFile);
+        String errorMessage = checkEntries(firstName, lastName, email, topicTitle, programIdString, categoryIdString, uploadFile);
         if (errorMessage.equals("None")) {
 
             //Conversion from String to Integer, exception impossible by construction of values in html files for each category and each program
-            int program_id = Integer.parseInt(program_id_string);
-            int category_id = Integer.parseInt(category_id_string);
+            int programId = Integer.parseInt(programIdString);
+            int categoryId = Integer.parseInt(categoryIdString);
             boolean confidentialTopic = Objects.equals(confidentiality, "on"); // the checkbox is checked
             try (Connection con = DbUtils.getConnection()) {
-                int supervisor_id;
+                int supervisorId;
 
                 if (con == null) {
                     response.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -90,13 +90,13 @@ public class UploadTopicServlet extends HttpServlet {
                         ps2.setString(1, email);
                         try (ResultSet rs2 = ps2.executeQuery()) {
                             rs2.next();
-                            supervisor_id = rs2.getInt("id");
+                            supervisorId = rs2.getInt("id");
                         }
                     }
 
                     String query3 = "insert into person_roles(role_id, person_id) values (4, ?);"; //'proponent' id=4
                     try (PreparedStatement ps3 = con.prepareStatement(query3)) {
-                        ps3.setInt(1, supervisor_id);
+                        ps3.setInt(1, supervisorId);
                         ps3.executeUpdate();
                     }
                 }
@@ -106,7 +106,7 @@ public class UploadTopicServlet extends HttpServlet {
                     ps4.setString(1, email);
                     try (ResultSet rs4 = ps4.executeQuery()) {
                         rs4.next();
-                        supervisor_id = rs4.getInt("id");
+                        supervisorId = rs4.getInt("id");
                     }
                 }
 
@@ -120,8 +120,8 @@ public class UploadTopicServlet extends HttpServlet {
                         ps5.setString(1, topicTitle);
                         ps5.setDate(2, Date.valueOf(java.time.LocalDate.now()));
                         ps5.setBinaryStream(3, inputStream);
-                        ps5.setInt(4, supervisor_id);
-                        ps5.setInt(5, program_id);
+                        ps5.setInt(4, supervisorId);
+                        ps5.setInt(5, programId);
                         ps5.setBoolean(6, confidentialTopic);
                         int row = ps5.executeUpdate();
                         if (row <= 0) {
@@ -134,13 +134,13 @@ public class UploadTopicServlet extends HttpServlet {
                         ps6.setString(1, topicTitle);
                         try (ResultSet rs6 = ps6.executeQuery()) {
                             rs6.next();
-                            int internship_id = rs6.getInt("id");
+                            int internshipId = rs6.getInt("id");
 
                             String query7 = "insert into internship_category(internship_id, category_id)" +
                                     " values (?, ?) ;";
                             try (PreparedStatement ps7 = con.prepareStatement(query7)) {
-                                ps7.setInt(1, internship_id);
-                                ps7.setInt(2, category_id);
+                                ps7.setInt(1, internshipId);
+                                ps7.setInt(2, categoryId);
                                 ps7.executeUpdate();
                             }
                         }
