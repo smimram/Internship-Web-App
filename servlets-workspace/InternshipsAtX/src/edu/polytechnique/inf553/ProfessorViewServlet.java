@@ -13,8 +13,8 @@ import javax.servlet.http.HttpSession;
  */
 @WebServlet("/ProfessorViewServlet")
 public class ProfessorViewServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
+    private static final long serialVersionUID = 1L;
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -22,35 +22,35 @@ public class ProfessorViewServlet extends HttpServlet {
         super();
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// session management
-		HttpSession session = request.getSession(false);
-		if(session!=null && session.getAttribute("user")!= null) {
-			Person user = (Person)session.getAttribute("user");
-			String role = user.getRole();
-			if (role.equals("Professor")) {
-				request.getRequestDispatcher("professor_view.jsp").forward(request, response);
-			}else {
-				// the user is not professor, redirect to the error page
-				session.setAttribute("errorMessage", "Please check your user role.");
-				request.getRequestDispatcher("no_access_page.jsp").forward(request, response);
-			}
-		}else {
-			// the user is not logged in, redirect to the error page
-			session.setAttribute("errorMessage", "Please log in first.");
-			request.getRequestDispatcher("no_access_page.jsp").forward(request, response);
-		}
-	}
+    /**
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // session management
+        HttpSession session = request.getSession(false);
+        if (session != null && session.getAttribute("user") != null) {
+            Person user = (Person) session.getAttribute("user");
+            String role = user.getRole();
+            if (role.equals("Professor")) {
+                request.getRequestDispatcher("professor_view.jsp").forward(request, response);
+            } else {
+                // the user is not professor, redirect to the error page
+                session.setAttribute("errorMessage", "Please check your user role.");
+                request.getRequestDispatcher("no_access_page.jsp").forward(request, response);
+            }
+        } else {
+            // the user is not logged in, redirect to the error page
+            session.setAttribute("errorMessage", "Please log in first.");
+            request.getRequestDispatcher("no_access_page.jsp").forward(request, response);
+        }
+    }
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
+    /**
+     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+     */
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // TODO Auto-generated method stub
+        doGet(request, response);
+    }
 
 }

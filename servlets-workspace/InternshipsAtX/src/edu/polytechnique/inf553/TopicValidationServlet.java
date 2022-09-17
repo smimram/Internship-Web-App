@@ -19,8 +19,8 @@ import java.util.List;
  */
 @WebServlet("/TopicValidationServlet")
 public class TopicValidationServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
+    private static final long serialVersionUID = 1L;
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -29,78 +29,78 @@ public class TopicValidationServlet extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// session management
-		HttpSession session = request.getSession(false);
-		if(session!=null && session.getAttribute("user")!= null) {
-			Person user = (Person)session.getAttribute("user");
-			String role = user.getRole();
-			if (role.equals("Admin") || role.equals("Professor") || role.equals("Assistant")) {
-				
-				//======================== DATA LOADING PART ========================
-				List<Topic> topics = getTopics();
-				
-				request.setAttribute("role", user.getRole());
-				request.setAttribute("topics", topics);
-				request.getRequestDispatcher("topic_validation.jsp").forward(request, response);
-			}else {
-				// the user is not admin, assistant or professor, redirect to the error page
-				session.setAttribute("errorMessage", "Please check your user role.");
-				request.getRequestDispatcher("no_access_page.jsp").forward(request, response);
-			}
-		}else {
-			// the user is not logged in, redirect to the error page
-			session.setAttribute("errorMessage", "Please log in first.");
-			request.getRequestDispatcher("no_access_page.jsp").forward(request, response);
-		}
-	}
+    /**
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // session management
+        HttpSession session = request.getSession(false);
+        if (session != null && session.getAttribute("user") != null) {
+            Person user = (Person) session.getAttribute("user");
+            String role = user.getRole();
+            if (role.equals("Admin") || role.equals("Professor") || role.equals("Assistant")) {
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
+                //======================== DATA LOADING PART ========================
+                List<Topic> topics = getTopics();
 
-
-	private List<Topic> getTopics() {
-		try (Connection con = DbUtils.getConnection()) {
-			if (con == null) {
-				return null;
-			}
-			
-			List<Topic> topics = new ArrayList<>();
-			// get all topic list
-			String query = "SELECT DISTINCT id, title, program_id, administr_validated, scientific_validated, confidential_internship "
-					+ "FROM internship "
-					+ "WHERE is_taken IS FALSE;";
-			try (
-           PreparedStatement preparedStatement = con.prepareStatement(query);
-           ResultSet resultSet = preparedStatement.executeQuery();
-      ) {
-        while(resultSet.next()) {
-          Topic topic = new Topic(resultSet.getInt("id"),
-                                        resultSet.getString("title"),
-                                        resultSet.getInt("program_id"),
-                                        resultSet.getBoolean("administr_validated"),
-                                        resultSet.getBoolean("scientific_validated"),
-                                        resultSet.getBoolean("confidential_internship"));
-          topics.add(topic);
+                request.setAttribute("role", user.getRole());
+                request.setAttribute("topics", topics);
+                request.getRequestDispatcher("topic_validation.jsp").forward(request, response);
+            } else {
+                // the user is not admin, assistant or professor, redirect to the error page
+                session.setAttribute("errorMessage", "Please check your user role.");
+                request.getRequestDispatcher("no_access_page.jsp").forward(request, response);
+            }
+        } else {
+            // the user is not logged in, redirect to the error page
+            session.setAttribute("errorMessage", "Please log in first.");
+            request.getRequestDispatcher("no_access_page.jsp").forward(request, response);
         }
-      }
+    }
 
-			return topics;
-			
-		} catch(SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
+    /**
+     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+     */
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // TODO Auto-generated method stub
+        doGet(request, response);
+    }
 
-	
+
+    private List<Topic> getTopics() {
+        try (Connection con = DbUtils.getConnection()) {
+            if (con == null) {
+                return null;
+            }
+
+            List<Topic> topics = new ArrayList<>();
+            // get all topic list
+            String query = "SELECT DISTINCT id, title, program_id, administr_validated, scientific_validated, confidential_internship "
+                    + "FROM internship "
+                    + "WHERE is_taken IS FALSE;";
+            try (
+                    PreparedStatement preparedStatement = con.prepareStatement(query);
+                    ResultSet resultSet = preparedStatement.executeQuery();
+            ) {
+                while (resultSet.next()) {
+                    Topic topic = new Topic(resultSet.getInt("id"),
+                            resultSet.getString("title"),
+                            resultSet.getInt("program_id"),
+                            resultSet.getBoolean("administr_validated"),
+                            resultSet.getBoolean("scientific_validated"),
+                            resultSet.getBoolean("confidential_internship"));
+                    topics.add(topic);
+                }
+            }
+
+            return topics;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
 }
 

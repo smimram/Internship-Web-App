@@ -14,53 +14,53 @@ import java.sql.SQLException;
 import java.util.Base64;
 
 public class DownloadTopicServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	private static final int BUFFER_SIZE = 16177215;
+    private static final long serialVersionUID = 1L;
+    private static final int BUFFER_SIZE = 16177215;
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println(this.getClass().getName() + " doGet method called with path " + request.getRequestURI() + " and parameters " + request.getQueryString());
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println(this.getClass().getName() + " doGet method called with path " + request.getRequestURI() + " and parameters " + request.getQueryString());
 
-		int internshipId = Integer.parseInt(request.getParameter("internshipId"));
+        int internshipId = Integer.parseInt(request.getParameter("internshipId"));
 
-		String returnFileName = "file_not_found.jsp";
-		
-		try (Connection con = DbUtils.getConnection()) {
-			if (con == null) {
-				response.sendError(HttpServletResponse.SC_FORBIDDEN);
-			}
-			
-			String query = "SELECT content, title " + "FROM internship " + "WHERE internship.id = ? AND content IS NOT NULL;";
-			try (PreparedStatement ps = con.prepareStatement(query)) {
-        ps.setInt(1, internshipId);
-        try (ResultSet rs = ps.executeQuery()) {
-          if(rs.next()) {
-            returnFileName = "download_complete_topic.jsp";
-            InputStream inputStream = rs.getBinaryStream("content");
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            byte[] buffer = new byte[BUFFER_SIZE];
-            int bytesRead = -1;
-                 
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-              outputStream.write(buffer, 0, bytesRead);                  
+        String returnFileName = "file_not_found.jsp";
+
+        try (Connection con = DbUtils.getConnection()) {
+            if (con == null) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN);
             }
-                 
-            byte[] contentBytes = outputStream.toByteArray();
-            String encodedContent =  Base64.getEncoder().encodeToString(contentBytes);
-                
-            inputStream.close();
-            outputStream.close();
 
-            request.setAttribute("internshipId", internshipId);
-            request.setAttribute("topicTitle", rs.getString("title"));
-            request.setAttribute("encodedContent", encodedContent);
-          }
+            String query = "SELECT content, title " + "FROM internship " + "WHERE internship.id = ? AND content IS NOT NULL;";
+            try (PreparedStatement ps = con.prepareStatement(query)) {
+                ps.setInt(1, internshipId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        returnFileName = "download_complete_topic.jsp";
+                        InputStream inputStream = rs.getBinaryStream("content");
+                        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                        byte[] buffer = new byte[BUFFER_SIZE];
+                        int bytesRead = -1;
+
+                        while ((bytesRead = inputStream.read(buffer)) != -1) {
+                            outputStream.write(buffer, 0, bytesRead);
+                        }
+
+                        byte[] contentBytes = outputStream.toByteArray();
+                        String encodedContent = Base64.getEncoder().encodeToString(contentBytes);
+
+                        inputStream.close();
+                        outputStream.close();
+
+                        request.setAttribute("internshipId", internshipId);
+                        request.setAttribute("topicTitle", rs.getString("title"));
+                        request.setAttribute("encodedContent", encodedContent);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-			}
-		} catch(SQLException e) {
-			e.printStackTrace();
-		}
 
-		 request.getRequestDispatcher(returnFileName).forward(request, response);
-	}
-	
+        request.getRequestDispatcher(returnFileName).forward(request, response);
+    }
+
 }

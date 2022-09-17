@@ -11,12 +11,12 @@ import javax.sql.DataSource;
 public class DbUtils {
     public static Connection getConnection() {
         try {
-            Context    ic = new InitialContext();
-            Context    ec = (Context) ic.lookup("java:comp/env");
+            Context ic = new InitialContext();
+            Context ec = (Context) ic.lookup("java:comp/env");
             DataSource ds = (DataSource) ec.lookup("jdbc/InternshipsDB");
-    
+
             return ds.getConnection();
-        } catch (NamingException|SQLException e) {
+        } catch (NamingException | SQLException e) {
             return null;
         }
     }
@@ -26,6 +26,7 @@ public class DbUtils {
             if (con != null) {
                 con.close();
             }
-        } catch (SQLException e) {}
+        } catch (SQLException e) {
+        }
     }
 }
