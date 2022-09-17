@@ -64,7 +64,7 @@
 						<select name="programStudent" class="input100">
 							<option value="null" selected>Select a program</option>
 							<c:forEach items="${programs}" var="program">
-								<option value="${program.id}">${program.name}</option>
+								<option value="${program.id}">${program.name} - ${program.year}</option>
 							</c:forEach>
 						</select>
 					</div>
