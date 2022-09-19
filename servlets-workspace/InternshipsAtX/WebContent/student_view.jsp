@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"
     import="edu.polytechnique.inf553.Person"
-    import="edu.polytechnique.inf553.Topic"%>
+    import="edu.polytechnique.inf553.Topic" import="edu.polytechnique.inf553.Defense"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <!DOCTYPE html>
@@ -27,7 +27,7 @@
 			<div class="wrap-login100-V2">
 				<div class="login100-form validate-form p-l-55 p-r-55 p-t-178">
 					<span class="login100-form-title">
-						<h1>My Internship</h1>
+						<h1>My internship</h1>
 					</span>
 					<%
 						// show user internship if he has
@@ -102,8 +102,47 @@
 				</div>
 			</div>
 		</div>
-	</div>			
-			
+	</div>
+
+	<div class="limiter">
+		<div class="container-login100 background_style" style="min-height:auto;">
+			<div class="wrap-login100-V2">
+				<div class="login100-form validate-form p-l-55 p-r-55 p-t-178">
+					<span class="login100-form-title">
+						<h1>My defense</h1>
+					</span>
+					<%
+						// show user internship if he has
+						Defense defense = (Defense)request.getAttribute("studentDefense");
+						if(defense != null){
+					%>
+					<div class="text-center">
+						<ul class="responsive-table">
+							<li class="table-header">
+								<div class="col col-3">Date</div>
+								<div class="col col-3">Time</div>
+								<div class="col col-3">Référent</div>
+								<div class="col col-3">Jury 2</div>
+							</li>
+							<li class="table-row">
+								<div class="col col-3" data-label="Id"><%=defense.getDate()%></div>
+								<div class="col col-3" data-label="Time"><%=defense.getTime() %></div>
+								<div class="col col-3" data-label="Référent" title="${(defense.referent != null) ? defense.referent.email : 'No referent'}">${(defense.referent != null) ? defense.referent.mail : 'No referent'}</div>
+								<div class="col col-3" data-label="Jury 2" title="${(defense.jury2 != null) ? defense.jury2.email : 'No jury 2'}">${(defense.jury2 != null) ? defense.jury2.mail : 'No jury 2'}</div>
+							</li>
+						</ul>
+					</div>
+					<%
+					} else {
+					%>
+					<p style="text-align: center; font-size: 2em;"> No defense. </p>
+					<%
+						}
+					%>
+				</div>
+			</div>
+		</div>
+	</div>
 	
 	<div class="limiter">
 		<div class="container-login100 background_style">

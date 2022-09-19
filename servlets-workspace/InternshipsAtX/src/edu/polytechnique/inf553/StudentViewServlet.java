@@ -40,7 +40,8 @@ public class StudentViewServlet extends HttpServlet {
 
                 List<Program> programs = new ArrayList<>();
                 List<TopicsPerCategory> topicsPerCategory = new ArrayList<>();
-                int userId = user.getId();
+                Defense studentDefense = null;
+                int studentId = user.getId();
 
                 //======================== DATA LOADING PART ========================
                 try (Connection con = DbUtils.getConnection()) {
@@ -55,7 +56,7 @@ public class StudentViewServlet extends HttpServlet {
                             "INNER JOIN person_internship pi on i.id = pi.internship_id\n" +
                             "WHERE pi.person_id = ?";
                     try (PreparedStatement ps0 = con.prepareStatement(query0)) {
-                        ps0.setInt(1, userId);
+                        ps0.setInt(1, studentId);
                         try (ResultSet rs0 = ps0.executeQuery()) {
                             while (rs0.next()) {
                                 Topic userTopic = new Topic(rs0.getString("title"),
@@ -73,7 +74,7 @@ public class StudentViewServlet extends HttpServlet {
                             "FROM program p inner join person_program pp on p.id = pp.program_id\n" +
                             "WHERE pp.person_id = ?";
                     try (PreparedStatement ps1 = con.prepareStatement(query1)) {
-                        ps1.setInt(1, userId);
+                        ps1.setInt(1, studentId);
                         try (ResultSet rs1 = ps1.executeQuery()) {
                             while (rs1.next()) {
                                 Program p = new Program(rs1.getInt("id"), rs1.getString("name"), rs1.getString("year"));
@@ -121,6 +122,20 @@ public class StudentViewServlet extends HttpServlet {
                             }
                         }
                     }
+
+                    // get the defense of the student
+                    // p1 corresponds to the referent
+                    // p2 corresponds to the jury2
+                    String query = "SELECT d.id, d.date, d.time, p1.id, p1.name, p1.email, p2.id, p2.name, p2.email, d.student_id " +
+                            "FROM defense d, person p1, person p2 " +
+                            "WHERE d.referent_id = p1.id AND d.jury2_id = p2.id AND student_id = ?;";
+                    try(PreparedStatement stmt = con.prepareStatement(query)) {
+                        stmt.setInt(1, studentId);
+                        ResultSet rs = stmt.executeQuery();
+                        if(rs.next()) {
+                            studentDefense = new Defense(rs.getInt(1), rs.getDate(2), rs.getTime(3), new Person(rs.getInt(4), rs.getString(5), rs.getString(6)), new Person(rs.getInt(7), rs.getString(8), rs.getString(9)), new Person(rs.getInt(10)));
+                        }
+                    }
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -129,6 +144,7 @@ public class StudentViewServlet extends HttpServlet {
 
                 request.setAttribute("programs", programs);
                 request.setAttribute("topicsPerCategory", topicsPerCategory);
+                request.setAttribute("studentDefense", studentDefense);
                 request.getRequestDispatcher("student_view.jsp").forward(request, response);
 
             } else {

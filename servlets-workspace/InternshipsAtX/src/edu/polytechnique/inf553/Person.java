@@ -23,6 +23,16 @@ public class Person {
         this.hasInternship = false;
     }
 
+    public Person(int id, String name, String email) {
+        this.name = name;
+        this.id = id;
+        this.email = email;
+    }
+
+    public Person(int id) {
+        this.id = id;
+    }
+
     public String getName() {
         return this.name;
     }
