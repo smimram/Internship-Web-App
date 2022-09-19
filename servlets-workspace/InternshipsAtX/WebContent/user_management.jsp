@@ -100,14 +100,15 @@ input:checked + .slider:before {
 								<div class="col col-1"> Id </div>
 								<div class="col col-3">Name</div>
 								<div class="col col-2">Role</div>
-								<div class="col col-4">Program</div>
+								<div class="col col-3">Program</div>
 								<div class="col col-2">Validate</div>
+								<div class="col col-1">Delete</div>
 							</li>
 							
 							<c:forEach items="${persons}" var="person">
 								<li class="table-row">
 									<div class="col col-1" data-label="Id">${person.id}</div>
-									<div class="col col-3" data-label="Name">${person.name}</br><button type="button" class="btn btn-secondary btn-sm" onclick="displayEmail('${person.email}')"><i class="fas fa-at" style="color: white"></i></button></div>
+									<div class="col col-3" data-label="Name">${person.name}<br/><button type="button" class="btn btn-secondary btn-sm" onclick="displayEmail('${person.email}')"><i class="fas fa-at" style="color: white"></i></button></div>
 									<div class="col col-2" data-label="Role">
 										<!-- update the role of a user -->
 										<select class="custom-select" name="role" onchange="updateUserRole(${person.id}, this);">
@@ -117,7 +118,7 @@ input:checked + .slider:before {
 					        				<option value="1" ${person.role == "Student" ? 'selected' : ''} >Student</option>
 										</select>
 									</div>
-									<div class="col col-4" data-label="Program">
+									<div class="col col-3" data-label="Program">
 										<!-- update the programs of a user -->
 										<select class="mul-select" id="mul-select-${person.id}" name="programs[]" multiple="multiple" data-pid= "${person.id}">
 											<c:forEach items="${programs}" var="program">
@@ -137,6 +138,11 @@ input:checked + .slider:before {
 											<span class="slider round"></span>
 										</label>
 									</div>
+									<div class="col col-1" data-label="Delete">
+										<!-- delete a user from the DB -->
+										<button type="button" class="btn btn-danger btn-sm" onclick="deleteUser(${user.id}, '${user.name}');"><i class="fas fa-trash"></i></button>
+									</div>
+								</li>
 								</li>
 							</c:forEach>
 							
@@ -232,6 +238,25 @@ function displayEmail(email) {
 	// console.log(decodeURIComponent(email));
 	// alert("Email: " + decodeURIComponent(email));
 	alert("Email: " + email);
+}
+
+function deleteUser(id, name){
+	var r = confirm("Are you sure you want to delete the user " + name + " ?");
+	if (r == true) {
+		$.ajax({
+			type : "GET",
+			url : "DeleteUserServlet",
+			data : "userId=" + id ,
+			success : function(data) {
+				console.log("delete user " + name);
+				alert("deleted user " + name);
+				location.reload();
+			},
+			error: function(res){
+				alert("Failed to delete the user " + name + ". Cannot delete user if it has a topic or program assigned.");
+			}
+		});
+	}
 }
 </script>
 
