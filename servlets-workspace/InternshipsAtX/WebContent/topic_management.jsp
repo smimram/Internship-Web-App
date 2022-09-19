@@ -135,7 +135,7 @@ input:checked + .slider:before {
 									<div class="col col-2" data-label="Title">${topic.title}</div>
 									<div class="col col-2" data-label="Categories">
 										<!-- update the categories of a topic -->
-										<select class="mul-select" id="mul-select-category-${topic.id}" ${(user.role != "Assistant") ? '' : 'disabled'}  name="topics[]" multiple="multiple" data-pid= "${topic.id}">
+										<select class="mul-select" id="mul-select-category-${topic.id}" name="topics[]" multiple="multiple" data-pid= "${topic.id}">
 											<c:forEach items="${categoriesForPrograms}" var="entry">
 												<c:if test="${entry.key == topic.programId}">
 													<c:forEach items="${categoriesForPrograms[entry.key]}" var="cat">
@@ -147,7 +147,7 @@ input:checked + .slider:before {
 									</div>
 									<div class="col col-2" data-label="Program">
 										<!-- update the program of a topic -->
-										<select id="select-program-${topic.id}" class="custom-select" name="role" ${(user.role != "Assistant") ? '' : 'disabled'}  onchange="updateTopicProgram(${topic.id}, this);">
+										<select id="select-program-${topic.id}" class="custom-select" name="role" onchange="updateTopicProgram(${topic.id}, this);">
 											<c:forEach items="${programs}" var="program">
 												<option value="${program.id}" ${topic.programId == program.id ? 'selected' : '' }>${program.name} - ${program.year}</option>
 											</c:forEach>
@@ -165,7 +165,7 @@ input:checked + .slider:before {
 										<!-- update the valid status of a user -->
 										<!-- need to select at least one program before validate a user -->
 										<label class="switch">
-											<input type="checkbox" id="select-sci-valid-${topic.id}" onchange="updateTopicSciValid(${topic.id}, this);" ${topic.sciValid ? 'checked' : ''}> <!-- ${(topic.adminValid && user.role != "Assistant") ? '' : 'disabled'}  -->
+											<input type="checkbox" id="select-sci-valid-${topic.id}" onchange="updateTopicSciValid(${topic.id}, this);" ${topic.sciValid ? 'checked' : ''}>
 											<span class="slider round"></span>
 										</label>
 									</div>
@@ -178,7 +178,7 @@ input:checked + .slider:before {
 												<button type="button" class="btn btn-secondary btn-sm" onclick="displayEmail('${topic.affiliatedStudent.email}')"><i class="fas fa-at" style="color: white"></i></button>
 											</c:when>
 											<c:otherwise> <!-- else display the list of students without internships -->
-												<select class="custom-select" id="select-aff-student-topic-${topic.id}" name="assignedStudent" ${(user.role != "Assistant") ? '' : 'disabled'} onfocus="updateOldAffiliatedStudent(this)" onchange="updateTopicAffiliatedStudent(${topic.id}, this);">
+												<select class="custom-select" id="select-aff-student-topic-${topic.id}" name="assignedStudent" onfocus="updateOldAffiliatedStudent(this)" onchange="updateTopicAffiliatedStudent(${topic.id}, this);">
 													<option value="null" selected>No student</option>
 													<c:forEach items="${studentsNoInternship}" var="studentNoInternship">
 														<option value="${studentNoInternship.id}">${studentNoInternship.name}</option>
