@@ -271,7 +271,6 @@ input:checked + .slider:before {
 			data : "defenseId=" + defenseId + "&defenseDate=" + date + "&defenseTime=" + time,
 			success : function(data) {
 				console.log("update defense " + defenseId + " with date " + date + " and time " + time);
-				alert("update defense " + defenseId + " with date " + date + " and time " + time);
 				location.reload();
 				// $("#date-picker-defense-1").val(time);
 			},
@@ -375,7 +374,6 @@ input:checked + .slider:before {
 				data : "defenseId=" + defenseId ,
 				success : function(data) {
 					console.log("delete defense " + defenseId);
-					alert("deleted defense " + defenseId);
 					location.reload();
 				},
 				error: function(res){

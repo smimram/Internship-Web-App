@@ -248,8 +248,6 @@ function deleteUser(id, name){
 			url : "DeleteUserServlet",
 			data : "userId=" + id ,
 			success : function(data) {
-				console.log("delete user " + name);
-				alert("deleted user " + name);
 				location.reload();
 			},
 			error: function(res){

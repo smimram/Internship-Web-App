@@ -269,7 +269,6 @@ input:checked + .slider:before {
 					// if the validate option was disabled(no program selected), remove it
 					$('#select-valid-' + topicId).attr("disabled",false);
 				}
-				alert("updated connection topic id " + topicId + ", category id " + categoryId + " to " + value);
 				location.reload();
 			},
 			error: function(res){
@@ -315,7 +314,6 @@ input:checked + .slider:before {
 			data : "topicId=" + topicId + "&studentId=" + studentId,
 			success : function(data) {
 				console.log("assign topic " + topicId + " to student " + studentId);
-				alert("updated connection: assign topic id " + topicId + " to student id " + studentId);
 				location.reload();
 			},
 			error: function(res){
@@ -332,7 +330,6 @@ input:checked + .slider:before {
 			data : "topicId=" + topicId + "&studentId=" + studentId,
 			success : function(data) {
 				console.log("assign topic " + topicId + " to student " + studentId);
-				alert("updated connection: unassign topic id " + topicId + " to student id " + studentId);
 				location.reload();
 			},
 			error: function(res){
@@ -350,7 +347,6 @@ input:checked + .slider:before {
 			data : "topicId=" + topicId + "&programId=" + programId,
 			success : function(data) {
 				console.log("update topic " + topicId + " program into " + programId);
-				alert("updated program of topic id" + topicId + " to program with id " + programId);
 				location.reload();
 			},
 			error: function(res){
@@ -368,7 +364,6 @@ input:checked + .slider:before {
 			data : "topicId=" + topicId + "&valid=" + valid,
 			success : function(data) {
 				console.log("update topic " + topicId + " valid into " + valid);
-				alert("updated topic id " + topicId + " admin valid to " + valid);
 				location.reload();
 			},
 			error: function(res){
@@ -386,7 +381,6 @@ input:checked + .slider:before {
 			data : "topicId=" + topicId + "&valid=" + valid,
 			success : function(data) {
 				console.log("update topic " + topicId + " valid into " + valid);
-				alert("updated topic id " + topicId + " scientific valid to " + valid);
 				location.reload();
 			},
 			error: function(res){
@@ -405,7 +399,6 @@ input:checked + .slider:before {
 				data : "topicId=" + id ,
 				success : function(data) {
 					console.log("delete topic " + title);
-					alert("deleted topic " + title);
 					location.reload();
 				},
 				error: function(res){
