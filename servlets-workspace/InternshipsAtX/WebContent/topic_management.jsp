@@ -127,7 +127,7 @@ input:checked + .slider:before {
 								<li class="table-row">
 									<div class="col col-1" data-label="Id">
 											${topic.id}
-											${topic.isConfidentialInternship() ? '<i class="fas fa-lock" style="color: goldenrod"></i>' : '<i class="fas fa-lock-open" style="color: goldenrod"></i>'}
+											${topic.isConfidentialInternship() ? '<i class="fas fa-lock" style="color: goldenrod" title="Confidential internship"></i>' : '<i class="fas fa-lock-open" style="color: goldenrod" title="Non-confidential internship"></i>'}
 									</div>
 									<div class="col col-2" data-label="Title">${topic.title}</div>
 									<div class="col col-2" data-label="Categories">
