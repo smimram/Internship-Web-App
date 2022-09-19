@@ -62,7 +62,7 @@ public class StudentManagementServlet extends HttpServlet {
                                 "INNER JOIN person_roles pr ON pr.person_id = p.id " +
                                 "INNER JOIN role_type r ON r.id = pr.role_id " +
                                 "INNER JOIN person_program pp ON pp.person_id = p.id " +
-                                "WHERE pp.program_id = ?" +
+                                "WHERE pp.program_id = ? AND r.role = 'Student' " +
                                 "ORDER BY p.name";
                         try (PreparedStatement ps0 = con.prepareStatement(query)) {
                             ps0.setInt(1, Integer.parseInt(p.getId()));
