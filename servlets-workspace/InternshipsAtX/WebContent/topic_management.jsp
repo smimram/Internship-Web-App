@@ -110,7 +110,7 @@ input:checked + .slider:before {
 									<a href="./topic-management?orderByColumn=title&orderBySort=DESC"><i class="fas fa-sort-alpha-down-alt" title="sort by decreasing order"></i></a>
 								</div>
 								<div class="col col-2">Categories</div>
-								<div class="col col-1">Program</i></div>
+								<div class="col col-2">Program</div>
 								<div class="col col-1">Admin. validation
 									<a href="./topic-management?orderByColumn=administr_validated&orderBySort=ASC"><i class="fas fa-sort-amount-down" title="sort by increasing order"></i></a>
 									<a href="./topic-management?orderByColumn=administr_validated&orderBySort=DESC"><i class="fas fa-sort-amount-down-alt" title="sort by decreasing order"></i></a>
@@ -119,16 +119,16 @@ input:checked + .slider:before {
 									<a href="./topic-management?orderByColumn=scientific_validated&orderBySort=ASC"><i class="fas fa-sort-amount-down" title="sort by increasing order"></i></a>
 									<a href="./topic-management?orderByColumn=scientific_validated&orderBySort=DESC"><i class="fas fa-sort-amount-down-alt" title="sort by decreasing order"></i></a>
 								</div>
-								<div class="col col-2">Attributed to 
-								</div>
-								<div class="col col-1">Confidential topic
-								</div>
+								<div class="col col-2">Attributed to</div>
 								<div class="col col-1">Actions</div>
 							</li>
 							
 							<c:forEach items="${topics}" var="topic">
 								<li class="table-row">
-									<div class="col col-1" data-label="Id">${topic.id}</div>
+									<div class="col col-1" data-label="Id">
+											${topic.id}
+											${topic.isConfidentialInternship() ? '<i class="fa-regular fa-lock"></i>' : '<i class="fa-regular fa-lock-open"></i>'}
+									</div>
 									<div class="col col-2" data-label="Title">${topic.title}</div>
 									<div class="col col-2" data-label="Categories">
 										<!-- update the categories of a topic -->
@@ -142,7 +142,7 @@ input:checked + .slider:before {
 											</c:forEach>
 										</select>
 									</div>
-									<div class="col col-1" data-label="Program">
+									<div class="col col-2" data-label="Program">
 										<!-- update the program of a topic -->
 										<select id="select-program-${topic.id}" class="custom-select" name="role" ${(user.role != "Assistant") ? '' : 'disabled'}  onchange="updateTopicProgram(${topic.id}, this);">
 											<c:forEach items="${programs}" var="program">
@@ -183,12 +183,6 @@ input:checked + .slider:before {
 												</select>
 											</c:otherwise>
 										</c:choose>
-									</div>
-									<div class="col col-1" data-label="confidentialTopic">
-										<label class="switch">
-											<input type="checkbox" disabled ${topic.isConfidentialInternship() ? 'checked' : ''}>
-											<span class="slider round"></span>
-										</label>
 									</div>
 									<div class="col col-1">
 										<button type="button" class="btn btn-primary btn-sm"><a href="/download-topic?internshipId=${topic.id}" target="_blank" style="color: white">Download topic</a></button>
