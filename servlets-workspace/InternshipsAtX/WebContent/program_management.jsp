@@ -165,7 +165,7 @@
 <script>
 
 function deleteProgram(id, name){
-	var r = confirm("Are you sure you want to delete the program " + name + " ?");
+	var r = confirm("Are you sure you want to delete the program " + name + "?");
 	if (r == true) {
 	    $.ajax({
 	        type : "GET",
@@ -211,7 +211,7 @@ function createProgram(e){
 }
 
 function deleteCategory(id, name){
-	var r = confirm("Are you sure you want to delete the category " + name + " ?");
+	var r = confirm("Are you sure you want to delete the category " + name + "?");
 	if (r == true) {
 	    $.ajax({
 	        type : "GET",

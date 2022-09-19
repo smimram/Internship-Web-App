@@ -110,7 +110,10 @@ input:checked + .slider:before {
 									<a href="./topic-management?orderByColumn=title&orderBySort=DESC"><i class="fas fa-sort-alpha-down-alt" title="sort by decreasing order"></i></a>
 								</div>
 								<div class="col col-2">Categories</div>
-								<div class="col col-2">Program</div>
+								<div class="col col-2">Program
+									<a href="./topic-management?orderByColumn=program_id&orderBySort=ASC"><i class="fas fa-sort-amount-down" title="sort by increasing order"></i></a>
+									<a href="./topic-management?orderByColumn=program_id&orderBySort=DESC"><i class="fas fa-sort-amount-down-alt" title="sort by decreasing order"></i></a>
+								</div>
 								<div class="col col-1">Admin. validation
 									<a href="./topic-management?orderByColumn=administr_validated&orderBySort=ASC"><i class="fas fa-sort-amount-down" title="sort by increasing order"></i></a>
 									<a href="./topic-management?orderByColumn=administr_validated&orderBySort=DESC"><i class="fas fa-sort-amount-down-alt" title="sort by decreasing order"></i></a>
@@ -394,7 +397,7 @@ input:checked + .slider:before {
 	}
 
 	function deleteTopic(id, title){
-		var r = confirm("Are you sure you want to delete the topic " + title + " ?");
+		var r = confirm("Are you sure you want to delete the topic '" + title + "'?");
 		if (r == true) {
 			$.ajax({
 				type : "GET",

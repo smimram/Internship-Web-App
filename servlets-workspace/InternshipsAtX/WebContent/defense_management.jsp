@@ -222,6 +222,15 @@ input:checked + .slider:before {
 						    <input type="time" class="form-control w-50 d-inline" id="newDefenseTime">
 						</div>
 						<div class="form-group">
+							<label for="newDefenseStudent" class="mr-3">Student: </label>
+							<select class="custom-select" id="newDefenseStudent" name="student">
+								<option value="null" selected>No student</option>
+								<c:forEach items="${students}" var="student">
+									<option value="${student.id}">${student.name}</option>
+								</c:forEach>
+							</select>
+						</div>
+						<div class="form-group">
 						  	<label for="newDefenseReferent" class="mr-3">Referent: </label>
 						    <select class="custom-select" id="newDefenseReferent" name="referent">
 								<option value="null" selected>No referent</option>
@@ -236,15 +245,6 @@ input:checked + .slider:before {
 								<option value="null" selected>No jury 2</option>
 								<c:forEach items="${professors}" var="professor">
 									<option value="${professor.id}">${professor.name}</option>
-								</c:forEach>
-							</select>
-						</div>
-						<div class="form-group">
-						  	<label for="newDefenseStudent" class="mr-3">Student: </label>
-						    <select class="custom-select" id="newDefenseStudent" name="student">
-								<option value="null" selected>No student</option>
-								<c:forEach items="${students}" var="student">
-									<option value="${student.id}">${student.name}</option>
 								</c:forEach>
 							</select>
 						</div>
@@ -367,7 +367,7 @@ input:checked + .slider:before {
 	}
 
 	function deleteDefense(defenseId){
-		var r = confirm("Are you sure you want to delete the defense"+defenseId+"?");
+		var r = confirm("Are you sure you want to delete the defense "+defenseId+"?");
 		if (r == true) {
 			$.ajax({
 				type : "GET",

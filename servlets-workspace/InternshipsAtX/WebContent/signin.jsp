@@ -40,7 +40,7 @@
 					</div>
 
 					<div class="wrap-input100 validate-input m-b-16" data-validate = "Please enter password">
-						<input class="input100" type="password" name="pass" placeholder="Password">
+						<input class="input100" type="password" name="pass" placeholder="Password (at least 8 characters)">
 						<span class="focus-input100"></span>
 					</div>
 					

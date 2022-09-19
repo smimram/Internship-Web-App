@@ -241,7 +241,7 @@ function displayEmail(email) {
 }
 
 function deleteUser(id, name){
-	var r = confirm("Are you sure you want to delete the user " + name + " ?");
+	var r = confirm("Are you sure you want to delete the user " + name + "?");
 	if (r == true) {
 		$.ajax({
 			type : "GET",
