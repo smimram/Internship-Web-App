@@ -140,7 +140,7 @@ input:checked + .slider:before {
 									</div>
 									<div class="col col-1" data-label="Delete">
 										<!-- delete a user from the DB -->
-										<button type="button" class="btn btn-danger btn-sm" onclick="deleteUser(${user.id}, '${user.name}');"><i class="fas fa-trash"></i></button>
+										<button type="button" class="btn btn-danger btn-sm" onclick="deleteUser(${person.id}, '${person.name}');"><i class="fas fa-trash"></i></button>
 									</div>
 								</li>
 								</li>
@@ -253,7 +253,7 @@ function deleteUser(id, name){
 				location.reload();
 			},
 			error: function(res){
-				alert("Failed to delete the user " + name + ". Cannot delete user if it has a topic or program assigned.");
+				alert("Failed to delete the user " + name + ".");
 			}
 		});
 	}

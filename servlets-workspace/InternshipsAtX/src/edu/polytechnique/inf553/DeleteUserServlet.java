@@ -42,7 +42,7 @@ public class DeleteUserServlet extends HttpServlet {
             if (role.equals("Admin") || role.equals("Assistant") || role.equals("Professor")) {
                 int userId = Integer.parseInt(request.getParameter("userId"));
                 if (isStillActive(userId)) {
-                    session.setAttribute("description", "Cannot delete user if it has a topic or program assigned.");
+                    session.setAttribute("description", "Failed to delete user.");
                     session.setAttribute("method", "doGet method of DeleteUserServlet");
                     session.setAttribute("userId", String.valueOf(user.getId()));
                     request.getRequestDispatcher("/ErrorPageServlet").forward(request, response);
@@ -51,9 +51,30 @@ public class DeleteUserServlet extends HttpServlet {
                     if (con == null) {
                         response.sendError(HttpServletResponse.SC_FORBIDDEN);
                     }
+                    // delete the user
                     String query = "DELETE FROM person WHERE id = ?";
                     try (PreparedStatement ps = con.prepareStatement(query)) {
                         ps.setInt(1, userId);
+                        ps.executeUpdate();
+                    }
+                    // delete its assignement to the internship
+                    query = "DELETE FROM person_internship WHERE person_id = ?";
+                    try (PreparedStatement ps = con.prepareStatement(query)) {
+                        ps.setInt(1, userId);
+                        ps.executeUpdate();
+                    }
+                    // delete its assignement to the programs
+                    query = "DELETE FROM person_program WHERE person_id = ?";
+                    try (PreparedStatement ps = con.prepareStatement(query)) {
+                        ps.setInt(1, userId);
+                        ps.executeUpdate();
+                    }
+                    // delete its assignement to the defense
+                    query = "DELETE FROM defense WHERE student_id = ? OR referent_id = ? OR jury2_id = ?";
+                    try (PreparedStatement ps = con.prepareStatement(query)) {
+                        ps.setInt(1, userId);
+                        ps.setInt(2, userId);
+                        ps.setInt(3, userId);
                         ps.executeUpdate();
                     }
                 } catch (SQLException e) {
