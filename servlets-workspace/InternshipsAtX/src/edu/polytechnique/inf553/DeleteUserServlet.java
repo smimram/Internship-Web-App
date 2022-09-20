@@ -47,7 +47,7 @@ public class DeleteUserServlet extends HttpServlet {
                     session.setAttribute("userId", String.valueOf(user.getId()));
                     request.getRequestDispatcher("/ErrorPageServlet").forward(request, response);
                 }
-                try (Connection con = DbUtils.getInstance().getConnection()) {
+                try (Connection con = DbUtils.getConnection()) {
                     if (con == null) {
                         response.sendError(HttpServletResponse.SC_FORBIDDEN);
                     }
@@ -105,7 +105,7 @@ public class DeleteUserServlet extends HttpServlet {
     private boolean isStillActive(int userId) {
         boolean stillActive = true;
         ArrayList<Integer> inactivePersons = new ArrayList<>();
-        try (Connection con = DbUtils.getInstance().getConnection()) {
+        try (Connection con = DbUtils.getConnection()) {
             if (con == null) {
                 return false;
             }
