@@ -137,7 +137,7 @@ public class TopicManagementServlet extends HttpServlet {
             HashMap<String, ArrayList<Category>> categoryForEachProgram = new HashMap<>();
             //get all the categories in each program
             for (Program p : programs) {
-                String query = "SELECT c.* FROM program_category pc, categories c WHERE pc.cat_id = c.id AND pc.program_id = ? ORDER BY description";
+                String query = "SELECT DISTINCT c.* FROM program_category pc, categories c WHERE pc.cat_id = c.id AND pc.program_id = ? ORDER BY description";
                 PreparedStatement preparedStatement = con.prepareStatement(query);
                 preparedStatement.setInt(1, Integer.parseInt(p.getId()));
                 ResultSet resultSet = preparedStatement.executeQuery();
