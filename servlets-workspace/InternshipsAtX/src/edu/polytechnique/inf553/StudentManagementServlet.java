@@ -36,7 +36,8 @@ public class StudentManagementServlet extends HttpServlet {
                 List<Program> programs = new ArrayList<>();
 
                 //======================== DATA LOADING PART ========================
-                try (Connection con = DbUtils.getConnection()) {
+                Connection con = DbUtils.getConnection();
+                try {
                     if (con == null) {
                         response.sendError(HttpServletResponse.SC_FORBIDDEN);
                     }
@@ -76,6 +77,8 @@ public class StudentManagementServlet extends HttpServlet {
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
+                } finally {
+                    DbUtils.releaseConnection(con);
                 }
 
                 request.setAttribute("programs", programs);

@@ -68,7 +68,8 @@ public class TopicValidationServlet extends HttpServlet {
 
 
     private List<Topic> getTopics() {
-        try (Connection con = DbUtils.getConnection()) {
+        Connection con = DbUtils.getConnection();
+        try {
             if (con == null) {
                 return null;
             }
@@ -98,6 +99,8 @@ public class TopicValidationServlet extends HttpServlet {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        } finally {
+            DbUtils.releaseConnection(con);
         }
     }
 

@@ -39,7 +39,8 @@ public class UpdateTopicAdminValidServlet extends HttpServlet {
             if (role.equals("Admin") || role.equals("Assistant") || role.equals("Professor")) {
                 Boolean valid = Boolean.parseBoolean(request.getParameter("valid"));
                 int topicId = Integer.parseInt(request.getParameter("topicId"));
-                try (Connection con = DbUtils.getConnection()) {
+                Connection con = DbUtils.getConnection();
+                try {
                     if (con == null) {
                         response.sendError(HttpServletResponse.SC_FORBIDDEN);
                     }
@@ -54,6 +55,8 @@ public class UpdateTopicAdminValidServlet extends HttpServlet {
 
                 } catch (SQLException e) {
                     e.printStackTrace();
+                } finally {
+                    DbUtils.releaseConnection(con);
                 }
 
                 response.setStatus(200);

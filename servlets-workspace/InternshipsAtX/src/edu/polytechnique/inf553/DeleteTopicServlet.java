@@ -48,7 +48,8 @@ public class DeleteTopicServlet extends HttpServlet {
                     request.getRequestDispatcher("/ErrorPageServlet").forward(request, response);
                     //response.sendError(HttpServletResponse.SC_FORBIDDEN);
                 }
-                try (Connection con = DbUtils.getConnection()) {
+                Connection con = DbUtils.getConnection();
+                try {
                     if (con == null) {
                         response.sendError(HttpServletResponse.SC_FORBIDDEN);
                     }
@@ -63,6 +64,8 @@ public class DeleteTopicServlet extends HttpServlet {
                     e.printStackTrace();
                     // db error
                     response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                } finally {
+                    DbUtils.releaseConnection(con);
                 }
 
                 response.setStatus(200);
@@ -86,7 +89,8 @@ public class DeleteTopicServlet extends HttpServlet {
 
     private boolean checkIsTaken(int topicId) {
         boolean taken = true;
-        try (Connection con = DbUtils.getConnection()) {
+        Connection con = DbUtils.getConnection();
+        try {
             if (con == null) {
                 return false;
             }
@@ -106,6 +110,8 @@ public class DeleteTopicServlet extends HttpServlet {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            DbUtils.releaseConnection(con);
         }
         return taken;
     }

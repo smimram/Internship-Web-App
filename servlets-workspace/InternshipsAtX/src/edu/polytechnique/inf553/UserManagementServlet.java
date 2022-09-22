@@ -27,7 +27,8 @@ public class UserManagementServlet extends HttpServlet {
                 List<Program> programs = new ArrayList<>();
 
                 //======================== DATA LOADING PART ========================
-                try (Connection con = DbUtils.getConnection()) {
+                Connection con = DbUtils.getConnection();
+                try {
                     // get user list
                     String query0 = "SELECT p.id as id, p.name as name, rt.role as role, p.valid as valid, p.email AS email \n" +
                             "FROM person p inner join person_roles pr on p.id = pr.person_id\n" +
@@ -75,6 +76,8 @@ public class UserManagementServlet extends HttpServlet {
 
                 } catch (SQLException e) {
                     e.printStackTrace();
+                } finally {
+                    DbUtils.releaseConnection(con);
                 }
 
                 request.setAttribute("persons", persons);

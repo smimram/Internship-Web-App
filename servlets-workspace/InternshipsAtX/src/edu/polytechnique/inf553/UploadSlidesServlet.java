@@ -45,7 +45,8 @@ public class UploadSlidesServlet extends HttpServlet {
         int userId = Integer.parseInt(request.getParameter("userId"));
         Part file = request.getPart("slides");
 
-        try (Connection con = DbUtils.getConnection()) {
+        Connection con = DbUtils.getConnection();
+        try {
             if (con == null) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN);
             }
@@ -75,6 +76,8 @@ public class UploadSlidesServlet extends HttpServlet {
             request.setAttribute("topicsPerCategory", CommonInterface.getTopicsPerCategory(programs, con));
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            DbUtils.releaseConnection(con);
         }
         request.getRequestDispatcher("student_view.jsp").forward(request, response);
     }

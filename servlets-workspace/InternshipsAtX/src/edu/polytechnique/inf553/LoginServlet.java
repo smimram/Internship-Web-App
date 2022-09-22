@@ -65,7 +65,8 @@ public class LoginServlet extends HttpServlet {
 
     private String checkUser(String email, String password) {
         String err_message = "None";
-        try (Connection con = DbUtils.getConnection()) {
+        Connection con = DbUtils.getConnection();
+        try {
             String query = "select * from person where email=? and password=crypt(?, password);";
             //creating connection with the database
             if (con == null) {
@@ -86,13 +87,16 @@ public class LoginServlet extends HttpServlet {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            DbUtils.releaseConnection(con);
         }
         return err_message;
     }
 
     private Person getUserInfo(String email) {
         Person user = null;
-        try (Connection con = DbUtils.getConnection()) {
+        Connection con = DbUtils.getConnection();
+        try {
             String query = "select name, role, person_id, valid, email " +
                     "from person p " +
                     "inner join person_roles pr on pr.person_id = p.id " +
@@ -112,6 +116,8 @@ public class LoginServlet extends HttpServlet {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            DbUtils.releaseConnection(con);
         }
         return user;
     }

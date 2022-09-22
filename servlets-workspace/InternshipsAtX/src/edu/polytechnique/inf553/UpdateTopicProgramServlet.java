@@ -106,7 +106,8 @@ public class UpdateTopicProgramServlet extends HttpServlet {
     }
 
     private Set<Integer> getCategoriesForTopic(int topicId) {
-        try (Connection con = DbUtils.getConnection()) {
+        Connection con = DbUtils.getConnection();
+        try {
             if (con == null) {
                 return null;
             }
@@ -131,11 +132,14 @@ public class UpdateTopicProgramServlet extends HttpServlet {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        } finally {
+            DbUtils.releaseConnection(con);
         }
     }
 
     private Set<Integer> getCategoriesForProgram(int programId) {
-        try (Connection con = DbUtils.getConnection()) {
+        Connection con = DbUtils.getConnection();
+        try {
             if (con == null) {
                 return null;
             }
@@ -159,6 +163,8 @@ public class UpdateTopicProgramServlet extends HttpServlet {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        } finally {
+            DbUtils.releaseConnection(con);
         }
     }
 

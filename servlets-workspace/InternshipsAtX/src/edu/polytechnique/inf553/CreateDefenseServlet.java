@@ -57,7 +57,8 @@ public class CreateDefenseServlet extends HttpServlet {
                     jury2Id = Integer.parseInt(request.getParameter("jury2Id"));
                 }
 
-                try (Connection con = DbUtils.getConnection()) {
+                Connection con = DbUtils.getConnection();
+                try {
                     if (con == null) {
                         response.sendError(HttpServletResponse.SC_FORBIDDEN);
                     }
@@ -99,6 +100,8 @@ public class CreateDefenseServlet extends HttpServlet {
                     e.printStackTrace();
                     // db error
                     response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                } finally {
+                    DbUtils.releaseConnection(con);
                 }
 
                 response.setStatus(200);

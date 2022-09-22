@@ -34,7 +34,8 @@ public class UpdateUserProgramServlet extends HttpServlet {
                 boolean add = Boolean.parseBoolean(request.getParameter("select"));
                 int pid = Integer.parseInt(request.getParameter("pid"));
                 int programId = Integer.parseInt(request.getParameter("programid"));
-                try (Connection con = DbUtils.getConnection()) {
+                Connection con = DbUtils.getConnection();
+                try {
                     if (con == null) {
                         response.sendError(HttpServletResponse.SC_FORBIDDEN);
                     }
@@ -57,6 +58,8 @@ public class UpdateUserProgramServlet extends HttpServlet {
                     e.printStackTrace();
                     // query errors
                     response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                } finally {
+                    DbUtils.releaseConnection(con);
                 }
 
                 response.setStatus(200);

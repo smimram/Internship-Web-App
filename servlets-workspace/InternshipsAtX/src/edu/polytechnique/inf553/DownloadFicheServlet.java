@@ -23,8 +23,8 @@ public class DownloadFicheServlet extends HttpServlet {
         int internshipId = Integer.parseInt(request.getParameter("internshipId"));
         String returnFileName = "file_not_found.jsp";
 
-
-        try (Connection con = DbUtils.getConnection()) {
+        Connection con = DbUtils.getConnection();
+        try {
             if (con == null) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN);
             }
@@ -58,6 +58,8 @@ public class DownloadFicheServlet extends HttpServlet {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            DbUtils.releaseConnection(con);
         }
 
         request.getRequestDispatcher(returnFileName).forward(request, response);

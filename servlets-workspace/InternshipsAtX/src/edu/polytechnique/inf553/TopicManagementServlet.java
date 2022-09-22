@@ -82,7 +82,8 @@ public class TopicManagementServlet extends HttpServlet {
     }
 
     private List<Topic> getTopics(String orderByColumn, String orderBySort) {
-        try (Connection con = DbUtils.getConnection()) {
+        Connection con = DbUtils.getConnection();
+        try {
             if (con == null) {
                 return null;
             }
@@ -121,11 +122,14 @@ public class TopicManagementServlet extends HttpServlet {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        } finally {
+            DbUtils.releaseConnection(con);
         }
     }
 
     private HashMap<String, ArrayList<Category>> getAllCategories(List<Program> programs) {
-        try (Connection con = DbUtils.getConnection()) {
+        Connection con = DbUtils.getConnection();
+        try {
             if (con == null) {
                 return null;
             }
@@ -151,11 +155,14 @@ public class TopicManagementServlet extends HttpServlet {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        } finally {
+            DbUtils.releaseConnection(con);
         }
     }
 
     private List<Program> getAllPrograms() {
-        try (Connection con = DbUtils.getConnection()) {
+        Connection con = DbUtils.getConnection();
+        try {
             if (con == null) {
                 return null;
             }
@@ -178,11 +185,14 @@ public class TopicManagementServlet extends HttpServlet {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        } finally {
+            DbUtils.releaseConnection(con);
         }
     }
 
     private void getCategoriesForTopics(List<Topic> topics) {
-        try (Connection con = DbUtils.getConnection()) {
+        Connection con = DbUtils.getConnection();
+        try {
             if (con == null) {
                 return;
             }
@@ -204,15 +214,16 @@ public class TopicManagementServlet extends HttpServlet {
                     }
                 }
             }
-
-
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            DbUtils.releaseConnection(con);
         }
     }
 
     private void getAffiliatedStudentsForTopics(List<Topic> topics) {
-        try (Connection con = DbUtils.getConnection()) {
+        Connection con = DbUtils.getConnection();
+        try {
             if (con == null) {
                 return;
             }
@@ -241,12 +252,15 @@ public class TopicManagementServlet extends HttpServlet {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            DbUtils.releaseConnection(con);
         }
     }
 
     private List<Person> getStudents() {
         Person user;
-        try (Connection con = DbUtils.getConnection()) {
+        Connection con = DbUtils.getConnection();
+        try {
             if (con == null) {
                 return null;
             }
@@ -274,11 +288,14 @@ public class TopicManagementServlet extends HttpServlet {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        } finally {
+            DbUtils.releaseConnection(con);
         }
     }
 
     private List<Person> getStudentsWithoutInternship() {
-        try (Connection con = DbUtils.getConnection()) {
+        Connection con = DbUtils.getConnection();
+        try {
             if (con == null) {
                 return null;
             }
@@ -309,6 +326,8 @@ public class TopicManagementServlet extends HttpServlet {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        } finally {
+            DbUtils.releaseConnection(con);
         }
     }
 }

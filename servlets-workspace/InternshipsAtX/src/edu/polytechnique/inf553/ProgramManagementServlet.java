@@ -37,7 +37,8 @@ public class ProgramManagementServlet extends HttpServlet {
 
 
                 //======================== DATA LOADING PART ========================
-                try (Connection con = DbUtils.getConnection()) {
+                Connection con = DbUtils.getConnection();
+                try {
                     if (con == null) {
                         response.sendError(HttpServletResponse.SC_FORBIDDEN);
                     }
@@ -87,6 +88,8 @@ public class ProgramManagementServlet extends HttpServlet {
 
                 } catch (SQLException e) {
                     e.printStackTrace();
+                } finally {
+                    DbUtils.releaseConnection(con);
                 }
                 //======================== END OF DATA LOADING PART ========================
 

@@ -64,7 +64,8 @@ public class UploadTopicServlet extends HttpServlet {
             int programId = Integer.parseInt(programIdString);
             int categoryId = Integer.parseInt(categoryIdString);
             boolean confidentialTopic = Objects.equals(confidentiality, "on"); // the checkbox is checked
-            try (Connection con = DbUtils.getConnection()) {
+            Connection con = DbUtils.getConnection();
+            try {
                 int supervisorId;
 
                 if (con == null) {
@@ -148,6 +149,8 @@ public class UploadTopicServlet extends HttpServlet {
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
+            } finally {
+                DbUtils.releaseConnection(con);
             }
             request.setAttribute("topicTitle", topicTitle);
             request.getRequestDispatcher("upload_complete.jsp").forward(request, response);
@@ -165,7 +168,8 @@ public class UploadTopicServlet extends HttpServlet {
 
     private List<Program> loadData() {
         List<Program> programs = new ArrayList<>();
-        try (Connection con = DbUtils.getConnection()) {
+        Connection con = DbUtils.getConnection();
+        try {
             if (con == null) {
                 return null;
             }
@@ -195,6 +199,8 @@ public class UploadTopicServlet extends HttpServlet {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            DbUtils.releaseConnection(con);
         }
         return programs;
     }
@@ -236,7 +242,8 @@ public class UploadTopicServlet extends HttpServlet {
 
     private boolean checkEmail(String email) {
         boolean st = false;
-        try (Connection con = DbUtils.getConnection()) {
+        Connection con = DbUtils.getConnection();
+        try {
             if (con == null) {
                 return false;
             }
@@ -251,13 +258,16 @@ public class UploadTopicServlet extends HttpServlet {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            DbUtils.releaseConnection(con);
         }
         return st;
     }
 
     private boolean checkTitle(String topicTitle) {
         boolean st = false;
-        try (Connection con = DbUtils.getConnection()) {
+        Connection con = DbUtils.getConnection();
+        try {
             if (con == null) {
                 return false;
             }
@@ -273,6 +283,8 @@ public class UploadTopicServlet extends HttpServlet {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            DbUtils.releaseConnection(con);
         }
         return st;
     }

@@ -37,7 +37,8 @@ public class UpdateTopicReportServlet extends HttpServlet {
             if (role.equals("Admin") || role.equals("Professor")) {
                 Part uploadFiche = request.getPart("uploadReport");
                 int topicId = Integer.parseInt(request.getParameter("topicId"));
-                try (Connection con = DbUtils.getConnection()) {
+                Connection con = DbUtils.getConnection();
+                try {
                     if (con == null) {
                         response.sendError(HttpServletResponse.SC_FORBIDDEN);
                     }
@@ -53,6 +54,8 @@ public class UpdateTopicReportServlet extends HttpServlet {
 
                 } catch (SQLException e) {
                     e.printStackTrace();
+                } finally {
+                    DbUtils.releaseConnection(con);
                 }
 
                 response.setStatus(200);

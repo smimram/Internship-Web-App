@@ -37,7 +37,8 @@ public class UpdateUserRoleServlet extends HttpServlet {
             if (role.equals("Admin")) {
                 int rid = Integer.parseInt(request.getParameter("rid"));
                 int pid = Integer.parseInt(request.getParameter("pid"));
-                try (Connection con = DbUtils.getConnection()) {
+                Connection con = DbUtils.getConnection();
+                try {
                     if (con == null) {
                         response.sendError(HttpServletResponse.SC_FORBIDDEN);
                     }
@@ -52,6 +53,8 @@ public class UpdateUserRoleServlet extends HttpServlet {
 
                 } catch (SQLException e) {
                     e.printStackTrace();
+                } finally {
+                    DbUtils.releaseConnection(con);
                 }
 
                 response.setStatus(200);
