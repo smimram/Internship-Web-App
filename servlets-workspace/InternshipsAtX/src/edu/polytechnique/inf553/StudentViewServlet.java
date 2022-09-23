@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class StudentViewServlet extends HttpServlet {
@@ -38,8 +39,8 @@ public class StudentViewServlet extends HttpServlet {
             String role = user.getRole();
             if (role.equals("Student")) {
 
-                List<Program> programs = new ArrayList<>();
-                List<TopicsPerCategory> topicsPerCategory = new ArrayList<>();
+                HashMap<Integer, ArrayList<Category>> topic2category = new HashMap<>();
+                HashMap<Program, ArrayList<Topic>> topicsAvailableForTheStudentPerProgram = new HashMap<>();
                 Defense studentDefense = null;
                 int studentId = user.getId();
 
@@ -51,12 +52,12 @@ public class StudentViewServlet extends HttpServlet {
                     }
 
                     // check if the user already has an internship
-                    String query0 = "select i.id as id, i.title as title, p.email as email, p.name as name, i.confidential_internship as confidential_internship\n" +
+                    String query = "select i.id as id, i.title as title, p.email as email, p.name as name, i.confidential_internship as confidential_internship\n" +
                             "FROM internship i\n" +
                             "INNER JOIN person p on i.supervisor_id = p.id\n" +
                             "INNER JOIN person_internship pi on i.id = pi.internship_id\n" +
                             "WHERE pi.person_id = ?";
-                    try (PreparedStatement ps0 = con.prepareStatement(query0)) {
+                    try (PreparedStatement ps0 = con.prepareStatement(query)) {
                         ps0.setInt(1, studentId);
                         try (ResultSet rs0 = ps0.executeQuery()) {
                             while (rs0.next()) {
@@ -70,64 +71,49 @@ public class StudentViewServlet extends HttpServlet {
                         }
                     }
 
-                    //show only programs associated to the user
-                    String query1 = "SELECT DISTINCT p.id as id, p.name as name, p.year as year\n" +
-                            "FROM program p inner join person_program pp on p.id = pp.program_id\n" +
-                            "WHERE pp.person_id = ?";
-                    try (PreparedStatement ps1 = con.prepareStatement(query1)) {
-                        ps1.setInt(1, studentId);
-                        try (ResultSet rs1 = ps1.executeQuery()) {
-                            while (rs1.next()) {
-                                Program p = new Program(rs1.getInt("id"), rs1.getString("name"), rs1.getString("year"));
-                                programs.add(p);
+                    // get all the internships that the user can apply to
+                    // i.e. those that are validated and no taken
+                    // and that are in the program(s) of the student
+                    // and regardless they have a category or not
+                    query = "SELECT pr.id AS programId, pr.name AS programName, pr.year AS programYear, i.id, i.title, i.confidential_internship, p.name AS supervisorName, p.email AS supervisorEmail, c.id AS categoryId, c.description AS categoryDescr " +
+                            "FROM internship i, person p, internship_category ic, categories c, person_program pp, program pr " +
+                            "WHERE i.supervisor_id = p.id AND i.id = ic.internship_id AND ic.category_id = c.id AND i.program_id = pp.program_id AND pp.person_id = ? AND pp.program_id = pr.id " +
+                            "   AND i.scientific_validated = true " +
+                            "   AND i.administr_validated = true " +
+                            "   AND is_taken = false " +
+                            "ORDER BY pp.program_id, i.id;";
+                    try (PreparedStatement stmt2 = con.prepareStatement(query)) {
+                        stmt2.setInt(1, studentId);
+                        try (ResultSet rs = stmt2.executeQuery()) {
+                            while (rs.next()) {
+                                Program program = new Program(rs.getInt("programId"), rs.getString("programName"), rs.getString("programYear"));
+                                if(!topicsAvailableForTheStudentPerProgram.containsKey(program)) {
+                                    topicsAvailableForTheStudentPerProgram.put(program, new ArrayList<>());
+                                }
+                                Topic topic = new Topic(rs.getString("title"), rs.getInt("id"), rs.getString("supervisorEmail"), rs.getString("supervisorName"), rs.getBoolean("confidential_internship"));
+                                topicsAvailableForTheStudentPerProgram.get(program).add(topic);
                             }
                         }
                     }
 
-                    for (Program program : programs) {
-                        String query = "SELECT DISTINCT c.description AS desc, c.id as id \n" +
-                                "FROM categories c\n" +
-                                "INNER JOIN program_category pc ON pc.cat_id = c.id\n" +
-                                "WHERE pc.program_id = ?;";
-                        try (PreparedStatement stmt = con.prepareStatement(query)) {
-                            stmt.setInt(1, Integer.parseInt(program.getId()));
-                            try (ResultSet rs = stmt.executeQuery()) {
-                                while (rs.next()) {
-                                    int categoryId = rs.getInt("id");
-
-                                    String queryTopics = "SELECT i.id as id, i.title as title, i.confidential_internship as confidential_internship, p.email as email, p.name as name " +
-                                            "FROM internship i " +
-                                            "INNER JOIN internship_category ic ON i.id = ic.internship_id " +
-                                            "INNER JOIN categories c ON c.id = ic.category_id " +
-                                            "INNER JOIN person p on i.supervisor_id = p.id " +
-                                            "WHERE program_id = ? AND c.id = ? AND i.is_taken=false AND scientific_validated=true AND administr_validated=true;";
-                                    try (PreparedStatement stmt2 = con.prepareStatement(queryTopics)) {
-                                        stmt2.setInt(1, Integer.parseInt(program.getId()));
-                                        stmt2.setInt(2, categoryId);
-                                        try (ResultSet rsTopics = stmt2.executeQuery()) {
-                                            List<Topic> topicsOfCategory = new ArrayList<>();
-                                            while (rsTopics.next()) {
-                                                Topic s = new Topic(rsTopics.getString("title"),
-                                                        rsTopics.getInt("id"),
-                                                        rsTopics.getString("email"),
-                                                        rsTopics.getString("name"),
-                                                        rsTopics.getBoolean("confidential_internship"));
-                                                topicsOfCategory.add(s);
-                                            }
-                                            topicsPerCategory.add(new TopicsPerCategory(Integer.parseInt(program.getId()), categoryId, topicsOfCategory));
-                                        }
-                                    }
-                                    Category c = new Category(rs.getString("desc"), categoryId);
-                                    program.addCategory(c);
-                                }
+                    // get categories of each topic -- store only the topic ID and its categories
+                    query = "SELECT c.id AS categoryId, c.description AS categoryDescr " +
+                            "FROM categories c, internship_category ic " +
+                            "WHERE ic.category_id = c.id AND ic.internship_id IN (" + + ");";
+                    try(PreparedStatement stmt = con.prepareStatement(query)) {
+                        ResultSet rs = stmt.executeQuery();
+                        if(rs.next()) {
+                            if(!topic2category.containsKey(rs.getInt("topicId"))) {
+                                topic2category.put(rs.getInt("topicId"), new ArrayList<>());
                             }
+                            topic2category.get(rs.getInt("topicId")).add(new Category(rs.getInt("categoryId"), rs.getString("categoryDesc")));
                         }
                     }
 
                     // get the defense of the student
                     // p1 corresponds to the referent
                     // p2 corresponds to the jury2
-                    String query = "SELECT d.id, d.date, d.time, p1.id, p1.name, p1.email, p2.id, p2.name, p2.email, d.student_id " +
+                    query = "SELECT d.id, d.date, d.time, p1.id, p1.name, p1.email, p2.id, p2.name, p2.email, d.student_id " +
                             "FROM defense d, person p1, person p2 " +
                             "WHERE d.referent_id = p1.id AND d.jury2_id = p2.id AND student_id = ?;";
                     try(PreparedStatement stmt = con.prepareStatement(query)) {
@@ -145,8 +131,9 @@ public class StudentViewServlet extends HttpServlet {
                 //======================== END OF DATA LOADING PART ========================
 
 
-                request.setAttribute("programs", programs);
-                request.setAttribute("topicsPerCategory", topicsPerCategory);
+                request.setAttribute("topicsAvailableForTheStudentPerProgram", topicsAvailableForTheStudentPerProgram);
+                request.setAttribute("programsAvailableForTheStudent", new ArrayList<>(topicsAvailableForTheStudentPerProgram.keySet()));
+                request.setAttribute("topic2category", topic2category);
                 request.setAttribute("studentDefense", studentDefense);
                 request.getRequestDispatcher("student_view.jsp").forward(request, response);
 

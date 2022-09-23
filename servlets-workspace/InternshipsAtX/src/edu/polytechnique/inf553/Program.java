@@ -2,8 +2,9 @@ package edu.polytechnique.inf553;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class Program {
+public class Program implements Comparable<Object> {
 
     private int id;
     private String name;
@@ -12,8 +13,8 @@ public class Program {
     private List<Person> students;
 
     public Program(int id, String name, String year) {
-        this.name = name;
         this.id = id;
+        this.name = name;
         this.year = year;
         this.categories = new ArrayList<>();
         this.students = new ArrayList<>();
@@ -45,5 +46,32 @@ public class Program {
 
     public List<Person> getStudents() {
         return this.students;
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Program) {
+            Program prog = (Program) obj;
+            System.out.println(prog);
+            System.out.println(this);
+            return this.id == prog.id;
+        }
+        return false;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return Integer.compare(this.id, ((Program) o).id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.id);
+    }
+
+    @Override
+    public String toString() {
+        return "Program{" + "id=" + id + ", name='" + name + ", year=" + year + "}";
     }
 }
