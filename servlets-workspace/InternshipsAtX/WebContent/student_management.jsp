@@ -103,16 +103,18 @@
 									<a href="/topic-management?orderByColumn=id&orderBySort=ASC"><i class="fas fa-sort-numeric-down" title="sort by increasing order"></i></a>
 									<a href="/topic-management?orderByColumn=id&orderBySort=DESC"><i class="fas fa-sort-numeric-down-alt" title="sort by decreasing order"></i></a>
 								</div>
-								<div class="col col-11">Name
+								<div class="col col-8">Name
 									<a href="/topic-management?orderByColumn=title&orderBySort=ASC"><i class="fas fa-sort-alpha-down" title="sort by increasing order"></i></a>
 									<a href="/topic-management?orderByColumn=title&orderBySort=DESC"><i class="fas fa-sort-alpha-down-alt" title="sort by decreasing order"></i></a>
 								</div>
+								<div class="col col-3">Topic title</div>
 							</li>
 
 							<c:forEach items="${program.getStudents()}" var="student">
 								<li class="table-row">
 									<div class="col col-1" data-label="Id">${student.id}</div>
-									<div class="col col-11" data-label="Title">${student.name}</div>
+									<div class="col col-8" data-label="Title">${student.name}</div>
+									<div class="col col-3" data-label="Title">${student.internshipTitle}</div>
 								</li>
 							</c:forEach>
 						</ul>

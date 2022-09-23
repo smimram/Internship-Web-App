@@ -12,6 +12,7 @@ public class Person {
     private boolean valid;
     private String email;
     private boolean hasInternship;
+    private String internshipTitle = "";
 
     public Person(String name, int id, String role, boolean valid, String email) {
         this.name = name;
@@ -83,6 +84,14 @@ public class Person {
 
     public boolean hasInternship() {
         return this.hasInternship;
+    }
+
+    public String getInternshipTitle() {
+        return this.internshipTitle;
+    }
+
+    public void setInternshipTitle(String internshipTitle) {
+        this.internshipTitle = internshipTitle;
     }
 
     @Override

@@ -58,11 +58,13 @@ public class StudentManagementServlet extends HttpServlet {
 
                     // get students for each program
                     for (Program p : programs) {
-                        query = "SELECT p.name, p.id, r.role, p.valid, p.email " +
+                        query = "SELECT p.name, p.id, r.role, p.valid, p.email, i.title " +
                                 "FROM person p " +
                                 "INNER JOIN person_roles pr ON pr.person_id = p.id " +
                                 "INNER JOIN role_type r ON r.id = pr.role_id " +
                                 "INNER JOIN person_program pp ON pp.person_id = p.id " +
+                                "LEFT JOIN person_internship pi ON pi.person_id = p.id " +
+                                "LEFT JOIN internship i ON pi.internship_id = i.id " +
                                 "WHERE pp.program_id = ? AND r.role = 'Student' " +
                                 "ORDER BY p.name";
                         try (PreparedStatement ps0 = con.prepareStatement(query)) {
@@ -70,6 +72,7 @@ public class StudentManagementServlet extends HttpServlet {
                             try (ResultSet rs0 = ps0.executeQuery()) {
                                 while (rs0.next()) {
                                     Person student = new Person(rs0.getString(1), rs0.getInt(2), rs0.getString(3), rs0.getBoolean(4), rs0.getString(5));
+                                    student.setInternshipTitle(rs0.getString(6));
                                     p.addStudent(student);
                                 }
                             }
