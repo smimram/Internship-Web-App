@@ -39,6 +39,7 @@ public class StudentViewServlet extends HttpServlet {
             String role = user.getRole();
             if (role.equals("Student")) {
 
+                Topic userTopic = null;
                 HashMap<Integer, ArrayList<Category>> topic2category = new HashMap<>();
                 HashMap<Program, ArrayList<Topic>> topicsAvailableForTheStudentPerProgram = new HashMap<>();
                 Defense studentDefense = null;
@@ -61,12 +62,7 @@ public class StudentViewServlet extends HttpServlet {
                         ps0.setInt(1, studentId);
                         try (ResultSet rs0 = ps0.executeQuery()) {
                             while (rs0.next()) {
-                                Topic userTopic = new Topic(rs0.getString("title"),
-                                        rs0.getInt("id"),
-                                        rs0.getString("email"),
-                                        rs0.getString("name"),
-                                        rs0.getBoolean("confidential_internship"));
-                                request.setAttribute("userTopic", userTopic);
+                                userTopic = new Topic(rs0.getString("title"), rs0.getInt("id"), rs0.getString("email"), rs0.getString("name"), rs0.getBoolean("confidential_internship"));
                             }
                         }
                     }
@@ -75,9 +71,10 @@ public class StudentViewServlet extends HttpServlet {
                     // i.e. those that are validated and no taken
                     // and that are in the program(s) of the student
                     // and regardless they have a category or not
-                    query = "SELECT pr.id AS programId, pr.name AS programName, pr.year AS programYear, i.id, i.title, i.confidential_internship, p.name AS supervisorName, p.email AS supervisorEmail, c.id AS categoryId, c.description AS categoryDescr " +
-                            "FROM internship i, person p, internship_category ic, categories c, person_program pp, program pr " +
-                            "WHERE i.supervisor_id = p.id AND i.id = ic.internship_id AND ic.category_id = c.id AND i.program_id = pp.program_id AND pp.person_id = ? AND pp.program_id = pr.id " +
+                    ArrayList<Integer> topicsIds = new ArrayList<>();
+                    query = "SELECT pr.id AS programId, pr.name AS programName, pr.year AS programYear, i.id AS topicId, i.title, i.confidential_internship, p.name AS supervisorName, p.email AS supervisorEmail " +
+                            "FROM internship i, person p, person_program pp, program pr " +
+                            "WHERE i.supervisor_id = p.id AND i.program_id = pp.program_id AND pp.person_id = ? AND pp.program_id = pr.id " +
                             "   AND i.scientific_validated = true " +
                             "   AND i.administr_validated = true " +
                             "   AND is_taken = false " +
@@ -90,25 +87,33 @@ public class StudentViewServlet extends HttpServlet {
                                 if(!topicsAvailableForTheStudentPerProgram.containsKey(program)) {
                                     topicsAvailableForTheStudentPerProgram.put(program, new ArrayList<>());
                                 }
-                                Topic topic = new Topic(rs.getString("title"), rs.getInt("id"), rs.getString("supervisorEmail"), rs.getString("supervisorName"), rs.getBoolean("confidential_internship"));
+                                Topic topic = new Topic(rs.getString("title"), rs.getInt("topicId"), rs.getString("supervisorEmail"), rs.getString("supervisorName"), rs.getBoolean("confidential_internship"));
                                 topicsAvailableForTheStudentPerProgram.get(program).add(topic);
+                                topicsIds.add(rs.getInt("topicId"));
                             }
                         }
                     }
+                    System.out.println("topicsIds = " + topicsIds);
 
                     // get categories of each topic -- store only the topic ID and its categories
-                    query = "SELECT c.id AS categoryId, c.description AS categoryDescr " +
+                    String topicsIdsString = "";
+                    for(int topicId : topicsIds) {
+                        topicsIdsString += topicId + ",";
+                    }
+                    topicsIdsString = topicsIdsString.substring(0, topicsIdsString.length() -1); // remove last comma
+                    query = "SELECT DISTINCT ic.internship_id AS topicId, c.id AS categoryId, c.description AS categoryDescr " +
                             "FROM categories c, internship_category ic " +
-                            "WHERE ic.category_id = c.id AND ic.internship_id IN (" + + ");";
+                            "WHERE ic.category_id = c.id AND ic.internship_id IN (" + topicsIdsString + ");";
                     try(PreparedStatement stmt = con.prepareStatement(query)) {
                         ResultSet rs = stmt.executeQuery();
-                        if(rs.next()) {
+                        while(rs.next()) {
                             if(!topic2category.containsKey(rs.getInt("topicId"))) {
                                 topic2category.put(rs.getInt("topicId"), new ArrayList<>());
                             }
-                            topic2category.get(rs.getInt("topicId")).add(new Category(rs.getInt("categoryId"), rs.getString("categoryDesc")));
+                            topic2category.get(rs.getInt("topicId")).add(new Category(rs.getString("categoryDescr"), rs.getInt("categoryId")));
                         }
                     }
+                    System.out.println(topic2category);
 
                     // get the defense of the student
                     // p1 corresponds to the referent
@@ -130,7 +135,7 @@ public class StudentViewServlet extends HttpServlet {
                 }
                 //======================== END OF DATA LOADING PART ========================
 
-
+                request.setAttribute("userTopic", userTopic);
                 request.setAttribute("topicsAvailableForTheStudentPerProgram", topicsAvailableForTheStudentPerProgram);
                 request.setAttribute("programsAvailableForTheStudent", new ArrayList<>(topicsAvailableForTheStudentPerProgram.keySet()));
                 request.setAttribute("topic2category", topic2category);
