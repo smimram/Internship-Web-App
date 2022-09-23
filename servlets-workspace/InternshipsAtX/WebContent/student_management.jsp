@@ -113,7 +113,7 @@
 							<c:forEach items="${program.getStudents()}" var="student">
 								<li class="table-row">
 									<div class="col col-1" data-label="Id">${student.id}</div>
-									<div class="col col-8" data-label="Title">${student.name}</div>
+									<div class="col col-8" data-label="Title">${student.name}<button type="button" class="btn btn-secondary btn-sm" style="margin-left: 10px;" onclick="displayEmail('${student.email}')"><i class="fas fa-at" style="color: white"></i></button></div>
 									<div class="col col-3" data-label="Title">${student.internshipTitle}</div>
 								</li>
 							</c:forEach>
@@ -125,4 +125,10 @@
 	</div>
 </div>
 </body>
+
+<script>
+	function displayEmail(email) {
+		alert("Email: " + email);
+	}
+</script>
 </html>
