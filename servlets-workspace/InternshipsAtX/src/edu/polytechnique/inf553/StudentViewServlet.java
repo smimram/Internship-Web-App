@@ -72,7 +72,7 @@ public class StudentViewServlet extends HttpServlet {
                     // and that are in the program(s) of the student
                     // and regardless they have a category or not
                     ArrayList<Integer> topicsIds = new ArrayList<>();
-                    query = "SELECT pr.id AS programId, pr.name AS programName, pr.year AS programYear, i.id AS topicId, i.title, i.confidential_internship, p.name AS supervisorName, p.email AS supervisorEmail " +
+                    query = "SELECT pr.id AS programId, pr.name AS programName, pr.year AS programYear, i.id AS topicId, i.title, i.confidential_internship, i.institution, p.name AS supervisorName, p.email AS supervisorEmail " +
                             "FROM internship i, person p, person_program pp, program pr " +
                             "WHERE i.supervisor_id = p.id AND i.program_id = pp.program_id AND pp.person_id = ? AND pp.program_id = pr.id " +
                             "   AND i.scientific_validated = true " +
@@ -87,7 +87,7 @@ public class StudentViewServlet extends HttpServlet {
                                 if(!topicsAvailableForTheStudentPerProgram.containsKey(program)) {
                                     topicsAvailableForTheStudentPerProgram.put(program, new ArrayList<>());
                                 }
-                                Topic topic = new Topic(rs.getString("title"), rs.getInt("topicId"), rs.getString("supervisorEmail"), rs.getString("supervisorName"), rs.getBoolean("confidential_internship"));
+                                Topic topic = new Topic(rs.getString("title"), rs.getInt("topicId"), rs.getString("supervisorEmail"), rs.getString("supervisorName"), rs.getBoolean("confidential_internship"), rs.getString("institution"));
                                 topicsAvailableForTheStudentPerProgram.get(program).add(topic);
                                 topicsIds.add(rs.getInt("topicId"));
                             }
@@ -146,7 +146,7 @@ public class StudentViewServlet extends HttpServlet {
                 }
                 System.out.println("atLeastOneAvailableInternship = " + atLeastOneAvailableInternship);
                 request.setAttribute("userTopic", userTopic);
-                request.setAttribute("atLeastOneAvaialableTopic", atLeastOneAvailableInternship);
+                request.setAttribute("atLeastOneAvailableInternship", atLeastOneAvailableInternship);
                 request.setAttribute("topicsAvailableForTheStudentPerProgram", topicsAvailableForTheStudentPerProgram);
                 request.setAttribute("programsAvailableForTheStudent", new ArrayList<>(topicsAvailableForTheStudentPerProgram.keySet()));
                 request.setAttribute("topic2category", topic2category);

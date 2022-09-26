@@ -10,6 +10,7 @@ public class Topic {
     private String title;
     private String supervisorEmail;
     private String supervisorName;
+    private String institution;
     private int programId;
     private boolean adminValid;
     private boolean sciValid;
@@ -20,17 +21,15 @@ public class Topic {
     private Timestamp dateReport;
     private Timestamp dateSlides;
 
+    public Topic(String title, int id, String supervisorEmail, String supervisorName, int programId, boolean adminValid, boolean sciValid, boolean isConfidentialInternship, String institution) {
+        this(title, id, supervisorEmail, supervisorName, programId, adminValid, sciValid, isConfidentialInternship);
+        this.institution = institution;
+    }
+
     public Topic(String title, int id, String supervisorEmail, String supervisorName, int programId, boolean adminValid, boolean sciValid, boolean isConfidentialInternship) {
-        this.title = title;
-        this.id = id;
+        this(id, title, programId, adminValid, sciValid, isConfidentialInternship);
         this.supervisorEmail = supervisorEmail;
         this.supervisorName = supervisorName;
-        this.adminValid = adminValid;
-        this.sciValid = sciValid;
-        this.programId = programId;
-        this.categories = new ArrayList<>();
-        this.affiliatedStudent = null;
-        this.isConfidentialInternship = isConfidentialInternship;
     }
 
     public Topic(int id, String title, int programId, boolean adminValid, boolean sciValid, boolean isConfidentialInternship) {
@@ -52,6 +51,16 @@ public class Topic {
         this.categories = new ArrayList<>();
         this.affiliatedStudent = null;
         this.isConfidentialInternship = isConfidentialInternship;
+    }
+
+    public Topic(int id, String title, int programId, boolean adminValid, boolean sciValid, boolean isConfidentialInternship, String institution) {
+        this(id, title, programId, adminValid, sciValid, isConfidentialInternship);
+        this.institution = institution;
+    }
+
+    public Topic(String title, int id, String supervisorEmail, String supervisorName, boolean isConfidentialInternship, String institution) {
+        this(title, id, supervisorEmail, supervisorName, isConfidentialInternship);
+        this.institution = institution;
     }
 
     public String getTitle() {
@@ -124,6 +133,14 @@ public class Topic {
 
     public List<Category> getCategories() {
         return categories;
+    }
+
+    public String getInstitution() {
+        return institution;
+    }
+
+    public void setInstitution(String institution) {
+        this.institution = institution;
     }
 
     @Override

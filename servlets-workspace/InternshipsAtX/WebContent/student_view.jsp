@@ -162,15 +162,17 @@
 								<ul class="responsive-table">
 								<li class="table-header">
 									<div class="col col-1"> Id </div>
-									<div class="col col-4">Topic Title</div>
+									<div class="col col-3">Topic Title</div>
+									<div class="col col-2">Institution</div>
 									<div class="col col-3">Categories</div>
-									<div class="col col-3">Supervisor</div>
+									<div class="col col-2">Supervisor</div>
 									<div class="col col-1">Download topic</div>
 								</li>
 								<c:forEach items="${topicsAvailableForTheStudentPerProgram[entry.key]}" var="topic">
 									<li class="table-row">
 									<div class="col col-1" data-label="Id">${topic.getId()}  ${topic.isConfidentialInternship() == true ? '<i class="fas fa-lock" style="color: goldenrod" title="Confidential internship"></i>' : '<i class="fas fa-unlock" style="color: goldenrod" title="Non-confidential internship"></i>'}</div>
-									<div class="col col-4" data-label="Topic Title">${topic.getTitle()}</div>
+									<div class="col col-3" data-label="Topic Title">${topic.getTitle()}</div>
+									<div class="col col-2" data-label="Institution">${topic.getInstitution()}</div>
 									<div class="col col-3" data-label="Topic Categories">
 									<select class="mul-select" id="mul-select-${topic.id}" name="topics[]" multiple="multiple" data-pid="${topic.id}" disabled>
 									<c:forEach items="${topic2category}" var="entry2">
@@ -182,7 +184,7 @@
 									</c:forEach>
 									</select>
 									</div>
-										<div class="col col-3" data-label="Supervisor Name">${topic.getSupervisorName()}<br/><button type="button" class="btn btn-secondary btn-sm" onclick="displayEmail('${topic.getSupervisorEmail()}')"><i class="fas fa-at" style="color: white"></i></button></div>
+										<div class="col col-2" data-label="Supervisor Name">${topic.getSupervisorName()}<br/><button type="button" class="btn btn-secondary btn-sm" onclick="displayEmail('${topic.getSupervisorEmail()}')"><i class="fas fa-at" style="color: white"></i></button></div>
 										<div class="col col-1" data-label="Topic"><button type="button" class="btn btn-secondary btn-sm"><a href="./download-topic?internshipId=${topic.getId()}" target="_blank"><i class="fas fa-download" style="color: white"></i></a></button></div>
 									</li>
 								</c:forEach>

@@ -97,7 +97,7 @@ public class TopicManagementServlet extends HttpServlet {
                 orderByColumn = orderByColumn.substring(1, orderByColumn.length() - 1); // if the value is encapsulated into '', e.g. 'id'
             if (orderBySort.startsWith("'") && orderBySort.endsWith("'"))
                 orderBySort = orderBySort.substring(1, orderBySort.length() - 1); // if the value is encapsulated into '', e.g. 'ASC'
-            String query = "SELECT DISTINCT id, title, program_id, administr_validated, scientific_validated, confidential_internship, timestamp_fiche, timestamp_report, timestamp_slides "
+            String query = "SELECT DISTINCT id, title, institution, program_id, administr_validated, scientific_validated, confidential_internship, timestamp_fiche, timestamp_report, timestamp_slides "
                     + "FROM internship "
                     + "ORDER BY " + orderByColumn + " " + orderBySort + ";";
             try (
@@ -110,7 +110,8 @@ public class TopicManagementServlet extends HttpServlet {
                             resultSet.getInt("program_id"),
                             resultSet.getBoolean("administr_validated"),
                             resultSet.getBoolean("scientific_validated"),
-                            resultSet.getBoolean("confidential_internship"));
+                            resultSet.getBoolean("confidential_internship"),
+                            resultSet.getString("institution"));
                     topic.setDateFiche(resultSet.getTimestamp("timestamp_fiche"));
                     topic.setDateReport(resultSet.getTimestamp("timestamp_report"));
                     topic.setDateSlides(resultSet.getTimestamp("timestamp_slides"));

@@ -132,7 +132,7 @@ input:checked + .slider:before {
 											${topic.id}
 											${topic.isConfidentialInternship() ? '<i class="fas fa-lock" style="color: goldenrod" title="Confidential internship"></i>' : '<i class="fas fa-lock-open" style="color: goldenrod" title="Non-confidential internship"></i>'}
 									</div>
-									<div class="col col-2" data-label="Title">${topic.title}</div>
+									<div class="col col-2" data-label="Title">${topic.title} (@ ${topic.institution})</div>
 									<div class="col col-2" data-label="Categories">
 										<!-- update the categories of a topic -->
 										<select class="mul-select" id="mul-select-category-${topic.id}" name="topics[]" multiple="multiple" data-pid= "${topic.id}">
