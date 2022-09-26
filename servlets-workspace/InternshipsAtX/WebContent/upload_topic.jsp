@@ -40,7 +40,7 @@
 					</div>
 
 					<div class="wrap-input100 validate-input m-b-16" data-validate="Please enter your institution">
-						<input class="input100" type="text" name="institution" placeholder="Institution" value="${institution}">
+						<input class="input100" type="text" name="institution" placeholder="Company or institution name" value="${institution}">
 						<span class="focus-input100"></span>
 					</div>
 
