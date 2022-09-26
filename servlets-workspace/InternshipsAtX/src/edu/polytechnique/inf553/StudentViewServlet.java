@@ -73,7 +73,7 @@ public class StudentViewServlet extends HttpServlet {
                     // and that are in the program(s) of the student
                     // and regardless they have a category or not
                     ArrayList<Integer> topicsIds = new ArrayList<>();
-                    query = "SELECT pr.id AS programId, pr.name AS programName, pr.year AS programYear, i.id AS topicId, i.title, i.confidential_internship, i.institution, p.name AS supervisorName, p.email AS supervisorEmail " +
+                    query = "SELECT pr.id AS programId, pr.name AS programName, pr.year AS programYear, pr.description AS programDescription, i.id AS topicId, i.title, i.confidential_internship, i.institution, p.name AS supervisorName, p.email AS supervisorEmail " +
                             "FROM internship i, person p, person_program pp, program pr " +
                             "WHERE i.supervisor_id = p.id AND i.program_id = pp.program_id AND pp.person_id = ? AND pp.program_id = pr.id " +
                             "   AND i.scientific_validated = true " +
@@ -84,7 +84,7 @@ public class StudentViewServlet extends HttpServlet {
                         stmt2.setInt(1, studentId);
                         try (ResultSet rs = stmt2.executeQuery()) {
                             while (rs.next()) {
-                                Program program = new Program(rs.getInt("programId"), rs.getString("programName"), rs.getString("programYear"));
+                                Program program = new Program(rs.getInt("programId"), rs.getString("programName"), rs.getString("programYear"), rs.getString("programDescription"));
                                 if(!topicsAvailableForTheStudentPerProgram.containsKey(program)) {
                                     topicsAvailableForTheStudentPerProgram.put(program, new ArrayList<>());
                                 }

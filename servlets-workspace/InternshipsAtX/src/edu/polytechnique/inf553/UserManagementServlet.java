@@ -48,14 +48,14 @@ public class UserManagementServlet extends HttpServlet {
 
                     // get program list for each user
                     for (Person person : persons) {
-                        String query1 = "SELECT DISTINCT program_id, name, year\n" +
+                        String query1 = "SELECT DISTINCT program_id, name, year, description\n" +
                                 "FROM program p inner join person_program pp on p.id = pp.program_id\n" +
                                 "WHERE pp.person_id = ?";
                         try (PreparedStatement ps1 = con.prepareStatement(query1)) {
                             ps1.setInt(1, person.getId());
                             try (ResultSet rs1 = ps1.executeQuery()) {
                                 while (rs1.next()) {
-                                    Program pr = new Program(rs1.getInt("program_id"), rs1.getString("name"), rs1.getString("year"));
+                                    Program pr = new Program(rs1.getInt("program_id"), rs1.getString("name"), rs1.getString("year"), rs1.getString("description"));
                                     person.addProgram(pr);
                                 }
                             }
@@ -63,13 +63,13 @@ public class UserManagementServlet extends HttpServlet {
                     }
 
                     // get all program list
-                    String query2 = "SELECT DISTINCT id, name, year FROM program;";
+                    String query2 = "SELECT DISTINCT id, name, year, description FROM program;";
                     try (
                             PreparedStatement ps2 = con.prepareStatement(query2);
                             ResultSet rs2 = ps2.executeQuery();
                     ) {
                         while (rs2.next()) {
-                            Program p = new Program(rs2.getInt("id"), rs2.getString("name"), rs2.getString("year"));
+                            Program p = new Program(rs2.getInt("id"), rs2.getString("name"), rs2.getString("year"), rs2.getString("description"));
                             programs.add(p);
                         }
                     }

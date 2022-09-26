@@ -51,7 +51,7 @@ public class StudentManagementServlet extends HttpServlet {
                             ResultSet rs0 = ps0.executeQuery();
                     ) {
                         while (rs0.next()) {
-                            Program p = new Program(rs0.getInt(1), rs0.getString(2), rs0.getString(3));
+                            Program p = new Program(rs0.getInt(1), rs0.getString(2), rs0.getString(3), rs0.getString(4));
                             programs.add(p);
                         }
                     }

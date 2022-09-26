@@ -30,14 +30,14 @@ public class CommonInterface {
         List<Program> programs = new ArrayList<>();
 
         //show only programs associated to the user
-        String query = "SELECT DISTINCT p.id as id, p.name as name, p.year as year\n" +
+        String query = "SELECT DISTINCT p.id as id, p.name as name, p.year as year, p.description as description\n" +
                 "FROM program p inner join person_program pp on p.id = pp.program_id\n" +
                 "WHERE pp.person_id = ?";
         try (PreparedStatement ps1 = con.prepareStatement(query)) {
             ps1.setInt(1, userId);
             try (ResultSet rs1 = ps1.executeQuery()) {
                 while (rs1.next()) {
-                    Program p = new Program(rs1.getInt("id"), rs1.getString("name"), rs1.getString("year"));
+                    Program p = new Program(rs1.getInt("id"), rs1.getString("name"), rs1.getString("year"), rs1.getString("description"));
                     programs.add(p);
                 }
             }

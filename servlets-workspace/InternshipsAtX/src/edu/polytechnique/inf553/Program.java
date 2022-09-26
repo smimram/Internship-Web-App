@@ -9,13 +9,15 @@ public class Program implements Comparable<Object> {
     private int id;
     private String name;
     private String year;
+    private String description;
     private List<Category> categories;
     private List<Person> students;
 
-    public Program(int id, String name, String year) {
+    public Program(int id, String name, String year, String description) {
         this.id = id;
         this.name = name;
         this.year = year;
+        this.description = description;
         this.categories = new ArrayList<>();
         this.students = new ArrayList<>();
     }
@@ -48,13 +50,18 @@ public class Program implements Comparable<Object> {
         return this.students;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Program) {
             Program prog = (Program) obj;
-            System.out.println(prog);
-            System.out.println(this);
             return this.id == prog.id;
         }
         return false;

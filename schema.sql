@@ -122,3 +122,7 @@ insert into program(name, year) values ('phys', 2020);
 -- modifications to add (Sept. 26th 2022)
 -- ALTER TABLE internship ADD COLUMN institution VARCHAR;
 -- ALTER TABLE internship DROP CONSTRAINT internship_program_id_fkey;
+-- ALTER TABLE program ADD column description VARCHAR;
+-- UPDATE program SET description = "Internship in Data Science" WHERE name = 'INF592';
+-- UPDATE program SET description = "Stage de recherche en science informatique" WHERE name = 'INF591';
+-- UPDATE program SET description = "Stages en IVA" WHERE name = 'INF594';

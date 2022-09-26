@@ -56,14 +56,14 @@ public class ProgramManagementServlet extends HttpServlet {
                     }
 
                     //get all the programs
-                    String query1 = "SELECT DISTINCT id, name, year \n" +
+                    String query1 = "SELECT DISTINCT id, name, year, description \n" +
                             "FROM program ORDER BY id";
                     try (
                             PreparedStatement ps1 = con.prepareStatement(query1);
                             ResultSet rs1 = ps1.executeQuery();
                     ) {
                         while (rs1.next()) {
-                            Program p = new Program(rs1.getInt("id"), rs1.getString("name"), rs1.getString("year"));
+                            Program p = new Program(rs1.getInt("id"), rs1.getString("name"), rs1.getString("year"), rs1.getString("description"));
                             programs.add(p);
                         }
                     }

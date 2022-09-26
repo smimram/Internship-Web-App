@@ -170,13 +170,13 @@ public class TopicManagementServlet extends HttpServlet {
 
             List<Program> programs = new ArrayList<>();
             // get all program list
-            String query = "SELECT DISTINCT id, name, year FROM program ORDER BY name;";
+            String query = "SELECT DISTINCT id, name, year, description FROM program ORDER BY name;";
             try (
                     PreparedStatement preparedStatement = con.prepareStatement(query);
                     ResultSet resultSet = preparedStatement.executeQuery();
             ) {
                 while (resultSet.next()) {
-                    Program program = new Program(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getString("year"));
+                    Program program = new Program(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getString("year"), resultSet.getString("description"));
                     programs.add(program);
                 }
             }

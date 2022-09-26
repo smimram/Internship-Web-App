@@ -183,10 +183,10 @@ public class UploadTopicServlet extends HttpServlet {
                 return null;
             }
 
-            String query1 = "SELECT DISTINCT id, name, year FROM program;";
+            String query1 = "SELECT DISTINCT id, name, year, description FROM program;";
             try (PreparedStatement ps1 = con.prepareStatement(query1); ResultSet rs1 = ps1.executeQuery();) {
                 while (rs1.next()) {
-                    Program p = new Program(rs1.getInt("id"), rs1.getString("name"), rs1.getString("year"));
+                    Program p = new Program(rs1.getInt("id"), rs1.getString("name"), rs1.getString("year"), rs1.getString("description"));
                     programs.add(p);
                 }
             }
