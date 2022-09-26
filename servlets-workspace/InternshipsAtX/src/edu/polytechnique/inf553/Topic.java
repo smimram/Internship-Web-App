@@ -11,7 +11,7 @@ public class Topic {
     private String supervisorEmail;
     private String supervisorName;
     private String institution;
-    private int programId;
+    private int programId = -1;
     private boolean adminValid;
     private boolean sciValid;
     private List<Category> categories;
@@ -143,8 +143,22 @@ public class Topic {
         this.institution = institution;
     }
 
-    @Override
-    public String toString() {
-        return "Topic{" + "id=" + id + ", title='" + title + '\'' + ", dateFiche=" + dateFiche + ", dateReport=" + dateReport + ", dateSlides=" + dateSlides + '}';
-    }
+    @java.lang.Override
+    public java.lang.String toString() {
+        return "Topic{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", supervisorEmail='" + supervisorEmail + '\'' +
+                ", supervisorName='" + supervisorName + '\'' +
+                ", institution='" + institution + '\'' +
+                ", programId=" + programId +
+                ", adminValid=" + adminValid +
+                ", sciValid=" + sciValid +
+                ", categories=" + categories +
+                ", affiliatedStudent=" + affiliatedStudent +
+                ", isConfidentialInternship=" + isConfidentialInternship +
+                ", dateFiche=" + dateFiche +
+                ", dateReport=" + dateReport +
+                ", dateSlides=" + dateSlides +
+                '}';
 }

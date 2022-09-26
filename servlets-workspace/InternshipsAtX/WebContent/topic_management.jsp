@@ -148,6 +148,9 @@ input:checked + .slider:before {
 									<div class="col col-2" data-label="Program">
 										<!-- update the program of a topic -->
 										<select id="select-program-${topic.id}" class="custom-select" name="role" onchange="updateTopicProgram(${topic.id}, this);">
+											<c:if test="${topic.programId == -1}">
+												<option value="-1" selected>No program</option>
+											</c:if>
 											<c:forEach items="${programs}" var="program">
 												<option value="${program.id}" ${topic.programId == program.id ? 'selected' : '' }>${program.name} - ${program.year}</option>
 											</c:forEach>

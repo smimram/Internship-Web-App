@@ -46,18 +46,23 @@ public class UploadTopicServlet extends HttpServlet {
         String fullName = request.getParameter("fullName");
         String email = request.getParameter("email").toLowerCase();
         String topicTitle = request.getParameter("topicTitle");
-        String topicInstitution = request.getParameter("topicInstitution");
+        String institution = request.getParameter("institution");
         String programIdString = request.getParameter("programs");
         String categoryIdString = request.getParameter("categories");
         String confidentiality = request.getParameter("confidentiality");
         Part uploadFile = request.getPart("uploadFile");
 
-        String errorMessage = checkEntries(fullName, email, topicTitle, topicInstitution, programIdString, categoryIdString, uploadFile);
+        String errorMessage = checkEntries(fullName, email, topicTitle, institution, programIdString, categoryIdString, uploadFile);
         if (errorMessage.equals("None")) {
 
-            //Conversion from String to Integer, exception impossible by construction of values in html files for each category and each program
-            int programId = Integer.parseInt(programIdString);
-            int categoryId = Integer.parseInt(categoryIdString);
+            int programId = -1;
+            int categoryId = -1;
+            if(programIdString != null && !programIdString.equals("")) {
+                programId = Integer.parseInt(programIdString);
+            }
+            if(categoryIdString != null && !categoryIdString.equals("")) {
+                categoryId = Integer.parseInt(categoryIdString);
+            }
             boolean confidentialTopic = Objects.equals(confidentiality, "on"); // the checkbox is checked
             Connection con = DbUtils.getConnection();
             try {
@@ -111,13 +116,19 @@ public class UploadTopicServlet extends HttpServlet {
                 InputStream inputStream = uploadFile.getInputStream();
 
                 if (inputStream != null) {
+                    // insert the topic
                     try (PreparedStatement ps5 = con.prepareStatement(query5)) {
                         ps5.setString(1, topicTitle);
                         ps5.setDate(2, Date.valueOf(java.time.LocalDate.now()));
                         ps5.setBinaryStream(3, inputStream);
-                        ps5.setString(4, topicInstitution);
+                        ps5.setString(4, institution);
                         ps5.setInt(5, supervisorId);
-                        ps5.setInt(6, programId);
+                        if(programId == -1) {
+//                            ps5.setNull(6, Types.INTEGER);
+                            ps5.setInt(6, -1);
+                        } else {
+                            ps5.setInt(6, programId);
+                        }
                         ps5.setBoolean(7, confidentialTopic);
                         int row = ps5.executeUpdate();
                         if (row <= 0) {
@@ -125,19 +136,22 @@ public class UploadTopicServlet extends HttpServlet {
                         }
                     }
 
-                    String query6 = "select id from internship where title =? ;";
-                    try (PreparedStatement ps6 = con.prepareStatement(query6)) {
-                        ps6.setString(1, topicTitle);
-                        try (ResultSet rs6 = ps6.executeQuery()) {
-                            rs6.next();
-                            int internshipId = rs6.getInt("id");
+                    // insert the topic category
+                    if(categoryId != -1) {
+                        String query6 = "select id from internship where title =? ;";
+                        try (PreparedStatement ps6 = con.prepareStatement(query6)) {
+                            ps6.setString(1, topicTitle);
+                            try (ResultSet rs6 = ps6.executeQuery()) {
+                                rs6.next();
+                                int internshipId = rs6.getInt("id");
 
-                            String query7 = "insert into internship_category(internship_id, category_id)" +
-                                    " values (?, ?) ;";
-                            try (PreparedStatement ps7 = con.prepareStatement(query7)) {
-                                ps7.setInt(1, internshipId);
-                                ps7.setInt(2, categoryId);
-                                ps7.executeUpdate();
+                                String query7 = "insert into internship_category(internship_id, category_id)" +
+                                        " values (?, ?) ;";
+                                try (PreparedStatement ps7 = con.prepareStatement(query7)) {
+                                    ps7.setInt(1, internshipId);
+                                    ps7.setInt(2, categoryId);
+                                    ps7.executeUpdate();
+                                }
                             }
                         }
                     }
@@ -153,6 +167,7 @@ public class UploadTopicServlet extends HttpServlet {
             request.setAttribute("fullName", fullName);
             request.setAttribute("email", email);
             request.setAttribute("topicTitle", topicTitle);
+            request.setAttribute("institution", institution);
             request.setAttribute("err_message", errorMessage);
             List<Program> programs = loadData();
             request.setAttribute("programs", programs);
@@ -199,7 +214,7 @@ public class UploadTopicServlet extends HttpServlet {
         return programs;
     }
 
-    private String checkEntries(String fullName, String email, String topicTitle, String topicInstitution, String program_id_string, String category_id_string, Part uploadFile) {
+    private String checkEntries(String fullName, String email, String topicTitle, String institution, String program_id_string, String category_id_string, Part uploadFile) {
         if (fullName == null || fullName.equals("")) {
             return "Please enter a full name.";
         } else if (email == null || email.equals("")) {
@@ -208,12 +223,12 @@ public class UploadTopicServlet extends HttpServlet {
             return "Please choose a topic title.";
         } else if (checkTitle(topicTitle)) {
             return "The topic title is already taken.";
-        } else if(topicInstitution == null || topicInstitution.equals("")) {
+        } else if(institution == null || institution.equals("")) {
             return "Please enter your institution.";
-        } else if (program_id_string == null || program_id_string.equals("0")) {
-            return "Please choose a program.";
-        } else if (category_id_string == null || category_id_string.equals("0") || category_id_string.equals("-1")) {
-            return "Please choose a category of your program.";
+//        } else if (program_id_string == null || program_id_string.equals("0")) {
+//            return "Please choose a program.";
+//        } else if (category_id_string == null || category_id_string.equals("0") || category_id_string.equals("-1")) {
+//            return "Please choose a category of your program.";
         } else {
             boolean emailIsValid = true;
             try {
