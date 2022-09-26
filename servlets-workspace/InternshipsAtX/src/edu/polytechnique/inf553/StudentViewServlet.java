@@ -95,25 +95,27 @@ public class StudentViewServlet extends HttpServlet {
                     }
                     System.out.println("topicsIds = " + topicsIds);
 
-                    // get categories of each topic -- store only the topic ID and its categories
-                    String topicsIdsString = "";
-                    for(int topicId : topicsIds) {
-                        topicsIdsString += topicId + ",";
-                    }
-                    topicsIdsString = topicsIdsString.substring(0, topicsIdsString.length() -1); // remove last comma
-                    query = "SELECT DISTINCT ic.internship_id AS topicId, c.id AS categoryId, c.description AS categoryDescr " +
-                            "FROM categories c, internship_category ic " +
-                            "WHERE ic.category_id = c.id AND ic.internship_id IN (" + topicsIdsString + ");";
-                    try(PreparedStatement stmt = con.prepareStatement(query)) {
-                        ResultSet rs = stmt.executeQuery();
-                        while(rs.next()) {
-                            if(!topic2category.containsKey(rs.getInt("topicId"))) {
-                                topic2category.put(rs.getInt("topicId"), new ArrayList<>());
+                    if(!topicsIds.isEmpty()) {
+                        // get categories of each topic -- store only the topic ID and its categories
+                        String topicsIdsString = "";
+                        for (int topicId : topicsIds) {
+                            topicsIdsString += topicId + ",";
+                        }
+                        topicsIdsString = topicsIdsString.substring(0, topicsIdsString.length() - 1); // remove last comma
+                        query = "SELECT DISTINCT ic.internship_id AS topicId, c.id AS categoryId, c.description AS categoryDescr " +
+                                "FROM categories c, internship_category ic " +
+                                "WHERE ic.category_id = c.id AND ic.internship_id IN (" + topicsIdsString + ");";
+                        try (PreparedStatement stmt = con.prepareStatement(query)) {
+                            ResultSet rs = stmt.executeQuery();
+                            while (rs.next()) {
+                                if (!topic2category.containsKey(rs.getInt("topicId"))) {
+                                    topic2category.put(rs.getInt("topicId"), new ArrayList<>());
+                                }
+                                topic2category.get(rs.getInt("topicId")).add(new Category(rs.getString("categoryDescr"), rs.getInt("categoryId")));
                             }
-                            topic2category.get(rs.getInt("topicId")).add(new Category(rs.getString("categoryDescr"), rs.getInt("categoryId")));
                         }
                     }
-                    System.out.println(topic2category);
+                    System.out.println("topic2category = " + topic2category);
 
                     // get the defense of the student
                     // p1 corresponds to the referent

@@ -18,17 +18,11 @@
 						Register now
 					</span>
 
-					<div class="wrap-input100 validate-input m-b-16" data-validate="Please enter your email">
-						<input class="input100" type="text" name="firstName" placeholder="First Name" value="${firstName}">
+					<div class="wrap-input100 validate-input m-b-16" data-validate="Please enter your full name">
+						<input class="input100" type="text" name="fullName" placeholder="Full Name" value="${fullName}">
 						<span class="focus-input100"></span>
 					</div>
 
-					<div class="wrap-input100 validate-input m-b-16" data-validate="Please enter your email">
-						<input class="input100" type="text" name="lastName" placeholder="Last Name" value="${lastName}">
-						<span class="focus-input100"></span>
-					</div>
-					
-					
 					<div class="wrap-input100 validate-input m-b-16" data-validate="Please enter your email">
 						<input class="input100" type="text" name="email" placeholder="Email" value="${email}">
 						<span class="focus-input100"></span>
@@ -39,38 +33,34 @@
 						<span class="focus-input100"></span>
 					</div>
 
-					<div class="wrap-input100 validate-input m-b-16" data-validate = "Please enter password">
+					<div class="wrap-input100 validate-input m-b-16" data-validate = "Please choose your role">
+						<select name="role" class="input100" id="selectRole" onchange="showAndHide();">
+							<option value="" selected disabled hidden>--Please choose a role--</option>
+							<option value="Admin" selected>Admin</option>
+							<option value="Assistant">Assistant</option>
+							<option value="Professor">Professor</option>
+							<option value="Student">Student</option>
+						</select>
+						<span class="focus-input100"></span>
+					</div>
+
+					<div id="divPassword" class="wrap-input100 validate-input m-b-16" data-validate = "Please enter password">
 						<input class="input100" type="password" name="pass" placeholder="Password (at least 8 characters)">
 						<span class="focus-input100"></span>
 					</div>
-					
-					<div class="wrap-input100 validate-input m-b-16" data-validate = "Please confirm password">
+
+					<div id="divPasswordConfirm" class="wrap-input100 validate-input m-b-16" data-validate = "Please confirm password">
 						<input class="input100" type="password" name="confirmPass" placeholder="Confirm password">
 						<span class="focus-input100"></span>
 					</div>
 
-					<div class="wrap-input100 validate-input" data-validate = "Please choose your role">
-						<select name="role" class="input100" id="selectRole" onchange="displayProgramsForStudents();">
-								<option value="" selected disabled hidden>--Please choose a role--</option>
-								<option value="Admin" selected>Admin</option>
-								<option value="Assistant">Assistant</option>
-								<option value="Professor">Professor</option>
-								<option value="Student">Student</option>
-							</select>
-						<span class="focus-input100"></span>
-					</div>
-
-					<div id ="programsForStudents" class="wrap-input100 validate-input" data-validate = "Please choose your program">
+					<div id ="divProgramsForStudents" class="wrap-input100 validate-input" data-validate = "Please choose your program">
 						<select name="programStudent" class="input100">
 							<option value="null" selected>Select a program</option>
 							<c:forEach items="${programs}" var="program">
 								<option value="${program.id}">${program.name} - ${program.year}</option>
 							</c:forEach>
 						</select>
-					</div>
-
-					<div class="wrap-input100 validate-input">
-						<span class="focus-input100"></span>
 					</div>
 
 					<div class="container-login100-form-btn p-t-40">
@@ -87,20 +77,26 @@
 			</div>
 		</div>
 	</div>
-	
-	
-
 </body>
 </html>
 
 <script type="text/javascript">
-$("#programsForStudents").hide(); // by default, hide the program select. Show it only for students
-
-function displayProgramsForStudents() {
-	if($("#selectRole option:selected").text() == "Student") {
-		$("#programsForStudents").show();
+$("#divProgramsForStudents").hide(); // by default, hide the program select. Show it only for students
+function showAndHide() {
+	// students can be enrolled in a program
+	if ($("#selectRole option:selected").text() === "Student") {
+		$("#divProgramsForStudents").show();
 	} else {
-		$("#programsForStudents").hide();
+		$("#divProgramsForStudents").hide();
+	}
+
+	// student don't need a password - they will use the default pwd
+	if ($("#selectRole option:selected").text() === "Student") {
+		$("#divPassword").hide();
+		$("#divPasswordConfirm").hide();
+	} else {
+		$("#divPassword").show();
+		$("#divPasswordConfirm").show();
 	}
 }
 </script>

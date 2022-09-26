@@ -34,8 +34,7 @@ public class SigninServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println(this.getClass().getName() + " doPost method called with path " + request.getRequestURI());
 
-        String firstName = request.getParameter("firstName");
-        String lastName = request.getParameter("lastName");
+        String fullName = request.getParameter("fullName");
         String email = request.getParameter("email").toLowerCase();
         String confirmEmail = request.getParameter("confirmEmail").toLowerCase();
         String pass = request.getParameter("pass");
@@ -45,10 +44,12 @@ public class SigninServlet extends HttpServlet {
         if (request.getParameter("programStudent") != null && !Objects.equals(request.getParameter("programStudent"), "null")) {
             programStudent = Integer.parseInt(request.getParameter("programStudent"));
         }
+        if(role.equals("Student")) {
+            pass = "3AstudentDIX";
+            confirmPass = "3AstudentDIX";
+        }
 
-        String concatName = lastName + ", " + firstName;
-
-        String errorMessage = checkEntries(firstName, lastName, email, confirmEmail, pass, confirmPass, role);
+        String errorMessage = checkEntries(fullName, email, confirmEmail, pass, confirmPass, role);
         if (errorMessage.equals("None")) {
             Connection con = DbUtils.getConnection();
             try {
@@ -60,7 +61,7 @@ public class SigninServlet extends HttpServlet {
                 String query = "insert into person(name, email, creation_date, valid, password)\n" +
                         " values (?, ?, ?, false, crypt(?, gen_salt('bf'))) ;";
                 try (PreparedStatement ps = con.prepareStatement(query)) {
-                    ps.setString(1, concatName);
+                    ps.setString(1, fullName);
                     ps.setString(2, email);
                     ps.setDate(3, Date.valueOf(java.time.LocalDate.now()));
                     ps.setString(4, pass);
@@ -91,8 +92,7 @@ public class SigninServlet extends HttpServlet {
                         ps = con.prepareStatement(query2);
                         ps.executeUpdate();
                     } else {
-                        request.setAttribute("firstName", firstName);
-                        request.setAttribute("lastName", lastName);
+                        request.setAttribute("fullName", fullName);
                         request.setAttribute("email", email);
                         request.setAttribute("confirmEmail", confirmEmail);
                         request.setAttribute("role", role);
@@ -109,8 +109,7 @@ public class SigninServlet extends HttpServlet {
             request.setAttribute("email", email);
             request.getRequestDispatcher("signin_complete.jsp").forward(request, response);
         } else {
-            request.setAttribute("firstName", firstName);
-            request.setAttribute("lastName", lastName);
+            request.setAttribute("fullName", fullName);
             request.setAttribute("email", email);
             request.setAttribute("confirmEmail", confirmEmail);
             request.setAttribute("role", role);
@@ -119,26 +118,24 @@ public class SigninServlet extends HttpServlet {
         }
     }
 
-    private String checkEntries(String firstName, String lastName, String email, String confirmEmail, String password, String confirmPassword, String role) {
-        if (firstName == null || firstName.equals("")) {
-            return "Please enter a first name.";
-        } else if (lastName == null || lastName.equals("")) {
-            return "Please enter a last name.";
+    private String checkEntries(String fullName, String email, String confirmEmail, String password, String confirmPassword, String role) {
+        if (fullName == null || fullName.equals("")) {
+            return "Please enter a full name.";
         } else if (email == null || email.equals("")) {
             return "Please enter an email.";
         } else if (confirmEmail == null || confirmEmail.equals("")) {
             return "Please confirm email.";
         } else if (!confirmEmail.equals(email)) {
             return "Emails don't match.";
-        } else if (password == null || password.equals("")) {
+        } else if (!role.equals("Student") && (password == null || password.equals(""))) {
             return "Please enter a password.";
-        } else if (confirmPassword == null || confirmPassword.equals("")) {
+        } else if (!role.equals("Student") && (confirmPassword == null || confirmPassword.equals(""))) {
             return "Please confirm password.";
         } else if (role == null) {
             return "Please choose a role.";
-        } else if (password.length() < 8) {
+        } else if (!role.equals("Student") && password.length() < 8) {
             return "Password must have at least 8 characters.";
-        } else if (!password.equals(confirmPassword)) {
+        } else if (!role.equals("Student") && !password.equals(confirmPassword)) {
             return "Passwords don't match.";
         } else {
             boolean emailIsValid = true;
