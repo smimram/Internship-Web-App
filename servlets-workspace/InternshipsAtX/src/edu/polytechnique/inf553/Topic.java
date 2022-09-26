@@ -161,4 +161,5 @@ public class Topic {
                 ", dateReport=" + dateReport +
                 ", dateSlides=" + dateSlides +
                 '}';
+    }
 }
