@@ -151,13 +151,17 @@
 					<span class="login100-form-title">
 						Available Internships
 					</span>
-					<c:forEach items="${topicsAvailableForTheStudentPerProgram}" var="entry">
-						<div class="container-login100-form-btn-V2  p-t-50 p-b-25 p-l-250 p-r-250">
-							<h2 class="login100-form-btn-V2 p-l-5 p-r-5">${entry.key.name} - ${entry.key.year}</h2>
-						</div>
-						<div class="container" id="list">
-							<ul class="responsive-table">
+					<c:choose>
+						<c:when test="${atLeastOneAvailableInternship}">
+							<!-- show available internships if exist -->
+							<c:forEach items="${topicsAvailableForTheStudentPerProgram}" var="entry">
+								<div class="container-login100-form-btn-V2  p-t-50 p-b-25 p-l-250 p-r-250">
+									<h2 class="login100-form-btn-V2 p-l-5 p-r-5">${entry.key.name} - ${entry.key.year}</h2>
+								</div>
+								<div class="container" id="list">
+								<ul class="responsive-table">
 								<li class="table-header">
+									<div class="col col-1"> Id </div>
 									<div class="col col-4">Topic Title</div>
 									<div class="col col-3">Categories</div>
 									<div class="col col-3">Supervisor</div>
@@ -182,9 +186,14 @@
 										<div class="col col-1" data-label="Topic"><button type="button" class="btn btn-secondary btn-sm"><a href="./download-topic?internshipId=${topic.getId()}" target="_blank"><i class="fas fa-download" style="color: white"></i></a></button></div>
 									</li>
 								</c:forEach>
-							</ul>
-						</div>
-					</c:forEach>
+								</ul>
+								</div>
+							</c:forEach>
+						</c:when>
+						<c:otherwise>
+							<p style="text-align: center; font-size: 2em;"> No available internships. </p>
+						</c:otherwise>
+					</c:choose>
 				</form>
 			</div>
 		</div>

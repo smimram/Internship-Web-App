@@ -137,7 +137,16 @@ public class StudentViewServlet extends HttpServlet {
                 }
                 //======================== END OF DATA LOADING PART ========================
 
+                boolean atLeastOneAvailableInternship = false;
+                for(Map.Entry<Program, ArrayList<Topic>> entry : topicsAvailableForTheStudentPerProgram.entrySet()) {
+                    if(!entry.getValue().isEmpty()) { // if at least one topic in one program, we set the boolean to true and stop
+                        atLeastOneAvailableInternship = true;
+                        break;
+                    }
+                }
+                System.out.println("atLeastOneAvailableInternship = " + atLeastOneAvailableInternship);
                 request.setAttribute("userTopic", userTopic);
+                request.setAttribute("atLeastOneAvaialableTopic", atLeastOneAvailableInternship);
                 request.setAttribute("topicsAvailableForTheStudentPerProgram", topicsAvailableForTheStudentPerProgram);
                 request.setAttribute("programsAvailableForTheStudent", new ArrayList<>(topicsAvailableForTheStudentPerProgram.keySet()));
                 request.setAttribute("topic2category", topic2category);
