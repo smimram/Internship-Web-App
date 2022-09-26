@@ -118,3 +118,7 @@ insert into program(name, year) values ('map', 2020);
 insert into program(name, year) values ('bio', 2020);
 insert into program(name, year) values ('mat', 2020);
 insert into program(name, year) values ('phys', 2020);
+
+-- modifications to add (Sept. 26th 2022)
+-- ALTER TABLE internship ADD COLUMN institution VARCHAR;
+-- ALTER TABLE internship DROP CONSTRAINT internship_program_id_fkey;

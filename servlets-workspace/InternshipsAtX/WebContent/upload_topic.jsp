@@ -46,13 +46,13 @@
 
 					<div class="wrap-input100 validate-input m-b-16" data-validate = "Please choose the program">
 						<select name="programs" id="programs" class="input100">
-				    		<option value="0" selected disabled hidden>Select a program</option>
+				    		<option value="0" selected disabled hidden>Select a program (optional)</option>
 						</select>
 					</div>
 
 					<div class="wrap-input100 validate-input m-b-25" data-validate = "Please choose the category">
 					<select name="categories" id="categories" class="input100">
-		    			<option value="-1" selected disabled hidden> Select a category </option>
+		    			<option value="-1" selected disabled hidden> Select a category (optional)</option>
 		  			</select>
 					</div>
 
