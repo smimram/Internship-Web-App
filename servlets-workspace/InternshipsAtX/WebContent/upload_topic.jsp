@@ -23,14 +23,9 @@
 					<div class="text-red flex-col-c p-b-10">
 						<p class="text-red" style="color:red;">${err_message}</p>
 					</div>
-					
-					<div class="wrap-input100 validate-input m-b-16" data-validate="Please enter your email">
-						<input class="input100" type="text" name="firstName" placeholder="First Name" value="${firstName}">
-						<span class="focus-input100"></span>
-					</div>
 
-					<div class="wrap-input100 validate-input m-b-16" data-validate="Please enter your email">
-						<input class="input100" type="text" name="lastName" placeholder="Last Name" value="${lastName}">
+					<div class="wrap-input100 validate-input m-b-16" data-validate="Please enter your full name">
+						<input class="input100" type="text" name="fullName" placeholder="Full Name" value="${fullName}">
 						<span class="focus-input100"></span>
 					</div>
 					
@@ -41,6 +36,11 @@
 
 					<div class="wrap-input100 validate-input m-b-16" data-validate="Please confirm your email">
 						<input class="input100" type="text" name="topicTitle" placeholder="Topic title" value="${topicTitle}">
+						<span class="focus-input100"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input m-b-16" data-validate="Please enter your institution">
+						<input class="input100" type="text" name="topicInstitution" placeholder="Institution" value="${topicInstitution}">
 						<span class="focus-input100"></span>
 					</div>
 
