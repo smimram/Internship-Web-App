@@ -11,7 +11,7 @@
 	<jsp:include page="header.jsp"></jsp:include>
 	
 	<div class="limiter">
-		<div class="container-login100 background_style">
+		<div class="container-login100 background_style" style="width:100%">
 			<div class="wrap-login100">
 			
 				<form class="login100-form validate-form p-l-55 p-r-55" method="get" action="login">	
@@ -40,8 +40,12 @@
 			</div>
 		</div>
 	</div>
-	
-	
 
+
+	<footer style="color: white; position: fixed; bottom: 0.5rem; width: 100%; text-align: center;">
+		<div >
+			Credit: R&eacute;mi Delacourt, Come de Germay de Cirfontaine, Victor Radermecker, Yujia Fu and Aleksa Marusic (X19), Pierre-Yves Strub (DIX, Ecole polytechnique), Nelly Barret (Inria and DIX, Ecole polytechnique)
+		</div>
+	</footer>
 </body>
 </html>
