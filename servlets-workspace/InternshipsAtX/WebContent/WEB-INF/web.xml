@@ -82,6 +82,10 @@
     <servlet-class>edu.polytechnique.inf553.DownloadSlidesServlet</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>ExportAllInternshipsServlet</servlet-name>
+    <servlet-class>edu.polytechnique.inf553.ExportAllInternshipsServlet</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>ErrorPage</servlet-name>
     <servlet-class>edu.polytechnique.inf553.ErrorPageServlet</servlet-class>
   </servlet>
@@ -152,6 +156,10 @@
   <servlet-mapping>
     <servlet-name>DownloadSlidesPage</servlet-name>
     <url-pattern>/download-slides</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ExportAllInternshipsServlet</servlet-name>
+    <url-pattern>/export-internships</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>ErrorPage</servlet-name>

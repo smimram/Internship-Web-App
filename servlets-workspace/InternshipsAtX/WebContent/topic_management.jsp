@@ -97,6 +97,13 @@ input:checked + .slider:before {
 					<span class="login100-form-title">
 						<h1> Topic Management </h1>
 					</span>
+
+					<br/>
+					<div class="text-center">
+						<button type="button" class="btn btn-primary btn-sm" title="Export all internships"><a href="/export-internships" target="_blank" style="color: white">Export all internships to CSV</a></button>
+					</div>
+					<br/>
+					<br/>
 					
 					<div class="text-center">
 						<ul class="responsive-table">
