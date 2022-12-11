@@ -134,7 +134,10 @@ input:checked + .slider:before {
 									<a href="./topic-management?orderByColumn=scientific_validated&orderBySort=ASC"><i class="fas fa-sort-amount-down" title="sort by increasing order"></i></a>
 									<a href="./topic-management?orderByColumn=scientific_validated&orderBySort=DESC"><i class="fas fa-sort-amount-down-alt" title="sort by decreasing order"></i></a>
 								</div>
-								<div class="col col-2">Attributed to</div>
+								<div class="col col-2">Attributed to
+									<a href="./topic-management?orderByColumn=attributedTo&orderBySort=ASC"><i class="fas fa-sort-amount-down" title="sort by increasing order"></i></a>
+									<a href="./topic-management?orderByColumn=attributedTo&orderBySort=DESC"><i class="fas fa-sort-amount-down-alt" title="sort by decreasing order"></i></a>
+								</div>
 								<div class="col col-1">Actions</div>
 							</li>
 							

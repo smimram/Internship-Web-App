@@ -48,7 +48,7 @@ public class TopicManagementServlet extends HttpServlet {
                 System.out.println("orderByColumn=" + orderByColumn + " ; orderBySort=" + orderBySort);
                 List<Topic> topics = getTopics(orderByColumn, orderBySort);
                 getCategoriesForTopics(topics);
-                getAffiliatedStudentsForTopics(topics);
+                getAffiliatedStudentsForTopics(topics, (orderByColumn != null && orderByColumn.equals("attributedTo")), orderBySort);
                 List<Program> programs = getAllPrograms();
                 HashMap<String, ArrayList<Category>> categoriesForPrograms = getAllCategories(programs);
                 List<Person> students = getStudents();
@@ -91,8 +91,8 @@ public class TopicManagementServlet extends HttpServlet {
             List<Topic> topics = new ArrayList<>();
             // get all topic list
             System.out.println("getTopics");
-            if (orderByColumn == null) orderByColumn = "id"; // if no parameter is provided
-            if (orderBySort == null) orderBySort = "ASC";
+            if (orderByColumn == null || orderByColumn.equals("null") || orderByColumn.equals("attributedTo")) orderByColumn = "id"; // if no parameter is provided
+            if (orderBySort == null || orderBySort.equals("null")) orderBySort = "ASC";
             if (orderByColumn.startsWith("'") && orderByColumn.endsWith("'"))
                 orderByColumn = orderByColumn.substring(1, orderByColumn.length() - 1); // if the value is encapsulated into '', e.g. 'id'
             if (orderBySort.startsWith("'") && orderBySort.endsWith("'"))
@@ -223,7 +223,7 @@ public class TopicManagementServlet extends HttpServlet {
         }
     }
 
-    private void getAffiliatedStudentsForTopics(List<Topic> topics) {
+    private void getAffiliatedStudentsForTopics(List<Topic> topics, boolean sortByAttributedTo, String sortOrder) {
         Connection con = DbUtils.getConnection();
         try {
             if (con == null) {
@@ -237,7 +237,8 @@ public class TopicManagementServlet extends HttpServlet {
                         "INNER JOIN person_internship pi ON pi.person_id = p.id " +
                         "LEFT JOIN person_roles pr ON pr.person_id = p.id " +
                         "LEFT JOIN role_type r ON pr.role_id = r.id " +
-                        "WHERE pi.internship_id = ? ;";
+                        "WHERE pi.internship_id = ? " +
+                        (sortByAttributedTo ? "ORDER BY pName " + sortOrder + ";" : ";");
                 try (PreparedStatement stmt = con.prepareStatement(query)) {
                     stmt.setInt(1, Integer.parseInt(topic.getId()));
                     try (ResultSet resultSet = stmt.executeQuery()) {
