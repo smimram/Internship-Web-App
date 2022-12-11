@@ -2,6 +2,7 @@
     pageEncoding="ISO-8859-1"
     import="edu.polytechnique.inf553.Person"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -111,6 +112,10 @@ input:checked + .slider:before {
 								<div class="col col-1">Id
 									<a href="./topic-management?orderByColumn=id&orderBySort=ASC"><i class="fas fa-sort-numeric-down" title="sort by increasing order"></i></a>
 									<a href="./topic-management?orderByColumn=id&orderBySort=DESC"><i class="fas fa-sort-numeric-down-alt" title="sort by decreasing order"></i></a>
+									<br/>
+									Date
+									<a href="./topic-management?orderByColumn=creation_date&orderBySort=ASC"><i class="fas fa-sort-numeric-down" title="sort by increasing order"></i></a>
+									<a href="./topic-management?orderByColumn=creation_date&orderBySort=DESC"><i class="fas fa-sort-numeric-down-alt" title="sort by decreasing order"></i></a>
 								</div>
 								<div class="col col-2">Title
 									<a href="./topic-management?orderByColumn=title&orderBySort=ASC"><i class="fas fa-sort-alpha-down" title="sort by increasing order"></i></a>
@@ -138,6 +143,8 @@ input:checked + .slider:before {
 									<div class="col col-1" data-label="Id">
 											${topic.id}
 											${topic.isConfidentialInternship() ? '<i class="fas fa-lock" style="color: goldenrod" title="Confidential internship"></i>' : '<i class="fas fa-lock-open" style="color: goldenrod" title="Non-confidential internship"></i>'}
+												<br/>
+												<fmt:formatDate value="${topic.dateUpload}" type="date"/>
 									</div>
 									<div class="col col-2" data-label="Title">${topic.title} (@ ${topic.institution})</div>
 									<div class="col col-2" data-label="Categories">

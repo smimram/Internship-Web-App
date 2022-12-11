@@ -20,6 +20,7 @@ public class Topic {
     private Timestamp dateFiche;
     private Timestamp dateReport;
     private Timestamp dateSlides;
+    private Timestamp dateUpload; // when the internship proposal has been uploaded
 
     public Topic(String title, int id, String supervisorEmail, String supervisorName, int programId, boolean adminValid, boolean sciValid, boolean isConfidentialInternship, String institution) {
         this(title, id, supervisorEmail, supervisorName, programId, adminValid, sciValid, isConfidentialInternship);
@@ -143,6 +144,12 @@ public class Topic {
         this.institution = institution;
     }
 
+    public void setDateUpload(Timestamp dateUpload) { this.dateUpload = dateUpload; }
+
+    public Timestamp getDateUpload() {
+        return dateUpload;
+    }
+
     @java.lang.Override
     public java.lang.String toString() {
         return "Topic{" +
@@ -160,6 +167,7 @@ public class Topic {
                 ", dateFiche=" + dateFiche +
                 ", dateReport=" + dateReport +
                 ", dateSlides=" + dateSlides +
+                ", dateUpload=" + dateUpload +
                 '}';
     }
 }
