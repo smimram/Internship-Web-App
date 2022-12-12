@@ -26,7 +26,7 @@ public class ExportAllInternshipsServlet extends HttpServlet {
 
         String returnFileName = "file_not_found.jsp";
 
-        Connection con = DbUtils.getInstance().getConnection();
+        Connection con = DbUtils.getConnection();
         try {
             if (con == null) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -60,7 +60,7 @@ public class ExportAllInternshipsServlet extends HttpServlet {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            DbUtils.getInstance().releaseConnection(con);
+            DbUtils.releaseConnection(con);
         }
 
         request.getRequestDispatcher(returnFileName).forward(request, response);
