@@ -33,7 +33,7 @@ public class ExportAllInternshipsServlet extends HttpServlet {
             }
 
             // CREATE TABLE exports (id SERIAL, date DATE, file BYTEA);
-            String filePath = Paths.get(System.getProperty("user.dir"), "exportsInternshipsData", "exportInternshipData.csv").toString();
+            String filePath = Paths.get("/tmp", "exportsInternshipsData", "exportInternshipData.csv").toString();
             File f = new File(filePath);
             f.getParentFile().mkdirs();
             String query = "COPY (" +
