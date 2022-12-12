@@ -36,7 +36,7 @@ public class ExportAllInternshipsServlet extends HttpServlet {
             String filePath = Paths.get("/tmp", "exportsInternshipsData", "exportInternshipData.csv").toString();
             File f = new File(filePath);
             f.getParentFile().mkdirs();
-            String query = "COPY (" +
+            String query = "\\copy (" +
                     "  SELECT i.id AS internship_id, i.title AS internship_title, i.institution AS intersnhip_instituion, i.creation_date AS internship_creation_date, i.scientific_validated AS scientific_validation, i.administr_validated AS administrative_validation, p.name AS supervisor_name, p.email AS supervisor_email, CONCAT(pr.name, ' - ', pr.year) AS program, i.confidential_internship, p2.name AS student_name, p2.email AS student_email " +
                     "  FROM internship i " +
                     "  LEFT JOIN person p ON i.supervisor_id = p.id " +
