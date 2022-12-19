@@ -46,7 +46,7 @@ public class ExportAllInternshipsServlet extends HttpServlet {
                     "LEFT JOIN person p2 ON pi.person_id = p2.id" +
                     ") TO " + filePath + ";";
             System.out.println(query);
-            ProcessBuilder builderLoad = new ProcessBuilder("psql", "-d", "InternshipsDB", "-c", query);
+            ProcessBuilder builderLoad = new ProcessBuilder("/usr/bin/psql", "-d", "InternshipsDB", "-c", query);
             System.out.println(builderLoad.command());
             Process processLoad = builderLoad.inheritIO().start(); // builderLoad.start()
             processLoad.waitFor();
