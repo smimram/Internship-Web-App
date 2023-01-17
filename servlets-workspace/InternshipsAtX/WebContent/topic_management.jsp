@@ -218,7 +218,7 @@ input:checked + .slider:before {
 										<c:if test="${topic.dateSlides != null}">
 											<button type="button" class="btn btn-primary btn-sm" title="${(topic.dateSlides != null) ? topic.dateSlides : 'No file'}"><a href="/download-slides?internshipId=${topic.id}" target="_blank" style="color: white">Download slides</a></button>
 										</c:if>
-										<button type="button" class="btn btn-danger btn-sm" onclick="deleteTopic(${topic.id}, '${topic.title}');"><i class="fas fa-trash"></i></button>
+										<button type="button" class="btn btn-danger btn-sm" onclick="deleteTopic(${topic.id});"><i class="fas fa-trash"></i></button>
 									</div>
 								</li>
 							</c:forEach>
@@ -416,19 +416,19 @@ input:checked + .slider:before {
 		});
 	}
 
-	function deleteTopic(id, title){
-		var r = confirm("Are you sure you want to delete the topic '" + title + "'?");
+	function deleteTopic(id){
+		var r = confirm("Are you sure you want to delete the topic " + id + "?");
 		if (r == true) {
 			$.ajax({
 				type : "GET",
 				url : "DeleteTopicServlet",
 				data : "topicId=" + id ,
 				success : function(data) {
-					console.log("delete topic " + title);
+					console.log("delete topic " + id);
 					location.reload();
 				},
 				error: function(res){
-					alert("Failed to delete the topic" + title + ". Cannot delete topic if it is already assigned to a student!");
+					alert("Failed to delete the topic " + id + ". Cannot delete topic if it is already assigned to a student!");
 				}
 			});
 		}
