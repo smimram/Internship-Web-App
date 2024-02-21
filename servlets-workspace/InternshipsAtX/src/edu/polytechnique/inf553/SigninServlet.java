@@ -221,7 +221,7 @@ public class SigninServlet extends HttpServlet {
                     } catch (SQLException e) {
                         e.printStackTrace();
                     } finally {
-                        DbUtils.getInstance().releaseConnection(con);
+                        DbUtils.releaseConnection(con);
                     }
                     return "The email is already used.";
                 } else {
