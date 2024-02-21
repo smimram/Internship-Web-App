@@ -50,46 +50,69 @@ public class SigninServlet extends HttpServlet {
         }
 
         String errorMessage = checkEntries(fullName, email, confirmEmail, pass, confirmPass, role);
-        if (errorMessage.equals("None")) {
+        if (errorMessage.equals("None") || errorMessage.equals("student upgrade")) {
             Connection con = DbUtils.getConnection();
             try {
                 if (con == null) {
                     response.sendError(HttpServletResponse.SC_FORBIDDEN);
                 }
 
-                //add the user into 'person' table
-                String query = "insert into person(name, email, creation_date, valid, password)\n" +
-                        " values (?, ?, ?, false, crypt(?, gen_salt('bf'))) ;";
-                try (PreparedStatement ps = con.prepareStatement(query)) {
-                    ps.setString(1, fullName);
-                    ps.setString(2, email);
-                    ps.setDate(3, Date.valueOf(java.time.LocalDate.now()));
-                    ps.setString(4, pass);
-                    ps.executeUpdate();
-                }
+                if(errorMessage.equals("student upgrade")) {
+                    // let's upgrade the account from 'Proponent' to 'Student'
+                    String upgradeToStudent = "update person_roles " +
+                            "set role_id=rt.id " + // set the type to be the one for Student
+                            "from role_type rt, person p " +
+                            "where rt.role='Student' " +
+                            "  and p.email=? " + // set the user email
+                            "  and p.id=person_id;"; // and get only the person concerned
+                    try (PreparedStatement ps3 = con.prepareStatement(upgradeToStudent)) {
+                        ps3.setString(1, email);
+                        ps3.executeUpdate();
+                    }
 
-                //add a person_role relation into 'person_roles' table
-                String query2 = "insert into person_roles(role_id ,person_id)\n" +
-                        "SELECT rt.id, p.id\n" +
-                        "FROM role_type rt, person p\n" +
-                        "WHERE rt.role = ? AND p.email = ?";
-                try (PreparedStatement ps2 = con.prepareStatement(query2)) {
-                    ps2.setString(1, role);
-                    ps2.setString(2, email);
-                    ps2.executeUpdate();
+                    // and update his/her password
+                    String updatePassword = "update person set password = crypt(?, gen_salt('bf')) where email=?;";
+                    try (PreparedStatement ps4 = con.prepareStatement(updatePassword)) {
+                        ps4.setString(1, "3AstudentDIX");
+                        ps4.setString(2, email);
+                        ps4.executeUpdate();
+                    }
+                    role = "Student";
+                } else {
+                    //add the user into 'person' table
+                    String query = "insert into person(name, email, creation_date, valid, password)\n" +
+                            " values (?, ?, ?, false, crypt(?, gen_salt('bf'))) ;";
+                    try (PreparedStatement ps = con.prepareStatement(query)) {
+                        ps.setString(1, fullName);
+                        ps.setString(2, email);
+                        ps.setDate(3, Date.valueOf(java.time.LocalDate.now()));
+                        ps.setString(4, pass);
+                        ps.executeUpdate();
+                    }
+
+                    //add a person_role relation into 'person_roles' table
+                    String query2 = "insert into person_roles(role_id ,person_id)\n" +
+                            "SELECT rt.id, p.id\n" +
+                            "FROM role_type rt, person p\n" +
+                            "WHERE rt.role = ? AND p.email = ?";
+                    try (PreparedStatement ps2 = con.prepareStatement(query2)) {
+                        ps2.setString(1, role);
+                        ps2.setString(2, email);
+                        ps2.executeUpdate();
+                    }
                 }
 
                 if (role.equals("Student")) {
                     if (programStudent != -1) {
-                        query = "SELECT p.id FROM person p WHERE p.email = ?;";
-                        PreparedStatement ps = con.prepareStatement(query);
+                        String query3 = "SELECT p.id FROM person p WHERE p.email = ?;";
+                        PreparedStatement ps = con.prepareStatement(query3);
                         ps.setString(1, email);
                         ResultSet rs = ps.executeQuery();
                         rs.next();
                         int idPerson = rs.getInt(1);
 
-                        query2 = "INSERT INTO person_program (program_id, person_id) VALUES (" + programStudent + " , " + idPerson + ")";
-                        ps = con.prepareStatement(query2);
+                        String query4 = "INSERT INTO person_program (program_id, person_id) VALUES (" + programStudent + " , " + idPerson + ")";
+                        ps = con.prepareStatement(query4);
                         ps.executeUpdate();
                     } else {
                         request.setAttribute("fullName", fullName);
@@ -170,6 +193,36 @@ public class SigninServlet extends HttpServlet {
                     DbUtils.releaseConnection(con);
                 }
                 if (emailTaken) {
+                    // NB Feb 21, 2024
+                    // if this email is taken by a proponent, and the person tries to register as a sudent
+                    // we chaneg the existing (proponent) account to be a student account
+                    // mail Feb 13, 2024:
+                    // the solution consists of changing the Web app code so that
+                    //- when a Proponent tries to sign in as a Student
+                    //- instead of rejecting them because the email is already taken
+                    //- the person should get "upgraded" to become a student (and be able to interact with the app).
+                    String checkIsProponent = "select p.* " +
+                            "from person p " +
+                            "  inner join person_roles pr on p.id=pr.person_id " +
+                            "  inner join role_type rt on rt.id = pr.role_id" +
+                            "where p.email=? and rt.role = 'Proponent';";
+                    try (PreparedStatement ps2 = con.prepareStatement(checkIsProponent)) {
+                        ps2.setString(1, email);
+                        try (ResultSet rs2 = ps2.executeQuery()) {
+                            if (rs2.next()) {
+                                // this person exists as a proponent in the database
+                                // we now check whether he/she tries to create a student account
+                                if(role.equals("Student")) {
+                                    // the user tries to connect as a student
+                                    return "student upgrade";
+                                }
+                            }
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    } finally {
+                        DbUtils.getInstance().releaseConnection(con);
+                    }
                     return "The email is already used.";
                 } else {
                     return "None";
