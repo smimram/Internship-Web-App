@@ -50,6 +50,7 @@ public class SigninServlet extends HttpServlet {
         }
 
         String errorMessage = checkEntries(fullName, email, confirmEmail, pass, confirmPass, role);
+        System.out.println("errorMessage is " + errorMessage);
         if (errorMessage.equals("None") || errorMessage.equals("student upgrade")) {
             Connection con = DbUtils.getConnection();
             try {
@@ -58,6 +59,7 @@ public class SigninServlet extends HttpServlet {
                 }
 
                 if(errorMessage.equals("student upgrade")) {
+                    System.out.println("I'm going to upgrade the proponent to be a student.");
                     // let's upgrade the account from 'Proponent' to 'Student'
                     String upgradeToStudent = "update person_roles " +
                             "set role_id=rt.id " + // set the type to be the one for Student
@@ -71,6 +73,7 @@ public class SigninServlet extends HttpServlet {
                     }
 
                     // and update his/her password
+                    System.out.println("and also set its password.");
                     String updatePassword = "update person set password = crypt(?, gen_salt('bf')) where email=?;";
                     try (PreparedStatement ps4 = con.prepareStatement(updatePassword)) {
                         ps4.setString(1, "3AstudentDIX");
@@ -201,6 +204,7 @@ public class SigninServlet extends HttpServlet {
                     //- when a Proponent tries to sign in as a Student
                     //- instead of rejecting them because the email is already taken
                     //- the person should get "upgraded" to become a student (and be able to interact with the app).
+                    System.out.println("email " + email + " is alrady taken. role is: " + role);
                     String checkIsProponent = "select p.* " +
                             "from person p " +
                             "  inner join person_roles pr on p.id=pr.person_id " +
@@ -210,12 +214,19 @@ public class SigninServlet extends HttpServlet {
                         ps2.setString(1, email);
                         try (ResultSet rs2 = ps2.executeQuery()) {
                             if (rs2.next()) {
+                                System.out.println("I found a Proponent with email being " + email + ".");
                                 // this person exists as a proponent in the database
                                 // we now check whether he/she tries to create a student account
+                                System.out.println("Is the role '" + role + "' a student? " + role.equals("Student") + ", " + role.toLowerCase().equals("student"));
                                 if(role.equals("Student")) {
+                                    System.out.println("Will return student upgrade.");
                                     // the user tries to connect as a student
                                     return "student upgrade";
+                                } else {
+                                    System.out.println("The role is not a student, will return that this email is already used.");
                                 }
+                            } else {
+                                System.out.println("I couldn't find a proponent with email " + email + ".");
                             }
                         }
                     } catch (SQLException e) {
