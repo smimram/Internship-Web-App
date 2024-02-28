@@ -51,7 +51,7 @@ public class SigninServlet extends HttpServlet {
 
         String errorMessage = checkEntries(fullName, email, confirmEmail, pass, confirmPass, role);
         System.out.println("errorMessage is " + errorMessage);
-        if (errorMessage.equals("None") || errorMessage.equals("student upgrade")) {
+        if (errorMessage.equals("None") || errorMessage.endsWith("will be upgraded to a Student one")) {
             Connection con = DbUtils.getConnection();
             try {
                 if (con == null) {
@@ -221,12 +221,15 @@ public class SigninServlet extends HttpServlet {
                                 if(role.equals("Student")) {
                                     System.out.println("Will return student upgrade.");
                                     // the user tries to connect as a student
-                                    return "student upgrade";
+                                    // return "student upgrade";
+                                    return "The email " + email + " is already used by someone who is a proponent, and the current user tries to register as a " + role + " (" + role.equals("Student") + ", " + role.toLowerCase().equals("Student") + "), thus the associated account will be upgraded to a Student one.";
                                 } else {
                                     System.out.println("The role is not a student, will return that this email is already used.");
+                                    return "The email " + email + " is already used by someone who is a proponent, but the current user does not try to register as a Student (indeed role is " + role + ", thus " + role.equals("Student") + ", " + role.toLowerCase().equals("Student") + "). Therefore, the associated account cannot be upgraded to a Student one.";
                                 }
                             } else {
                                 System.out.println("I couldn't find a proponent with email " + email + ".");
+                                return "The email " + email + " is already used by someone who is not a proponent. Therefore, the associated account cannot be upgraded to a Student one.";
                             }
                         }
                     } catch (SQLException e) {
@@ -234,7 +237,7 @@ public class SigninServlet extends HttpServlet {
                     } finally {
                         DbUtils.releaseConnection(con);
                     }
-                    return "The email is already used.";
+                    return "The email " + email + " is used by someone, but an error occured, so stopping here.";
                 } else {
                     return "None";
                 }
