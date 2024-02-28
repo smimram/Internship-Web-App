@@ -217,15 +217,15 @@ public class SigninServlet extends HttpServlet {
                                 System.out.println("I found a Proponent with email being " + email + ".");
                                 // this person exists as a proponent in the database
                                 // we now check whether he/she tries to create a student account
-                                System.out.println("Is the role '" + role + "' a student? " + role.equals("Student") + ", " + role.toLowerCase().equals("student"));
-                                if(role.equals("Student")) {
+                                System.out.println("Is the role '" + role + "' a student? " + role.trim().equals("Student") + ", " + role.toLowerCase().trim().equals("student"));
+                                if(role.trim().equals("Student") || role.toLowerCase().trim().equals("student")) {
                                     System.out.println("Will return student upgrade.");
                                     // the user tries to connect as a student
                                     // return "student upgrade";
-                                    return "The email " + email + " is already used by someone who is a proponent, and the current user tries to register as a " + role + " (" + role.equals("Student") + ", " + role.toLowerCase().equals("Student") + "), thus the associated account will be upgraded to a Student one.";
+                                    return "The email " + email + " is already used by someone who is a proponent, and the current user tries to register as a Student (indeed role is '" + role + "', thus trimed role is " + role.trim() + ", thus " + role.trim().equals("Student") + ", " + role.toLowerCase().trim().equals("student") + "), thus the associated account will be upgraded to a Student one.";
                                 } else {
                                     System.out.println("The role is not a student, will return that this email is already used.");
-                                    return "The email " + email + " is already used by someone who is a proponent, but the current user does not try to register as a Student (indeed role is " + role + ", thus " + role.equals("Student") + ", " + role.toLowerCase().equals("Student") + "). Therefore, the associated account cannot be upgraded to a Student one.";
+                                    return "The email " + email + " is already used by someone who is a proponent, but the current user does not try to register as a Student (indeed role is' " + role + "', thus trimed role is " + role.trim() + ", thus " + role.trim().equals("Student") + ", " + role.toLowerCase().trim().equals("student") + "). Therefore, the associated account cannot be upgraded to a Student one.";
                                 }
                             } else {
                                 System.out.println("I couldn't find a proponent with email " + email + ".");
