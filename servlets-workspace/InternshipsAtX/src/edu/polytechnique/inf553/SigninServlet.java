@@ -51,15 +51,14 @@ public class SigninServlet extends HttpServlet {
 
         String errorMessage = checkEntries(fullName, email, confirmEmail, pass, confirmPass, role);
         System.out.println("errorMessage is " + errorMessage);
-        if (errorMessage.equals("None") || errorMessage.endsWith("will be upgraded to a Student one")) {
+        if (errorMessage.equals("None") || errorMessage.endsWith("to be a Student one.")) {
             Connection con = DbUtils.getConnection();
             try {
                 if (con == null) {
                     response.sendError(HttpServletResponse.SC_FORBIDDEN);
                 }
 
-                if(errorMessage.equals("student upgrade")) {
-                    System.out.println("I'm going to upgrade the proponent to be a student.");
+                if(errorMessage.endsWith("to be a Student one.")) {
                     // let's upgrade the account from 'Proponent' to 'Student'
                     String upgradeToStudent = "update person_roles " +
                             "set role_id=rt.id " + // set the type to be the one for Student
@@ -73,7 +72,6 @@ public class SigninServlet extends HttpServlet {
                     }
 
                     // and update his/her password
-                    System.out.println("and also set its password.");
                     String updatePassword = "update person set password = crypt(?, gen_salt('bf')) where email=?;";
                     try (PreparedStatement ps4 = con.prepareStatement(updatePassword)) {
                         ps4.setString(1, "3AstudentDIX");
@@ -204,32 +202,24 @@ public class SigninServlet extends HttpServlet {
                     //- when a Proponent tries to sign in as a Student
                     //- instead of rejecting them because the email is already taken
                     //- the person should get "upgraded" to become a student (and be able to interact with the app).
-                    System.out.println("email " + email + " is alrady taken. role is: " + role);
                     String checkIsProponent = "select p.* " +
                             "from person p " +
                             "  inner join person_roles pr on p.id=pr.person_id " +
-                            "  inner join role_type rt on rt.id = pr.role_id" +
+                            "  inner join role_type rt on rt.id = pr.role_id " +
                             "where p.email=? and rt.role = 'Proponent';";
                     try (PreparedStatement ps2 = con.prepareStatement(checkIsProponent)) {
                         ps2.setString(1, email);
                         try (ResultSet rs2 = ps2.executeQuery()) {
                             if (rs2.next()) {
-                                System.out.println("I found a Proponent with email being " + email + ".");
                                 // this person exists as a proponent in the database
                                 // we now check whether he/she tries to create a student account
-                                System.out.println("Is the role '" + role + "' a student? " + role.trim().equals("Student") + ", " + role.toLowerCase().trim().equals("student"));
                                 if(role.trim().equals("Student") || role.toLowerCase().trim().equals("student")) {
-                                    System.out.println("Will return student upgrade.");
                                     // the user tries to connect as a student
                                     // return "student upgrade";
-                                    return "The email " + email + " is already used by someone who is a proponent, and the current user tries to register as a Student (indeed role is '" + role + "', thus trimed role is " + role.trim() + ", thus " + role.trim().equals("Student") + ", " + role.toLowerCase().trim().equals("student") + "), thus the associated account will be upgraded to a Student one.";
+                                    return email + " is already used by a proponent, so your acount will be upgraded to be a Student one.";
                                 } else {
-                                    System.out.println("The role is not a student, will return that this email is already used.");
-                                    return "The email " + email + " is already used by someone who is a proponent, but the current user does not try to register as a Student (indeed role is' " + role + "', thus trimed role is " + role.trim() + ", thus " + role.trim().equals("Student") + ", " + role.toLowerCase().trim().equals("student") + "). Therefore, the associated account cannot be upgraded to a Student one.";
+                                    return email + " is already used by a proponent.";
                                 }
-                            } else {
-                                System.out.println("I couldn't find a proponent with email " + email + ".");
-                                return "The email " + email + " is already used by someone who is not a proponent. Therefore, the associated account cannot be upgraded to a Student one.";
                             }
                         }
                     } catch (SQLException e) {
@@ -237,7 +227,7 @@ public class SigninServlet extends HttpServlet {
                     } finally {
                         DbUtils.releaseConnection(con);
                     }
-                    return "The email " + email + " is used by someone, but an error occured, so stopping here.";
+                    return email + " is already used.";
                 } else {
                     return "None";
                 }
